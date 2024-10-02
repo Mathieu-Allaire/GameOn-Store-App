@@ -6,6 +6,8 @@ import java.util.*;
 
 // line 2 "GameState.ump"
 // line 61 "GameOn.ump"
+
+@Entity
 public class Game
 {
 
@@ -25,8 +27,14 @@ public class Game
   private GameStatus gameStatus;
 
   //Game Associations
+
+    // N/A Category --> Game
   private Category category;
+
+    // N/A WishlistLink --> Game
   private List<WishlistLink> wishlistlink;
+
+    @OneToMany //Game --> Review
   private List<Review> reviews;
 
   //------------------------

@@ -12,7 +12,11 @@ public class WishlistLink
   //------------------------
 
   //WishlistLink Associations
+
+    @ManyToOne //WishList Link --> Game  
   private Game wishlistGames;
+
+    // N/A WishList --> WishList Link
   private Wishlist wishlist;
 
   //------------------------

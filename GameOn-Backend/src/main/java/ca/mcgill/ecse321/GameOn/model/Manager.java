@@ -5,6 +5,8 @@
 import java.util.*;
 
 // line 44 "GameOn.ump"
+
+@Entity
 public class Manager extends Staff
 {
 
@@ -19,7 +21,10 @@ public class Manager extends Staff
   //------------------------
 
   //Manager Associations
+    @OneToMany //Manager --> Category (No need, why do we have this association?)
   private List<Category> categories;
+
+    // N/A GameRequest --> Manager (don't need this, only one manager)    
   private List<GameRequest> gameRequest;
 
   //------------------------

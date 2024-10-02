@@ -4,6 +4,8 @@
 
 
 // line 55 "GameOn.ump"
+
+@Entity
 public class SpecificGame
 {
 
@@ -15,6 +17,8 @@ public class SpecificGame
   private int id;
 
   //SpecificGame Associations
+
+    @ManyToOne //SpecificGame --> Game
   private Game game;
 
   //------------------------

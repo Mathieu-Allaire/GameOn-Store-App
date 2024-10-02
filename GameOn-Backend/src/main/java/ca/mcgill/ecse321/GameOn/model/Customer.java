@@ -6,6 +6,8 @@ import java.sql.Date;
 import java.util.*;
 
 // line 31 "GameOn.ump"
+
+@Entity
 public class Customer extends Role
 {
 
@@ -19,8 +21,14 @@ public class Customer extends Role
   private String billingAddress;
 
   //Customer Associations
+
+    @OneToMany // Customer --> Order
   private List<Order> customerOrder;
+
+    @OneToMany // Customer --> Order
   private Wishlist customerWishlist;
+
+    // N/A Review --> Customer
   private List<Review> customerReview;
 
   //------------------------

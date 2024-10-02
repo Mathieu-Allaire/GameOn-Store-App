@@ -6,6 +6,8 @@ import java.util.*;
 
 // line 1 "EmployeeState.ump"
 // line 21 "GameOn.ump"
+
+@Entity
 public class Employee extends Staff
 {
 
@@ -27,7 +29,8 @@ public class Employee extends Staff
   private EmployeeStatus employeeStatus;
 
   //Employee Associations
-  private List<GameRequest> gameRequest;
+    @OneToMany // Employee --> GameRequest
+  private List<GameRequest> gameRequest;x
 
   //------------------------
   // CONSTRUCTOR

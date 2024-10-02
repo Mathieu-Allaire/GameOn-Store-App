@@ -6,6 +6,8 @@ import java.util.*;
 import java.sql.Date;
 
 // line 82 "GameOn.ump"
+
+@Entity
 public class Wishlist
 {
 
@@ -17,7 +19,11 @@ public class Wishlist
   private int id;
 
   //Wishlist Associations
+
+    @OneToMany //Wishlist --> WishList Link
   private List<WishlistLink> wishlistLink;
+
+    // N/A Customer --> Wishlist
   private Customer wishlistCustomer;
 
   //------------------------
