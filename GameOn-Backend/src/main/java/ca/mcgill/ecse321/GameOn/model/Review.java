@@ -4,8 +4,6 @@
 
 
 // line 91 "GameOn.ump"
-
-@Entity
 public class Review
 {
 
@@ -21,10 +19,7 @@ public class Review
   private int dislikes;
 
   //Review Associations
-    @ManyToOne //Review --> Customer
   private Customer reviewAuthor;
-
-    @ManyToOne //Review --> Manager
   private Manager manager;
 
   //------------------------

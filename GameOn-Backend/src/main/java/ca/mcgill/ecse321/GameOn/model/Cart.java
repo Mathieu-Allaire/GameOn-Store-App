@@ -25,7 +25,6 @@ public class Cart
   // CONSTRUCTOR
   //------------------------
 
-  @Entity
   public Cart(Date aDateAdded, int aId, Order aOrder)
   {
     dateAdded = aDateAdded;
@@ -34,11 +33,7 @@ public class Cart
     {
       throw new RuntimeException("Unable to create Cart due to aOrder. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
-
-    //N/A (Order --> Cart
     order = aOrder;
-    
-    @OneToMany //Cart --> SpecificGame
     specificGame = new ArrayList<SpecificGame>();
   }
 

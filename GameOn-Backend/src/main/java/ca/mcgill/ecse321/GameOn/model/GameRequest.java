@@ -4,8 +4,6 @@
 
 
 // line 40 "GameOn.ump"
-
-@Entity
 public class GameRequest
 {
 
@@ -23,14 +21,8 @@ public class GameRequest
   private RequestType requestType;
 
   //GameRequest Associations
-
-    // N/A Employee --> GameRequest
   private Employee requestCreator;
-
-    @OneToOne // GameRequest --> Game
   private Game resquestedGame;
-
-    @ManyToOne //GameRequest --> Manager (don't need this, only one manager)
   private Manager requestApprover;
 
   //------------------------
