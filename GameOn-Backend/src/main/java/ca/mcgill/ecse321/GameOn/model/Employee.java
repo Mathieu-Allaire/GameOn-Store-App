@@ -30,7 +30,7 @@ public class Employee extends Staff
 
   //Employee Associations
     @OneToMany // Employee --> GameRequest
-  private List<GameRequest> gameRequest;x
+  private List<GameRequest> gameRequest;
 
   //------------------------
   // CONSTRUCTOR

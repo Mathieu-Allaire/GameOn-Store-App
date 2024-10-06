@@ -24,7 +24,7 @@ public class GameRequest
 
   //GameRequest Associations
 
-    // N/A Employee --> GameRequest
+    @ManyToOne
   private Employee requestCreator;
 
     @OneToOne // GameRequest --> Game

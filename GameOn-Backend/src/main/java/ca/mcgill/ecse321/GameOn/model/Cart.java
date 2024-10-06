@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.util.*;
 
 // line 75 "GameOn.ump"
+@Entity
 public class Cart
 {
 
@@ -18,7 +19,9 @@ public class Cart
   private int id;
 
   //Cart Associations
+  @OneToMany
   private Order order;
+  @OneToMany
   private List<SpecificGame> specificGame;
 
   //------------------------

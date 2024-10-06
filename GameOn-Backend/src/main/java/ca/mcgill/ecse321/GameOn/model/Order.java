@@ -26,7 +26,7 @@ public class Order
     @OneToMany // Order --> Specific Game
   private List<SpecificGame> orderGames;
 
-    // N/A Customer --> Order
+    @OneToOne
   private Customer orderCustomer;
 
   //------------------------

@@ -24,7 +24,7 @@ public class Manager extends Staff
     @OneToMany //Manager --> Category (No need, why do we have this association?)
   private List<Category> categories;
 
-    // N/A GameRequest --> Manager (don't need this, only one manager)    
+    @OneToMany  // GameRequest --> Manager (don't need this, only one manager)
   private List<GameRequest> gameRequest;
 
   //------------------------

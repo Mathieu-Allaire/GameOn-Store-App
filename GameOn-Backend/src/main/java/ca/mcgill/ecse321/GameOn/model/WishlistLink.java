@@ -16,7 +16,7 @@ public class WishlistLink
     @ManyToOne //WishList Link --> Game  
   private Game wishlistGames;
 
-    // N/A WishList --> WishList Link
+    @ManyToOne
   private Wishlist wishlist;
 
   //------------------------

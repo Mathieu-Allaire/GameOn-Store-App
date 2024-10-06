@@ -22,13 +22,13 @@ public class Customer extends Role
 
   //Customer Associations
 
-    @OneToMany // Customer --> Order
+    @OneToMany
   private List<Order> customerOrder;
 
-    @OneToMany // Customer --> Order
+    @OneToOne
   private Wishlist customerWishlist;
 
-    // N/A Review --> Customer
+    @OneToMany
   private List<Review> customerReview;
 
   //------------------------

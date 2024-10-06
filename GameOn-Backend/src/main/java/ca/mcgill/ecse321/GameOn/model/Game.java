@@ -28,10 +28,10 @@ public class Game
 
   //Game Associations
 
-    // N/A Category --> Game
+    @ManyToOne
   private Category category;
 
-    // N/A WishlistLink --> Game
+    @OneToMany
   private List<WishlistLink> wishlistlink;
 
     @OneToMany //Game --> Review

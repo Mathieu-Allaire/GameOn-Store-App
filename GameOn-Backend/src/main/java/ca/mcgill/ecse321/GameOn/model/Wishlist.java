@@ -23,7 +23,7 @@ public class Wishlist
     @OneToMany //Wishlist --> WishList Link
   private List<WishlistLink> wishlistLink;
 
-    // N/A Customer --> Wishlist
+    @OneToOne
   private Customer wishlistCustomer;
 
   //------------------------
