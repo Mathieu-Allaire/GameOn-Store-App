@@ -1,7 +1,6 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.31.1.5860.78bb27cc6 modeling language!*/
-
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 // line 55 "GameOn.ump"
 
@@ -14,6 +13,8 @@ public class SpecificGame
   //------------------------
 
   //SpecificGame Attributes
+  @Id 
+  @GeneratedValue
   private int id;
 
   //SpecificGame Associations
@@ -25,14 +26,17 @@ public class SpecificGame
   // CONSTRUCTOR
   //------------------------
 
-  public SpecificGame(int aId, Game aGame)
+  public SpecificGame(Game aGame)
   {
-    id = aId;
+    //id = aId;
     if (!setGame(aGame))
     {
       throw new RuntimeException("Unable to create SpecificGame due to aGame. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
+
+  protected SpecificGame() {
+	}
 
   //------------------------
   // INTERFACE
