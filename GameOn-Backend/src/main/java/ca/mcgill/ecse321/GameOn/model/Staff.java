@@ -4,7 +4,7 @@
 
 
 // line 27 "GameOn.ump"
-
+import jakarta.persistence.*;
 @MappedSuperclass
 public abstract class Staff extends Role
 {

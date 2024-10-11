@@ -4,7 +4,7 @@
 
 
 // line 55 "GameOn.ump"
-
+import jakarta.persistence.*;
 @Entity
 public class SpecificGame
 {
@@ -15,7 +15,7 @@ public class SpecificGame
 
   //SpecificGame Attributes
   @Id
-  @GeneratedValue( strategy = IDENTITY)
+  @GeneratedValue( strategy = GenerationType.IDENTITY)
   private int id;
 
   //SpecificGame Associations

@@ -5,7 +5,7 @@
 import java.util.*;
 
 // line 44 "GameOn.ump"
-
+import jakarta.persistence.*;
 @Entity
 public class Manager extends Staff
 {

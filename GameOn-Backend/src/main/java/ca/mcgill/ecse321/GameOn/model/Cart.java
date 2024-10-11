@@ -5,6 +5,8 @@
 import java.sql.Date;
 import java.util.*;
 
+import jakarta.persistence.*;
+
 // line 75 "GameOn.ump"
 @Entity
 public class Cart
@@ -18,7 +20,7 @@ public class Cart
   private Date dateAdded;
 
   @Id
-  @GeneratedValue( strategy = IDENTITY)
+  @GeneratedValue( strategy = GenerationType.IDENTITY)
   private int id;
 
   //Cart Associations
@@ -31,7 +33,7 @@ public class Cart
   // CONSTRUCTOR
   //------------------------
 
-  @Entity
+
   public Cart(Date aDateAdded, int aId, Order aOrder)
   {
     dateAdded = aDateAdded;
@@ -41,10 +43,8 @@ public class Cart
       throw new RuntimeException("Unable to create Cart due to aOrder. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
 
-    //N/A (Order --> Cart
     order = aOrder;
-    
-    @OneToMany //Cart --> SpecificGame
+
     specificGame = new ArrayList<SpecificGame>();
   }
 

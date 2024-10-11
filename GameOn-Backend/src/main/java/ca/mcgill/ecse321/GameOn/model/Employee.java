@@ -3,7 +3,7 @@
 
 
 import java.util.*;
-
+import jakarta.persistence.*;
 // line 1 "EmployeeState.ump"
 // line 21 "GameOn.ump"
 

@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.util.*;
 
 // line 31 "GameOn.ump"
-
+import jakarta.persistence.*;
 @Entity
 public class Customer extends Role
 {
@@ -246,7 +246,7 @@ public class Customer extends Role
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Review addCustomerReview(int aId, string aDescription, int aStars, int aLikes, int aDislikes, Manager aManager)
+  public Review addCustomerReview(int aId, String aDescription, int aStars, int aLikes, int aDislikes, Manager aManager)
   {
     return new Review(aId, aDescription, aStars, aLikes, aDislikes, this, aManager);
   }

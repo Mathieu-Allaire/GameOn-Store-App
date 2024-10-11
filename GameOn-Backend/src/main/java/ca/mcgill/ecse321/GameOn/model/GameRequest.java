@@ -4,7 +4,7 @@
 
 
 // line 40 "GameOn.ump"
-
+import jakarta.persistence.*;
 @Entity
 public class GameRequest
 {

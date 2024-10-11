@@ -2,7 +2,7 @@
 /*This code was generated using the UMPLE 1.31.1.5860.78bb27cc6 modeling language!*/
 
 
-
+import jakarta.persistence.*;
 // line 87 "GameOn.ump"
 public class WishlistLink
 {

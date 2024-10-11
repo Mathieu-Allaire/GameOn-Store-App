@@ -4,7 +4,7 @@
 
 
 // line 91 "GameOn.ump"
-
+import jakarta.persistence.*;
 @Entity
 public class Review
 {
@@ -15,10 +15,10 @@ public class Review
 
   //Review Attributes
   @Id
-  @GeneratedValue( strategy = IDENTITY)
+  @GeneratedValue( strategy = GenerationType.IDENTITY)
   private int id;
 
-  private string description;
+  private String description;
   private int stars;
   private int likes;
   private int dislikes;
@@ -34,7 +34,7 @@ public class Review
   // CONSTRUCTOR
   //------------------------
 
-  public Review(int aId, string aDescription, int aStars, int aLikes, int aDislikes, Customer aReviewAuthor, Manager aManager)
+  public Review(int aId, String aDescription, int aStars, int aLikes, int aDislikes, Customer aReviewAuthor, Manager aManager)
   {
     id = aId;
     description = aDescription;
@@ -64,7 +64,7 @@ public class Review
     return wasSet;
   }
 
-  public boolean setDescription(string aDescription)
+  public boolean setDescription(String aDescription)
   {
     boolean wasSet = false;
     description = aDescription;
@@ -101,7 +101,7 @@ public class Review
     return id;
   }
 
-  public string getDescription()
+  public String getDescription()
   {
     return description;
   }
