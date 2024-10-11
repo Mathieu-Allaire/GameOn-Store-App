@@ -27,9 +27,9 @@ public class SpecificGame
   // CONSTRUCTOR
   //------------------------
 
-  public SpecificGame(int aId, Game aGame)
+  public SpecificGame(Game aGame)
   {
-    id = aId;
+    //id = aId;
     if (!setGame(aGame))
     {
       throw new RuntimeException("Unable to create SpecificGame due to aGame. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
