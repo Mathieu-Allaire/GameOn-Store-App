@@ -16,6 +16,9 @@ public class Cart
 
   //Cart Attributes
   private Date dateAdded;
+
+  @Id
+  @GeneratedValue( strategy = IDENTITY)
   private int id;
 
   //Cart Associations

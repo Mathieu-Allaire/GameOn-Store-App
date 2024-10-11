@@ -14,6 +14,9 @@ public class Person
   //------------------------
 
   //Person Attributes
+
+  @Id
+  @GeneratedValue( strategy = IDENTITY)
   private int id;
   private String email;
   private String name;

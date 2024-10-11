@@ -4,6 +4,8 @@
 
 
 // line 27 "GameOn.ump"
+
+@MappedSuperclass
 public abstract class Staff extends Role
 {
 

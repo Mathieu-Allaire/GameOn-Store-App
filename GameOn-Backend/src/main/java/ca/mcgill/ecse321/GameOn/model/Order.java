@@ -16,7 +16,10 @@ public class Order
   //------------------------
 
   //Order Attributes
+  @Id
+  @GeneratedValue( strategy = IDENTITY)
   private int id;
+
   private Date purchaseDate;
 
   //Order Associations

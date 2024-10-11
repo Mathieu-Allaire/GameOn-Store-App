@@ -14,6 +14,8 @@ public class SpecificGame
   //------------------------
 
   //SpecificGame Attributes
+  @Id
+  @GeneratedValue( strategy = IDENTITY)
   private int id;
 
   //SpecificGame Associations

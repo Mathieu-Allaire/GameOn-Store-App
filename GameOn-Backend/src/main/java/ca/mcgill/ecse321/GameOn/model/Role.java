@@ -4,6 +4,8 @@
 
 
 // line 5 "GameOn.ump"
+
+@MappedSuperclass
 public abstract class Role
 {
 

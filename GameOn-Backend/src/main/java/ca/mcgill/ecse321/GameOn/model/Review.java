@@ -14,7 +14,10 @@ public class Review
   //------------------------
 
   //Review Attributes
+  @Id
+  @GeneratedValue( strategy = IDENTITY)
   private int id;
+
   private string description;
   private int stars;
   private int likes;

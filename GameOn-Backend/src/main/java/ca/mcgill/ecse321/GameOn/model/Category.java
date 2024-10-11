@@ -16,6 +16,9 @@ public class Category
 
   //Category Attributes
   private String name;
+
+  @Id
+  @GeneratedValue( strategy = IDENTITY)
   private int id;
 
   //Category Associations
