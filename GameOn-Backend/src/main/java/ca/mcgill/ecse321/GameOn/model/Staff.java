@@ -5,7 +5,8 @@
 package ca.mcgill.ecse321.GameOn.model;
 // line 27 "GameOn.ump"
 import jakarta.persistence.*;
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Staff extends Role
 {
 

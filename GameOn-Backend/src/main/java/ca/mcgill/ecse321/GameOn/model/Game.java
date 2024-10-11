@@ -17,6 +17,7 @@ public class Game
 
   //Game Attributes
   private String picture;
+  @Id
   private String name;
   private String description;
   private int price;

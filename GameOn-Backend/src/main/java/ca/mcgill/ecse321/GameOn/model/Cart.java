@@ -20,11 +20,11 @@ public class Cart
   private Date dateAdded;
 
   @Id
-  @GeneratedValue( strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
   //Cart Associations
-  @OneToMany
+  @OneToOne
   private Order order;
   @OneToMany
   private List<SpecificGame> specificGame;

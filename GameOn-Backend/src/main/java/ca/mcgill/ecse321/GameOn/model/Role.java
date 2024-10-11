@@ -4,7 +4,8 @@ package ca.mcgill.ecse321.GameOn.model;
 import jakarta.persistence.*;
 // line 5 "GameOn.ump"
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Role
 {
 
@@ -15,9 +16,21 @@ public abstract class Role
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
   public Role()
   {}
+   
+  public Long getId() {
+    return id;
+  }
+    
+  public void setId(Long id) {
+    this.id = id;
+  }
+  
 
   //------------------------
   // INTERFACE

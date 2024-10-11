@@ -13,6 +13,9 @@ public class GameRequest
   //------------------------
   // MEMBER VARIABLES
   //------------------------
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
   //GameRequest Attributes
   private RequestType requestType;
@@ -61,6 +64,10 @@ public class GameRequest
     requestType = aRequestType;
     wasSet = true;
     return wasSet;
+  }
+
+  public long getId() {
+    return id;
   }
 
   public RequestType getRequestType()

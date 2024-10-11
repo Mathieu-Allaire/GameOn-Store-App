@@ -23,7 +23,7 @@ public class Order
   private Date purchaseDate;
 
   //Order Associations
-    @OneToOne // Order --> Cart
+  @OneToOne // Order --> Cart
   private Cart cart;
 
     @OneToMany // Order --> Specific Game
