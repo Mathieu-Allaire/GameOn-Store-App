@@ -11,11 +11,6 @@ import jakarta.persistence.*;
 public class Employee extends Staff
 {
 
-  //------------------------
-  // ENUMERATIONS
-  //------------------------
-
-  public enum RequestType { Create, Archive }
 
   //------------------------
   // MEMBER VARIABLES

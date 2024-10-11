@@ -9,11 +9,6 @@ import jakarta.persistence.*;
 public class GameRequest
 {
 
-  //------------------------
-  // ENUMERATIONS
-  //------------------------
-
-  public enum RequestType { Create, Archive }
 
   //------------------------
   // MEMBER VARIABLES

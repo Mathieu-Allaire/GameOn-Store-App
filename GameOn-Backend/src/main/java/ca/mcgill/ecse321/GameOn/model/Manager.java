@@ -3,18 +3,13 @@
 
 
 import java.util.*;
-
-// line 44 "GameOn.ump"
 import jakarta.persistence.*;
+// line 44 "GameOn.ump"
+
 @Entity
 public class Manager extends Staff
 {
 
-  //------------------------
-  // ENUMERATIONS
-  //------------------------
-
-  public enum RequestType { Create, Archive }
 
   //------------------------
   // MEMBER VARIABLES
