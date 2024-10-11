@@ -35,3 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+GameOn-Backend/.gradle/8.10.2/executionHistory/executionHistory.bin
+GameOn-Backend/.gradle/8.10.2/executionHistory/executionHistory.lock
+GameOn-Backend/.gradle/8.10.2/fileHashes/fileHashes.bin
+GameOn-Backend/.gradle/8.10.2/fileHashes/fileHashes.lock
+GameOn-Backend/.gradle/8.10.2/fileHashes/resourceHashesCache.bin
+GameOn-Backend/.gradle/buildOutputCleanup/buildOutputCleanup.lock
+GameOn-Backend/.gradle/buildOutputCleanup/outputFiles.bin
