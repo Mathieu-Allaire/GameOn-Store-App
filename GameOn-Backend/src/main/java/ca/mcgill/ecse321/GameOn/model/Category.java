@@ -37,6 +37,10 @@ public class Category
     games = new ArrayList<Game>();
   }
 
+  protected Category(){
+    
+  }
+
   //------------------------
   // INTERFACE
   //------------------------

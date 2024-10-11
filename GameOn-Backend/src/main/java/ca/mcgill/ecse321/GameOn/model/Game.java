@@ -61,6 +61,10 @@ public class Game
     setGameStatus(GameStatus.Available);
   }
 
+  protected Game(){
+
+  }
+
   //------------------------
   // INTERFACE
   //------------------------
