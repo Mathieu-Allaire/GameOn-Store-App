@@ -3,6 +3,8 @@
 
 
 package ca.mcgill.ecse321.GameOn.model;
+import org.hibernate.jpa.SpecHints;
+
 // line 55 "GameOn.ump"
 import jakarta.persistence.*;
 @Entity
@@ -15,7 +17,7 @@ public class SpecificGame
 
   //SpecificGame Attributes
   @Id
-  @GeneratedValue( strategy = GenerationType.IDENTITY)
+  @GeneratedValue
   private int id;
 
   //SpecificGame Associations
@@ -27,13 +29,17 @@ public class SpecificGame
   // CONSTRUCTOR
   //------------------------
 
-  public SpecificGame(int aId, Game aGame)
+  public SpecificGame(Game aGame)
   {
-    id = aId;
+    //id = aId;
     if (!setGame(aGame))
     {
       throw new RuntimeException("Unable to create SpecificGame due to aGame. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
+  }
+
+  protected SpecificGame(){
+
   }
 
   //------------------------

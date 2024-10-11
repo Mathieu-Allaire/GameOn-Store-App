@@ -1,0 +1,146 @@
+
+use GameState.ump;
+use EmployeeState.ump;
+
+class Role
+{
+  abstract;
+}
+
+enum RequestType{create,archive}
+
+class Person
+{
+  Integer id;
+  String email;//not sure how to put unique here
+  name;
+  password;
+  
+}
+
+class Employee
+{
+  isA Staff;
+  //**
+  Boolean isEmployed;
+}
+class Staff{
+  abstract;
+  isA Role;
+}
+class Customer
+{
+  int cardNum;
+  Date cardExpiryDate;
+  billingAddress;
+ 
+  isA Role;
+}
+
+class GameRequest{
+  RequestType requestType;
+}
+
+class Manager
+{
+  isA Staff;
+}
+
+class Order
+{
+  int id;
+  Date purchaseDate;
+} 
+
+class SpecificGame
+{
+  int id; 
+  
+}
+
+class Game
+{
+  picture;
+  name;//Pk
+  description;
+  int price;
+  int quantity;
+}
+
+class Category{
+  name;
+  int id;
+}
+
+class Cart
+{
+  Date dateAdded;
+  int id;
+
+} 
+
+class Wishlist
+{
+  int id;
+}
+
+class WishlistLink
+{
+}
+
+class Review
+{
+  int id;
+  string description;
+  int stars;
+  int likes;
+  int dislikes;
+}
+association 
+{ 
+  0..1 Person -> 1..3 Role;
+  1 Employee requestCreator -- * GameRequest gameRequest ; 
+}
+
+association
+{
+ 1 Category category -- * Game games; 
+ 0..1 Manager manager -> * Category categories;
+}
+
+association
+{
+  1 Cart cart -- 1 Order order;
+  0..1 Cart cart -> * SpecificGame specificGame;
+}
+  
+association
+{
+  1 Game resquestedGame <- 0..1 GameRequest gameRequest;
+  1 Game game <- * SpecificGame specificGame;
+  1 Game wishlistGames-- * WishlistLink wishlistlink;
+  * WishlistLink wishlistLink-- 1 Wishlist wishlist;
+  0..1 Game reviewedGame -> * Review reviews;
+}
+  
+association
+{
+    0..1 Order order -> * SpecificGame orderGames;
+}
+
+association
+{
+  1 Customer orderCustomer -- * Order customerOrder;
+  1 Customer wishlistCustomer-- 1 Wishlist customerWishlist;
+  1 Customer reviewAuthor -- * Review customerReview;
+}
+
+association
+{
+    * GameRequest gameRequest -- 1 Manager requestApprover;
+}
+
+association
+{
+  1 Manager manager <- * Review reviews;
+}

@@ -4,6 +4,7 @@ package ca.mcgill.ecse321.GameOn.model;
 
 import jakarta.persistence.*;
 // line 87 "GameOn.ump"
+@Entity
 public class WishlistLink
 {
 
@@ -12,11 +13,13 @@ public class WishlistLink
   //------------------------
 
   //WishlistLink Associations
+  @Id
+  private int id;
 
-    @ManyToOne //WishList Link --> Game  
+  @ManyToOne //WishList Link --> Game  
   private Game wishlistGames;
 
-    @ManyToOne
+  @ManyToOne
   private Wishlist wishlist;
 
   //------------------------
@@ -44,6 +47,11 @@ public class WishlistLink
   public Game getWishlistGames()
   {
     return wishlistGames;
+  }
+
+  public int getId()
+  {
+    return id;
   }
   /* Code from template association_GetOne */
   public Wishlist getWishlist()
