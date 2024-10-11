@@ -22,6 +22,8 @@ public class Game
   private int price;
   private int quantity;
 
+  private boolean isInStock;
+
   //Game State Machines
   public enum GameStatus { Available, OutOfStock, Unavailable }
   private GameStatus gameStatus;
