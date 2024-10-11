@@ -4,7 +4,7 @@
 
 
 // line 40 "GameOn.ump"
-
+package ca.mcgill.ecse321.GameOn.model;
 import jakarta.persistence.*;
 @Entity
 

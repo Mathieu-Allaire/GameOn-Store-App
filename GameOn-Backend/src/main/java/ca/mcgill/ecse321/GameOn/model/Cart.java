@@ -1,6 +1,6 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.31.1.5860.78bb27cc6 modeling language!*/
-
+package ca.mcgill.ecse321.GameOn.model;
 
 import java.sql.Date;
 import java.util.*;
@@ -24,7 +24,7 @@ public class Cart
   private int id;
 
   //Cart Associations
-  @OneToMany
+  @OneToOne
   private Order order;
   @OneToMany
   private List<SpecificGame> specificGame;
