@@ -31,7 +31,7 @@ public class SpecificGameTests {
     }
 
     @Test
-    public void testCreateAndReadPerson(){
+    public void testCreateAndReadSpecificGame(){
         //Arrange
         String aPicture = "url";
         String aName = "Overwatch";
@@ -56,11 +56,11 @@ public class SpecificGameTests {
         //assertEquals(specGameDB.getCategory.getName == "Fight");
         //assertEquals(specGameDB.getCategory.getId == 1);
         assertNotNull(specGameDB.getGame());
-        assertEquals(specGameDB.getGame().getPicture() == aPicture);
-        assertEquals(specGameDB.getGame().getName() == aName);
-        assertEquals(specGameDB.getGame().getDescription() == aDescription);
-        assertEquals(specGameDB.getGame().getPrice() == aPrice);
-        assertEquals(specGameDB.getGame().getQuantity() == aQuantity);
+        assertEquals(specGameDB.getGame().getPicture(), aPicture);
+        assertEquals(specGameDB.getGame().getName(), aName);
+        assertEquals(specGameDB.getGame().getDescription(), aDescription);
+        assertEquals(specGameDB.getGame().getPrice(), aPrice);
+        assertEquals(specGameDB.getGame().getQuantity(), aQuantity);
     }
     
 

@@ -5,5 +5,5 @@ import ca.mcgill.ecse321.GameOn.model.SpecificGame;
 
 
 public interface SpecificGameRepository extends CrudRepository<SpecificGame, Integer> {
-    SpecificGame findCSpecificGameById(int id);
+    SpecificGame findSpecificGameById(int id);
 }
