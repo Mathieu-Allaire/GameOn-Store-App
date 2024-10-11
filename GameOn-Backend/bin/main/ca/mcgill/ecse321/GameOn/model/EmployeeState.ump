@@ -1,0 +1,10 @@
+class Employee{
+  employeeStatus{
+    Employed{
+    	kickOut() -> Unemployed;
+    }
+    Unemployed{
+      	hire() -> Employed;
+    }
+  }
+}

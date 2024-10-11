@@ -1,0 +1,17 @@
+
+class Game{
+	gameStatus{
+      
+      Available {
+      	[!isInStock] -> OutOfStock;
+        setUnavailable() -> Unavailable;
+      }
+      OutOfStock{
+      	[isInStock] -> Available;
+      }
+      Unavailable{
+        setAvailable() -> Available;
+      }
+    }
+      
+}
