@@ -38,7 +38,7 @@ public class SpecificGameTests {
         String aDescription = "Hero-based combat";
         int aPrice = 5;
         int aQuantity = 1;
-        Category aCategory = new Category("Fight", 1);
+        Category aCategory = new Category("Fight");
         Game gameTest = new Game( aPicture, aName, aDescription, aPrice, aQuantity, aCategory);
         SpecificGame specificGameTest = new SpecificGame(gameTest); // not sure if we need to put the id in the constructor
 

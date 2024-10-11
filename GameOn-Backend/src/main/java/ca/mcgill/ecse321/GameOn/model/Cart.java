@@ -24,7 +24,7 @@ public class Cart
   private int id;
 
   //Cart Associations
-  @OneToMany
+  @OneToOne
   private Order order;
   @OneToMany
   private List<SpecificGame> specificGame;

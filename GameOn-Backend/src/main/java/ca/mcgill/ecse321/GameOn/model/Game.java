@@ -309,22 +309,13 @@ public class Game
     return index;
   }
   /* Code from template association_SetOneToMany */
-  public boolean setCategory(Category aCategory)
+  public boolean setCategory(Category aNewCategory)
   {
     boolean wasSet = false;
-    if (aCategory == null)
-    {
-      return wasSet;
+    if (aNewCategory != null){
+      category = aNewCategory;
+      wasSet = true;
     }
-
-    Category existingCategory = category;
-    category = aCategory;
-    if (existingCategory != null && !existingCategory.equals(aCategory))
-    {
-      existingCategory.removeGame(this);
-    }
-    category.addGame(this);
-    wasSet = true;
     return wasSet;
   }
   /* Code from template association_MinimumNumberOfMethod */
@@ -459,14 +450,8 @@ public class Game
 
   public void delete()
   {
-    Category placeholderCategory = category;
-    this.category = null;
-    if(placeholderCategory != null)
-    {
-      placeholderCategory.removeGame(this);
-    }
-    for(int i=wishlistlink.size(); i > 0; i--)
-    {
+    category = null;
+    for(int i=wishlistlink.size(); i > 0; i--){
       WishlistLink aWishlistlink = wishlistlink.get(i - 1);
       aWishlistlink.delete();
     }
