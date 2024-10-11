@@ -52,15 +52,14 @@ public class SpecificGameTests {
 
         //Assert
         assertNotNull(specGameDB);
-        //assertNotNull(specGameDB.getCategory);
-        //assertEquals(specGameDB.getCategory.getName == "Fight");
-        //assertEquals(specGameDB.getCategory.getId == 1);
         assertNotNull(specGameDB.getGame());
         assertEquals(specGameDB.getGame().getPicture(), aPicture);
         assertEquals(specGameDB.getGame().getName(), aName);
         assertEquals(specGameDB.getGame().getDescription(), aDescription);
         assertEquals(specGameDB.getGame().getPrice(), aPrice);
         assertEquals(specGameDB.getGame().getQuantity(), aQuantity);
+        assertNotNull(specGameDB.getGame().getCategory());
+        assertEquals(specGameDB.getGame().getCategory().getName(),"Fight");
     }
     
 
