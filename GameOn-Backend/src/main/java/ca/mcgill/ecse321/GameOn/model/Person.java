@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import java.util.*;
 
 // line 12 "GameOn.ump"
-@Entity
 public class Person
 {
 
@@ -23,10 +22,6 @@ public class Person
   private String password;
 
   //Person Associations
-
-    @OneToMany // Person --> Role
-    //Might need more complex annotation because of player-role abstraction pattern
-    
   private List<Role> roles;
 
   //------------------------

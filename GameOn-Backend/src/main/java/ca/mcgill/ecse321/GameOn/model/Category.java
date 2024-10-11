@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import java.util.*;
 
 // line 70 "GameOn.ump"
-
-@Entity
 public class Category
 {
 
@@ -22,8 +20,6 @@ public class Category
   private int id;
 
   //Category Associations
-    
-  @OneToMany // Category --> Game
   private List<Game> games;
 
   //------------------------

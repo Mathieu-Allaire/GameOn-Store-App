@@ -4,6 +4,7 @@
 
 
 // line 55 "GameOn.ump"
+
 import jakarta.persistence.*;
 @Entity
 public class SpecificGame
@@ -19,8 +20,6 @@ public class SpecificGame
   private int id;
 
   //SpecificGame Associations
-
-    @ManyToOne //SpecificGame --> Game
   private Game game;
 
   //------------------------

@@ -6,8 +6,6 @@ import java.util.*;
 import jakarta.persistence.*;
 // line 1 "EmployeeState.ump"
 // line 21 "GameOn.ump"
-
-@Entity
 public class Employee extends Staff
 {
 
@@ -24,6 +22,7 @@ public class Employee extends Staff
   private EmployeeStatus employeeStatus;
 
   //Employee Associations
+
     @OneToMany // Employee --> GameRequest
   private List<GameRequest> gameRequest;
 
