@@ -22,6 +22,7 @@ public class Review
   private int stars;
   private int likes;
   private int dislikes;
+  private String reply;
 
   //Review Associations
     @ManyToOne //Review --> Customer
@@ -41,6 +42,7 @@ public class Review
     stars = aStars;
     likes = aLikes;
     dislikes = aDislikes;
+    reply = null;
     boolean didAddReviewAuthor = setReviewAuthor(aReviewAuthor);
     if (!didAddReviewAuthor)
     {
@@ -52,6 +54,9 @@ public class Review
     }
   }
 
+  protected Review()
+  {
+  }
   //------------------------
   // INTERFACE
   //------------------------
@@ -96,6 +101,14 @@ public class Review
     return wasSet;
   }
 
+  public boolean setReply(String aReply)
+  {
+    boolean wasSet = false;
+    reply = aReply;
+    wasSet = true;
+    return wasSet;
+  }
+
   public int getId()
   {
     return id;
@@ -129,6 +142,10 @@ public class Review
   public Manager getManager()
   {
     return manager;
+  }
+  public String getReply()
+  {
+    return reply;
   }
   /* Code from template association_SetOneToMany */
   public boolean setReviewAuthor(Customer aReviewAuthor)
@@ -182,6 +199,7 @@ public class Review
             "dislikes" + ":" + getDislikes()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "description" + "=" + (getDescription() != null ? !getDescription().equals(this)  ? getDescription().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "reviewAuthor = "+(getReviewAuthor()!=null?Integer.toHexString(System.identityHashCode(getReviewAuthor())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "manager = "+(getManager()!=null?Integer.toHexString(System.identityHashCode(getManager())):"null");
-  }
+            "  " + "manager = "+(getManager()!=null?Integer.toHexString(System.identityHashCode(getManager())):"null") +
+            "  " + "reply" + "=" + (getReply() != null ? !getReply().equals(this)  ? getReply().toString().replaceAll("  ","    ") : "this" : "null");
+          }
 }
