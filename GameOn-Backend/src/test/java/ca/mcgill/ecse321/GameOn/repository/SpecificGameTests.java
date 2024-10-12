@@ -27,7 +27,11 @@ public class SpecificGameTests {
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
+
+
         specGamerepo.deleteAll();
+        gameRepo.deleteAll();
+        categoryRepo.deleteAll();
     }
 
     @Test
@@ -51,15 +55,15 @@ public class SpecificGameTests {
         SpecificGame specGameDB = specGamerepo.findSpecificGameById(id);
 
         //Assert
-        assertNotNull(specGameDB);
-        assertNotNull(specGameDB.getGame());
-        assertEquals(specGameDB.getGame().getPicture(), aPicture);
-        assertEquals(specGameDB.getGame().getName(), aName);
-        assertEquals(specGameDB.getGame().getDescription(), aDescription);
-        assertEquals(specGameDB.getGame().getPrice(), aPrice);
-        assertEquals(specGameDB.getGame().getQuantity(), aQuantity);
-        assertNotNull(specGameDB.getGame().getCategory());
-        assertEquals(specGameDB.getGame().getCategory().getName(),"Fight");
+        assertNotNull(specGameDB, "SpecificGame could not be saved and loaded from database.");
+        assertNotNull(specGameDB.getGame(), "SpecificGame's game could not be saved and loaded from database.");
+        assertEquals(specGameDB.getGame().getPicture(), aPicture, "SpecificGame constructor's 'picture' could not be saved and loaded from database.");
+        assertEquals(specGameDB.getGame().getName(), aName, "SpecificGame constructor's 'name' could not be saved and loaded from database.");
+        assertEquals(specGameDB.getGame().getDescription(), aDescription, "SpecificGame constructor's 'description' could not be saved and loaded from database.");
+        assertEquals(specGameDB.getGame().getPrice(), aPrice, "SpecificGame constructor's 'price' could not be saved and loaded from database.");
+        assertEquals(specGameDB.getGame().getQuantity(), aQuantity, "SpecificGame constructor's 'quantity' could not be saved and loaded from database.");
+        assertNotNull(specGameDB.getGame().getCategory(), "SpecificGame's category could not be saved and loaded from database.");
+        assertEquals(specGameDB.getGame().getCategory().getName(),"Fight", "SpecificGame constructor's 'category' could not be saved and loaded from database.");
     }
     
 
