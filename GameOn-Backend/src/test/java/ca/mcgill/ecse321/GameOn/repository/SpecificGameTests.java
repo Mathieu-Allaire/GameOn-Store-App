@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import ca.mcgill.ecse321.GameOn.model.SpecificGame;
 import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.model.Category;
@@ -28,6 +27,8 @@ public class SpecificGameTests {
     @AfterEach
     public void clearDatabase() {
         specGamerepo.deleteAll();
+        gameRepo.deleteAll();
+        categoryRepo.deleteAll();
     }
 
     @Test
