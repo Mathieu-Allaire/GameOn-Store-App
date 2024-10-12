@@ -34,7 +34,7 @@ public class CategoryTests {
 
         //Assert
         assertNotNull(categoryDB);
-        assertEquals(categoryDB.getName(), aName);
+        assertEquals(categoryDB.getName(), aName, "Category constructor's 'name' could not be saved and loaded from database.");
     }
 
 }
