@@ -39,6 +39,10 @@ public class Employee extends Staff
     setEmployeeStatus(EmployeeStatus.Employed);
   }
 
+  protected Employee(){
+    
+  }
+
   //------------------------
   // INTERFACE
   //------------------------

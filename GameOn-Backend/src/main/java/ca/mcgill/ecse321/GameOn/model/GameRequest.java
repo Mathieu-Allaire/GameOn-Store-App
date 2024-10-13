@@ -15,14 +15,14 @@ public class GameRequest
   //------------------------
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private int id;
 
   //GameRequest Attributes
   private RequestType requestType;
 
   //GameRequest Associations
 
-    @ManyToOne
+  @ManyToOne
   private Employee requestCreator;
 
     @OneToOne // GameRequest --> Game
@@ -54,6 +54,10 @@ public class GameRequest
     }
   }
 
+  protected GameRequest()
+  {
+  }
+
   //------------------------
   // INTERFACE
   //------------------------
@@ -66,7 +70,7 @@ public class GameRequest
     return wasSet;
   }
 
-  public long getId() {
+  public int getId() {
     return id;
   }
 
