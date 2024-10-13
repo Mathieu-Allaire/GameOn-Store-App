@@ -8,6 +8,7 @@ import java.util.*;
 // line 49 "GameOn.ump"
 
 @Entity
+@Table(name = "\"order\"")
 public class Order
 {
 
@@ -26,10 +27,10 @@ public class Order
   @OneToOne // Order --> Cart
   private Cart cart;
 
-    @OneToMany // Order --> Specific Game
+  @OneToMany // Order --> Specific Game
   private List<SpecificGame> orderGames;
 
-    @OneToOne
+  @OneToOne
   private Customer orderCustomer;
 
   //------------------------
@@ -64,6 +65,10 @@ public class Order
     {
       throw new RuntimeException("Unable to create customerOrder due to orderCustomer. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
+  }
+
+  protected Order()
+  {
   }
 
   //------------------------
