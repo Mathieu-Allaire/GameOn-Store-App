@@ -50,6 +50,9 @@ public class Wishlist
     wishlistCustomer = new Customer(aCardNumForWishlistCustomer, aCardExpiryDateForWishlistCustomer, aBillingAddressForWishlistCustomer, this);
   }
 
+  protected Wishlist()
+  {
+  }
   //------------------------
   // INTERFACE
   //------------------------

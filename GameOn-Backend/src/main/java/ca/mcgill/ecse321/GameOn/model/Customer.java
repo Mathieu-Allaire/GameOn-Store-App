@@ -61,6 +61,18 @@ public class Customer extends Role
     customerReview = new ArrayList<Review>();
   }
 
+  public Customer(int aCardNum, Date aCardExpiryDate, String aBillingAddress){
+    super();
+    cardNum = aCardNum;
+    cardExpiryDate = aCardExpiryDate;
+    billingAddress = aBillingAddress;
+    customerOrder = new ArrayList<Order>();
+    customerReview = new ArrayList<Review>();
+  }
+
+  protected Customer()
+  {}
+
   //------------------------
   // INTERFACE
   //------------------------
