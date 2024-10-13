@@ -10,9 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ca.mcgill.ecse321.GameOn.model.SpecificGame;
 import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.model.Category;
-import ca.mcgill.ecse321.GameOn.repository.SpecificGameRepository;
-import ca.mcgill.ecse321.GameOn.repository.CategoryRepository;
-import ca.mcgill.ecse321.GameOn.repository.GameRepository;
+
 
 @SpringBootTest
 public class SpecificGameTests {
@@ -36,29 +34,33 @@ public class SpecificGameTests {
     @Test
     public void testCreateAndReadSpecificGame(){
         //Arrange
-        / Create
-        int aCardNum = 1234 // customer id
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2020, Calendar.JANUARY, 18);
-        Date aCardExpiryDate = calendar.getTime(); // date January 18th 2020
-        String aBillingAddress = "123 McGill Street";
+        String aPicture = "url";
+        String aName = "Overwatch";
+        String aDescription = "Hero-based combat";
+        int aPrice = 5;
+        int aQuantity = 1;
+        Category aCategory = new Category("Fight");
+        Game gameTest = new Game( aPicture, aName, aDescription, aPrice, aQuantity, aCategory);
+        SpecificGame specificGameTest = new SpecificGame(gameTest); // not sure if we need to put the id in the constructor
 
-        int aId = 5678
-        Wishlist wishlist = new Wishlist(aId, aCardNum, aCardExpiryDate, aBillingAddress);
-        Customer customer = new Customer(aCardNum,aCardExpiryDate,aBillingAddress, aId);
+        aCategory = categoryRepo.save(aCategory);
+        gameTest = gameRepo.save(gameTest);
+        specificGameTest = specGamerepo.save(specificGameTest);
+        int id = specificGameTest.getId();
 
-        //Save
-        customer = customerRepo.save(customer);
-        wishlist = wishlistRepo.save(wishlist);
+        // Act
+        SpecificGame specGameDB = specGamerepo.findSpecificGameById(id);
 
-        //Read
-        WishList wishlist_from_DB = wishlistRepo.findWishlistbyid(aId);
-        
         //Assert
-        assertNotNull(wishlist_from_DB, "Wishlist could not be saved and loaded from database.");
-        assertEquals(wishlist_from_DB.getId(), aCardNum, "Wishlist's 'ID' could not be saved and loaded from database.");
-        assertNotNull(wishlist_from_DB.getWishlistCustomer(), "Wishlist's customer could not be saved and loaded from database.");
-        assertEquals(wishlist_from_DB.getWishlistCustomer(), wishlist, "Wishlist's 'Customer' could not be saved and loaded from database.");
+        assertNotNull(specGameDB, "SpecificGame could not be saved and loaded from database.");
+        assertNotNull(specGameDB.getGame(), "SpecificGame's game could not be saved and loaded from database.");
+        assertEquals(specGameDB.getGame().getPicture(), aPicture, "SpecificGame constructor's 'picture' could not be saved and loaded from database.");
+        assertEquals(specGameDB.getGame().getName(), aName, "SpecificGame constructor's 'name' could not be saved and loaded from database.");
+        assertEquals(specGameDB.getGame().getDescription(), aDescription, "SpecificGame constructor's 'description' could not be saved and loaded from database.");
+        assertEquals(specGameDB.getGame().getPrice(), aPrice, "SpecificGame constructor's 'price' could not be saved and loaded from database.");
+        assertEquals(specGameDB.getGame().getQuantity(), aQuantity, "SpecificGame constructor's 'quantity' could not be saved and loaded from database.");
+        assertNotNull(specGameDB.getGame().getCategory(), "SpecificGame's category could not be saved and loaded from database.");
+        assertEquals(specGameDB.getGame().getCategory().getName(),"Fight", "SpecificGame constructor's 'category' could not be saved and loaded from database.");
     }
     
 
