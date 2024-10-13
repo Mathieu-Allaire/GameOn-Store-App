@@ -24,7 +24,7 @@ public class Cart
   private int id;
 
   //Cart Associations
-  @OneToOne
+  @OneToOne(mappedBy = "cart")
   private Order order;
   @OneToMany
   private List<SpecificGame> specificGame;
@@ -54,6 +54,18 @@ public class Cart
     id = aId;
     order = new Order(aIdForOrder, aPurchaseDateForOrder, this, aOrderCustomerForOrder);
     specificGame = new ArrayList<SpecificGame>();
+  }
+
+  public Cart(Date aDateAdded, int aId)
+  {
+    dateAdded = aDateAdded;
+    id = aId;
+    specificGame = new ArrayList<SpecificGame>();
+  }
+
+  protected Cart()
+  {
+
   }
 
   //------------------------

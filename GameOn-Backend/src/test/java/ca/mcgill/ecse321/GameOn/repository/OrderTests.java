@@ -1,0 +1,69 @@
+package ca.mcgill.ecse321.GameOn.repository;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.sql.Date;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import ca.mcgill.ecse321.GameOn.model.Order;
+import ca.mcgill.ecse321.GameOn.model.Customer;
+import ca.mcgill.ecse321.GameOn.model.Cart;
+
+
+@SpringBootTest
+public class OrderTests {
+    @Autowired
+    private OrderRepository orderRepo;
+    @Autowired
+    private CustomerRepository customerRepo;
+    @Autowired
+    private CartRepository cartRepo;
+
+    @BeforeEach
+    @AfterEach
+    public void clearDatabase() {
+        orderRepo.deleteAll();
+        customerRepo.deleteAll();
+        cartRepo.deleteAll();
+    }
+
+    @Test
+    public void testCreateandReadOrder(){
+        // Arrange
+        int aId = 1;
+        int aCardNumber = 1343;
+        long millis = System.currentTimeMillis();
+        String anAddress = "123 main st";
+        Date aCustomerDate = new Date(millis);
+        // Create Customer
+        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, anAddress);
+        aCustomer = customerRepo.save(aCustomer);
+        
+        // Create Order
+        int aIdForCart = 2;
+        Cart aCart = new Cart(aCustomerDate, aIdForCart);
+        aCart = cartRepo.save(aCart);
+        Order aOrder = new Order(aId, aCustomerDate, aCart, aCustomer);
+        aOrder = orderRepo.save(aOrder);
+        
+        int id = aOrder.getId();
+
+        // Act
+        Order result = orderRepo.findOrderById(id);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(result.getId(), aOrder.getId());
+        assertEquals(result.getCart().getId(), aOrder.getCart().getId());
+        assertEquals(result.getOrderCustomer().getBillingAddress(), aOrder.getOrderCustomer().getBillingAddress());
+        assertEquals(result.getOrderCustomer().getCardExpiryDate(), aOrder.getOrderCustomer().getCardExpiryDate());
+        assertEquals(result.getOrderCustomer().getCardNum(), aOrder.getOrderCustomer().getCardNum());
+    }
+    
+}
