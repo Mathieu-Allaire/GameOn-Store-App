@@ -11,7 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.model.Category;
-
+import ca.mcgill.ecse321.GameOn.repository.CategoryRepository;
+import ca.mcgill.ecse321.GameOn.repository.GameRepository;
 
 @SpringBootTest
 public class GameTests {
