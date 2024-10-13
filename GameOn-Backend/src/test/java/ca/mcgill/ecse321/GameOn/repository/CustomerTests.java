@@ -49,7 +49,7 @@ public class CustomerTests {
         wishlist = wishlistRepo.save(wishlist);
 
         //Read
-        Customer customer_from_DB = customerRepo.findCustomerbyCardNum(aCardNum);
+        Customer customer_from_DB = customerRepo.findCustomerByCardNum(aCardNum);
 
         //Assert
         assertNotNull(customer_from_DB, "Customer could not be saved and loaded from database.");
