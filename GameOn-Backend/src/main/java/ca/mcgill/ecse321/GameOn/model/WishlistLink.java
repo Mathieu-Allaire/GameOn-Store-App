@@ -1,116 +1,71 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.31.1.5860.78bb27cc6 modeling language!*/
 package ca.mcgill.ecse321.GameOn.model;
+import java.io.Serializable;
+import java.util.Objects;
 
 import jakarta.persistence.*;
 // line 87 "GameOn.ump"
 @Entity
-public class WishlistLink
-{
+public class WishlistLink{
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+    //------------------------
+    // MEMBER VARIABLES
+    //------------------------
 
-  //WishlistLink Associations
-  @Id
-  private int id;
+    //WishlistLink Associations
+    @EmbeddedId
+    private Key key;
 
-  @ManyToOne //WishList Link --> Game  
-  private Game wishlistGames;
+    public WishlistLink(){
 
-  @ManyToOne
-  private Wishlist wishlist;
-
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
-
-  public WishlistLink(Game aWishlistGames, Wishlist aWishlist)
-  {
-    boolean didAddWishlistGames = setWishlistGames(aWishlistGames);
-    if (!didAddWishlistGames)
-    {
-      throw new RuntimeException("Unable to create wishlistlink due to wishlistGames. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
-    boolean didAddWishlist = setWishlist(aWishlist);
-    if (!didAddWishlist)
-    {
-      throw new RuntimeException("Unable to create wishlistLink due to wishlist. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+
+    public WishlistLink(Key key){
+      this.key = key;
     }
+
+    public Key getKey(){
+      return key;
+    }
+
+    @Embeddable
+    public static class Key implements Serializable{
+
+      @ManyToOne //WishList Link --> Game  
+      private Game wishlistGames;
+      @ManyToOne
+      private Wishlist wishlist;
+
+      public Key() {
+        super();
+      }
+      
+      public Key(Game wishlistGames, Wishlist wishlist) {
+        this.wishlistGames = wishlistGames;
+        this.wishlist = wishlist;
+      }
+
+      public Game getWishlistGames() {
+        return wishlistGames;
+      }
+
+      public Wishlist getWishList(){
+        return wishlist;
+      }
+      @Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof Key)) {
+				return false;
+			}
+			Key that = (Key) obj;
+			return this.getWishList().getId() == that.getWishList().getId()
+					&& this.getWishlistGames().getName() == that.getWishlistGames().getName();
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(this.getWishList().getId(), this.getWishlistGames().getName());
+		}
   }
-
-  //------------------------
-  // INTERFACE
-  //------------------------
-  /* Code from template association_GetOne */
-  public Game getWishlistGames()
-  {
-    return wishlistGames;
-  }
-
-  public int getId()
-  {
-    return id;
-  }
-  /* Code from template association_GetOne */
-  public Wishlist getWishlist()
-  {
-    return wishlist;
-  }
-  /* Code from template association_SetOneToMany */
-  public boolean setWishlistGames(Game aWishlistGames)
-  {
-    boolean wasSet = false;
-    if (aWishlistGames == null)
-    {
-      return wasSet;
-    }
-
-    Game existingWishlistGames = wishlistGames;
-    wishlistGames = aWishlistGames;
-    if (existingWishlistGames != null && !existingWishlistGames.equals(aWishlistGames))
-    {
-      existingWishlistGames.removeWishlistlink(this);
-    }
-    wishlistGames.addWishlistlink(this);
-    wasSet = true;
-    return wasSet;
-  }
-  /* Code from template association_SetOneToMany */
-  public boolean setWishlist(Wishlist aWishlist)
-  {
-    boolean wasSet = false;
-    if (aWishlist == null)
-    {
-      return wasSet;
-    }
-
-    Wishlist existingWishlist = wishlist;
-    wishlist = aWishlist;
-    if (existingWishlist != null && !existingWishlist.equals(aWishlist))
-    {
-      existingWishlist.removeWishlistLink(this);
-    }
-    wishlist.addWishlistLink(this);
-    wasSet = true;
-    return wasSet;
-  }
-
-  public void delete()
-  {
-    Game placeholderWishlistGames = wishlistGames;
-    this.wishlistGames = null;
-    if(placeholderWishlistGames != null)
-    {
-      placeholderWishlistGames.removeWishlistlink(this);
-    }
-    Wishlist placeholderWishlist = wishlist;
-    this.wishlist = null;
-    if(placeholderWishlist != null)
-    {
-      placeholderWishlist.removeWishlistLink(this);
-    }
-  }
-
 }
