@@ -42,37 +42,15 @@ public class Customer extends Role
     cardExpiryDate = aCardExpiryDate;
     billingAddress = aBillingAddress;
     customerOrder = new ArrayList<Order>();
-    if (aCustomerWishlist == null || aCustomerWishlist.getWishlistCustomer() != null)
+    if (!setCustomerWishlist(aCustomerWishlist))
     {
-      throw new RuntimeException("Unable to create Customer due to aCustomerWishlist. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create Customer due to aCustomerWishlist. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
-    customerWishlist = aCustomerWishlist;
     customerReview = new ArrayList<Review>();
   }
 
-  public Customer(int aCardNum, Date aCardExpiryDate, String aBillingAddress, int aIdForCustomerWishlist)
-  {
-    super();
-    cardNum = aCardNum;
-    cardExpiryDate = aCardExpiryDate;
-    billingAddress = aBillingAddress;
-    customerOrder = new ArrayList<Order>();
-    customerWishlist = new Wishlist(aIdForCustomerWishlist, this);
-    customerReview = new ArrayList<Review>();
+  protected Customer(){
   }
-
-  public Customer(int aCardNum, Date aCardExpiryDate, String aBillingAddress){
-    super();
-    cardNum = aCardNum;
-    cardExpiryDate = aCardExpiryDate;
-    billingAddress = aBillingAddress;
-    customerOrder = new ArrayList<Order>();
-    customerReview = new ArrayList<Review>();
-  }
-
-  protected Customer()
-  {}
-
   //------------------------
   // INTERFACE
   //------------------------
@@ -252,13 +230,24 @@ public class Customer extends Role
     }
     return wasAdded;
   }
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setCustomerWishlist(Wishlist aNewCustomerWishlist)
+  {
+    boolean wasSet = false;
+    if (aNewCustomerWishlist != null)
+    {
+      customerWishlist = aNewCustomerWishlist;
+      wasSet = true;
+    }
+    return wasSet;
+  }
   /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfCustomerReview()
   {
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Review addCustomerReview(int aId, String aDescription, int aStars, int aLikes, int aDislikes, Manager aManager)
+  public Review addCustomerReview(int aId, String aDescription, int aStars, int aLikes, int aDislikes, String aReply, Manager aManager)
   {
     return new Review(aId, aDescription, aStars, aLikes, aDislikes, this, aManager);
   }
@@ -332,12 +321,7 @@ public class Customer extends Role
       Order aCustomerOrder = customerOrder.get(i - 1);
       aCustomerOrder.delete();
     }
-    Wishlist existingCustomerWishlist = customerWishlist;
     customerWishlist = null;
-    if (existingCustomerWishlist != null)
-    {
-      existingCustomerWishlist.delete();
-    }
     for(int i=customerReview.size(); i > 0; i--)
     {
       Review aCustomerReview = customerReview.get(i - 1);

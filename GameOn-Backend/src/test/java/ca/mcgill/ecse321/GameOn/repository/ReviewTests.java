@@ -12,6 +12,7 @@ import java.sql.Date;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.GameOn.model.Review;
+import ca.mcgill.ecse321.GameOn.model.Wishlist;
 import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Manager;
 
@@ -23,12 +24,15 @@ public class ReviewTests {
     private CustomerRepository customerRepo;
     @Autowired
     private ManagerRepository managerRepo;
+    @Autowired
+    private WishlistRepository wishlistRepo;
 
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
         reviewRepo.deleteAll();
         customerRepo.deleteAll();
+        wishlistRepo.deleteAll();
         managerRepo.deleteAll();
     }
 
@@ -48,9 +52,11 @@ public class ReviewTests {
         long millis = System.currentTimeMillis();
         Date aCustomerDate = new Date(millis);
         String aCustomerAddress = "123 main st";
+        Wishlist aWishlist = new Wishlist();
+        aWishlist = wishlistRepo.save(aWishlist);
 
         // Create Customer
-        Customer aCustomer = new Customer(aCustomerCardNum, aCustomerDate, aCustomerAddress);
+        Customer aCustomer = new Customer(aCustomerCardNum, aCustomerDate, aCustomerAddress, aWishlist);
         aCustomer = customerRepo.save(aCustomer);
 
         // Create Manager

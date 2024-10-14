@@ -12,6 +12,7 @@ import java.sql.Date;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.GameOn.model.Order;
+import ca.mcgill.ecse321.GameOn.model.Wishlist;
 import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Cart;
 
@@ -24,6 +25,8 @@ public class OrderTests {
     private CustomerRepository customerRepo;
     @Autowired
     private CartRepository cartRepo;
+    @Autowired
+    private WishlistRepository wishlistRepo;
 
     @BeforeEach
     @AfterEach
@@ -31,6 +34,7 @@ public class OrderTests {
         orderRepo.deleteAll();
         customerRepo.deleteAll();
         cartRepo.deleteAll();
+        wishlistRepo.deleteAll();
     }
 
     @Test
@@ -41,8 +45,12 @@ public class OrderTests {
         long millis = System.currentTimeMillis();
         String anAddress = "123 main st";
         Date aCustomerDate = new Date(millis);
+
+        // Create Wishlist
+        Wishlist aWishlist = new Wishlist();
+        aWishlist = wishlistRepo.save(aWishlist);
         // Create Customer
-        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, anAddress);
+        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, anAddress, aWishlist);
         aCustomer = customerRepo.save(aCustomer);
         
         // Create Order
