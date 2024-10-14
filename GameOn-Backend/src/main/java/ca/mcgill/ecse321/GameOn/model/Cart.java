@@ -1,17 +1,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.31.1.5860.78bb27cc6 modeling language!*/
-
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 package ca.mcgill.ecse321.GameOn.model;
+import jakarta.persistence.*;
 import java.sql.Date;
 import java.util.*;
 
-import jakarta.persistence.*;
-
-// line 75 "GameOn.ump"
+// line 72 "model.ump"
+// line 200 "model.ump"
 @Entity
-public class Cart
-{
-
+public class Cart {
   //------------------------
   // MEMBER VARIABLES
   //------------------------
@@ -19,8 +16,7 @@ public class Cart
   //Cart Attributes
   private Date dateAdded;
 
-  @Id
-  @GeneratedValue( strategy = GenerationType.IDENTITY)
+  @GeneratedValue (strategy = GenerationType.IDENTITY)
   private int id;
 
   //Cart Associations
@@ -33,41 +29,15 @@ public class Cart
   // CONSTRUCTOR
   //------------------------
 
-
-  public Cart(Date aDateAdded, int aId, Order aOrder)
+  public Cart(Date aDateAdded)
   {
     dateAdded = aDateAdded;
-    id = aId;
-    if (aOrder == null || aOrder.getCart() != null)
-    {
-      throw new RuntimeException("Unable to create Cart due to aOrder. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-
-    order = aOrder;
-
     specificGame = new ArrayList<SpecificGame>();
   }
 
-  public Cart(Date aDateAdded, int aId, int aIdForOrder, Date aPurchaseDateForOrder, Customer aOrderCustomerForOrder)
-  {
-    dateAdded = aDateAdded;
-    id = aId;
-    order = new Order(aIdForOrder, aPurchaseDateForOrder, this, aOrderCustomerForOrder);
-    specificGame = new ArrayList<SpecificGame>();
-  }
-
-  public Cart(Date aDateAdded, int aId)
-  {
-    dateAdded = aDateAdded;
-    id = aId;
-    specificGame = new ArrayList<SpecificGame>();
-  }
-
-  protected Cart()
-  {
+  protected Cart(){
 
   }
-
   //------------------------
   // INTERFACE
   //------------------------
@@ -102,6 +72,12 @@ public class Cart
   {
     return order;
   }
+
+  public boolean hasOrder()
+  {
+    boolean has = order != null;
+    return has;
+  }
   /* Code from template association_GetMany */
   public SpecificGame getSpecificGame(int index)
   {
@@ -132,6 +108,14 @@ public class Cart
     int index = specificGame.indexOf(aSpecificGame);
     return index;
   }
+  /* Code from template association_SetUnidirectionalOptionalOne */
+  public boolean setOrder(Order aNewOrder)
+  {
+    boolean wasSet = false;
+    order = aNewOrder;
+    wasSet = true;
+    return wasSet;
+  }
   /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfSpecificGame()
   {
@@ -159,7 +143,7 @@ public class Cart
   }
   /* Code from template association_AddIndexControlFunctions */
   public boolean addSpecificGameAt(SpecificGame aSpecificGame, int index)
-  {  
+  {
     boolean wasAdded = false;
     if(addSpecificGame(aSpecificGame))
     {
@@ -182,8 +166,8 @@ public class Cart
       specificGame.remove(aSpecificGame);
       specificGame.add(index, aSpecificGame);
       wasAdded = true;
-    } 
-    else 
+    }
+    else
     {
       wasAdded = addSpecificGameAt(aSpecificGame, index);
     }
@@ -192,12 +176,7 @@ public class Cart
 
   public void delete()
   {
-    Order existingOrder = order;
     order = null;
-    if (existingOrder != null)
-    {
-      existingOrder.delete();
-    }
     specificGame.clear();
   }
 
