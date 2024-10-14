@@ -25,34 +25,15 @@ public class Wishlist
     @OneToMany //Wishlist --> WishList Link
   private List<WishlistLink> wishlistLink;
 
-    @OneToOne
-  private Customer wishlistCustomer;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Wishlist(int aId, Customer aWishlistCustomer)
+  public Wishlist()
   {
-    id = aId;
     wishlistLink = new ArrayList<WishlistLink>();
-    if (aWishlistCustomer == null || aWishlistCustomer.getCustomerWishlist() != null)
-    {
-      throw new RuntimeException("Unable to create Wishlist due to aWishlistCustomer. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-    wishlistCustomer = aWishlistCustomer;
   }
 
-  public Wishlist(int aId, int aCardNumForWishlistCustomer, Date aCardExpiryDateForWishlistCustomer, String aBillingAddressForWishlistCustomer)
-  {
-    id = aId;
-    wishlistLink = new ArrayList<WishlistLink>();
-    wishlistCustomer = new Customer(aCardNumForWishlistCustomer, aCardExpiryDateForWishlistCustomer, aBillingAddressForWishlistCustomer, this);
-  }
-
-  protected Wishlist()
-  {
-  }
   //------------------------
   // INTERFACE
   //------------------------
@@ -98,11 +79,6 @@ public class Wishlist
   {
     int index = wishlistLink.indexOf(aWishlistLink);
     return index;
-  }
-  /* Code from template association_GetOne */
-  public Customer getWishlistCustomer()
-  {
-    return wishlistCustomer;
   }
   /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfWishlistLink()
@@ -184,19 +160,12 @@ public class Wishlist
       WishlistLink aWishlistLink = wishlistLink.get(i - 1);
       aWishlistLink.delete();
     }
-    Customer existingWishlistCustomer = wishlistCustomer;
-    wishlistCustomer = null;
-    if (existingWishlistCustomer != null)
-    {
-      existingWishlistCustomer.delete();
-    }
   }
 
 
   public String toString()
   {
     return super.toString() + "["+
-            "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "wishlistCustomer = "+(getWishlistCustomer()!=null?Integer.toHexString(System.identityHashCode(getWishlistCustomer())):"null");
+            "id" + ":" + getId()+ "]";
   }
 }
