@@ -11,19 +11,29 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.sql.Date;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ca.mcgill.ecse321.GameOn.model.Cart;
+import ca.mcgill.ecse321.GameOn.model.*;
+
 
 
 @SpringBootTest
 public class CartTests {
     @Autowired
     private CartRepository cartRepo;
+    @Autowired
+    private CustomerRepository customerRepo;
+    @Autowired
+    private OrderRepository orderRepo;
+    @Autowired
+    private WishlistRepository wishListRepo;
 
 
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
         cartRepo.deleteAll();
+        customerRepo.deleteAll();
+        orderRepo.deleteAll();
+        wishListRepo.deleteAll();
 
     }
 
@@ -32,10 +42,24 @@ public class CartTests {
         //Arrange
         long millis = System.currentTimeMillis();
         Date aDate = new Date(millis);
+        int aId = 2;
 
+        Wishlist aCustomerWishlist = new Wishlist();
+        aCustomerWishlist = wishListRepo.save(aCustomerWishlist);
+
+
+        //Create Customer
+        int aCardNumber = 1111;
+        String anAddress = "123 main street";
+        Customer aCustomer = new Customer(aCardNumber, aDate, anAddress, aCustomerWishlist);
+        aCustomer = customerRepo.save(aCustomer);
+
+        //Create Order
+        Order aOrder = new Order(aId, aDate, aCustomer);
+        aOrder = orderRepo.save(aOrder);
 
         //Create Class
-        Cart aCart = new Cart(aDate);
+        Cart aCart = new Cart(aDate,aOrder);
         aCart = cartRepo.save(aCart);
         int id = aCart.getId();
 

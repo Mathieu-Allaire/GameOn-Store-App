@@ -29,7 +29,7 @@ public class Order
   @OneToMany
   private List<SpecificGame> orderGames;
 
-  @OneToMany
+  @ManyToOne
   private Customer orderCustomer;
 
   //------------------------

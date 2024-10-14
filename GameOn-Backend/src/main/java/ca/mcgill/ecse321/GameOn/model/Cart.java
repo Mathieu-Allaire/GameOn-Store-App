@@ -16,6 +16,7 @@ public class Cart {
   //Cart Attributes
   private Date dateAdded;
 
+  @Id
   @GeneratedValue (strategy = GenerationType.IDENTITY)
   private int id;
 
@@ -24,14 +25,17 @@ public class Cart {
   private Order order;
   @OneToMany
   private List<SpecificGame> specificGame;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Cart(Date aDateAdded)
+  public Cart(Date aDateAdded, Order aOrder)
   {
     dateAdded = aDateAdded;
+    if (!setOrder(aOrder))
+    {
+      throw new RuntimeException("Unable to create Cart due to aOrder. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
     specificGame = new ArrayList<SpecificGame>();
   }
 
@@ -72,12 +76,6 @@ public class Cart {
   {
     return order;
   }
-
-  public boolean hasOrder()
-  {
-    boolean has = order != null;
-    return has;
-  }
   /* Code from template association_GetMany */
   public SpecificGame getSpecificGame(int index)
   {
@@ -108,12 +106,15 @@ public class Cart {
     int index = specificGame.indexOf(aSpecificGame);
     return index;
   }
-  /* Code from template association_SetUnidirectionalOptionalOne */
+  /* Code from template association_SetUnidirectionalOne */
   public boolean setOrder(Order aNewOrder)
   {
     boolean wasSet = false;
-    order = aNewOrder;
-    wasSet = true;
+    if (aNewOrder != null)
+    {
+      order = aNewOrder;
+      wasSet = true;
+    }
     return wasSet;
   }
   /* Code from template association_MinimumNumberOfMethod */
