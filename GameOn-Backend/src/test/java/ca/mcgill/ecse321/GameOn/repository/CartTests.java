@@ -30,10 +30,13 @@ public class CartTests {
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
+
         cartRepo.deleteAll();
-        customerRepo.deleteAll();
         orderRepo.deleteAll();
+        customerRepo.deleteAll();
         wishListRepo.deleteAll();
+
+
 
     }
 
@@ -70,7 +73,7 @@ public class CartTests {
 
         // Assert
         assertNotNull(cartDB);
-        assertEquals(cartDB.getDateAdded(), aDate);
+        assertEquals(cartDB.getDateAdded().toString(), aDate.toString());
         assertEquals(cartDB.getId(), id);
 
 

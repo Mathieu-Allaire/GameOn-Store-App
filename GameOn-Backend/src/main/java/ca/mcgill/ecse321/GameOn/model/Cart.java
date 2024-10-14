@@ -21,7 +21,7 @@ public class Cart {
   private int id;
 
   //Cart Associations
-  @OneToOne(mappedBy = "cart")
+  @OneToOne
   private Order order;
   @OneToMany
   private List<SpecificGame> specificGame;
