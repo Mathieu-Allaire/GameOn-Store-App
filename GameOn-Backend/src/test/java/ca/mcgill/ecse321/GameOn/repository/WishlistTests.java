@@ -24,13 +24,16 @@ public class WishlistTests {
 
     @Test
     public void testCreateAndReadWishlist(){
+        // Arrange
         Wishlist wishlist = new Wishlist();
         wishlist = wishlistRepo.save(wishlist);
         int id = wishlist.getId();
+
+        // Act
         Wishlist wishlist_from_DB = wishlistRepo.findWishlistById(id);
+
+        // Assert
         assertNotNull(wishlist_from_DB);
         assertEquals(wishlist_from_DB.getId(),id);  
     }
-     
-
 }
