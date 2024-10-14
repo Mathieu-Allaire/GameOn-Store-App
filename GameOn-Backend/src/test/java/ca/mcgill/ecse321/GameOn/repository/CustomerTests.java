@@ -47,6 +47,6 @@ public class CustomerTests {
         assertEquals(customer_from_DB.getCardNum(), aCardNum, "Customer's 'Card Number' could not be saved and loaded from database.");
         assertEquals(customer_from_DB.getCardExpiryDate().toLocalDate(), aCardExpiryDate.toLocalDate(), "Customer's 'Card Expiry Date' could not be saved and loaded from database.");
         assertEquals(customer_from_DB.getBillingAddress(), aBillingAddress, "Customer's 'Billing Address' could not be saved and loaded from database.");
-        assertEquals(customer_from_DB.getCustomerWishlist(), wishlist, "Customer's 'Wishlist' could not be saved and loaded from database.");
+        assertEquals(customer_from_DB.getCustomerWishlist().getId(), customer.getCustomerWishlist().getId(), "Customer's 'Wishlist' could not be saved and loaded from database.");
     }
 }
