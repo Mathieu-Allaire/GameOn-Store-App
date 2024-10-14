@@ -77,6 +77,8 @@ public class Cart {
     return order;
   }
   /* Code from template association_GetMany */
+
+
   public SpecificGame getSpecificGame(int index)
   {
     SpecificGame aSpecificGame = specificGame.get(index);

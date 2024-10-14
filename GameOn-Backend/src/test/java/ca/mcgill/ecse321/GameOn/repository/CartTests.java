@@ -25,6 +25,12 @@ public class CartTests {
     private OrderRepository orderRepo;
     @Autowired
     private WishlistRepository wishListRepo;
+    @Autowired
+    private SpecificGameRepository specGamerepo;
+    @Autowired
+    private CategoryRepository categoryRepo;
+    @Autowired
+    private GameRepository gameRepo;
 
 
     @BeforeEach
@@ -36,7 +42,9 @@ public class CartTests {
         customerRepo.deleteAll();
         wishListRepo.deleteAll();
 
-
+        specGamerepo.deleteAll();
+        gameRepo.deleteAll();
+        categoryRepo.deleteAll();
 
     }
 
@@ -63,6 +71,25 @@ public class CartTests {
 
         //Create Class
         Cart aCart = new Cart(aDate,aOrder);
+
+        //Create Game and Add Game to Cart
+        String aPicture = "url";
+        String aName = "Overwatch";
+        String aDescription = "Hero-based combat";
+        int aPrice = 5;
+        int aQuantity = 1;
+        Category aCategory = new Category("Fight");
+        Game gameTest = new Game( aPicture, aName, aDescription, aPrice, aQuantity, aCategory);
+        SpecificGame specificGameTest = new SpecificGame(gameTest); // not sure if we need to put the id in the constructor
+
+        aCart.addSpecificGame(specificGameTest);
+
+        aCategory = categoryRepo.save(aCategory);
+        gameTest = gameRepo.save(gameTest);
+        specificGameTest = specGamerepo.save(specificGameTest);
+
+
+        //Save Object
         aCart = cartRepo.save(aCart);
         int id = aCart.getId();
 
@@ -75,8 +102,7 @@ public class CartTests {
         assertNotNull(cartDB);
         assertEquals(cartDB.getDateAdded().toString(), aDate.toString());
         assertEquals(cartDB.getId(), id);
-
-
+        assertEquals(cartDB.getOrder().getPurchaseDate().toString(), aDate.toString());
 
     }
 }
