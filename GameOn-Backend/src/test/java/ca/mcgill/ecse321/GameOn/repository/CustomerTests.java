@@ -10,16 +10,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Date;
 import ca.mcgill.ecse321.GameOn.model.Customer;
+import ca.mcgill.ecse321.GameOn.model.Wishlist;
 
 @SpringBootTest
 public class CustomerTests {
     @Autowired 
     private CustomerRepository customerRepo;
-
+    @Autowired 
+    private WishlistRepository wishlistRepo;
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
         customerRepo.deleteAll();
+        wishlistRepo.deleteAll();
     }
 
     @Test
@@ -29,10 +32,9 @@ public class CustomerTests {
         long millis = System.currentTimeMillis();
         Date aCardExpiryDate = new Date(millis);
         String aBillingAddress = "123 McGill Street";
-
-        Customer customer = new Customer(aCardNum, aCardExpiryDate, aBillingAddress);
-
-        //Save
+        Wishlist wishlist = new Wishlist();
+        Customer customer = new Customer(aCardNum, aCardExpiryDate, aBillingAddress, wishlist);
+        wishlist = wishlistRepo.save(wishlist);
         customer = customerRepo.save(customer);
         //wishlist = wishlistRepo.save(wishlist);
 
@@ -45,5 +47,6 @@ public class CustomerTests {
         assertEquals(customer_from_DB.getCardNum(), aCardNum, "Customer's 'Card Number' could not be saved and loaded from database.");
         assertEquals(customer_from_DB.getCardExpiryDate().toLocalDate(), aCardExpiryDate.toLocalDate(), "Customer's 'Card Expiry Date' could not be saved and loaded from database.");
         assertEquals(customer_from_DB.getBillingAddress(), aBillingAddress, "Customer's 'Billing Address' could not be saved and loaded from database.");
+        assertEquals(customer_from_DB.getCustomerWishlist(), wishlist, "Customer's 'Wishlist' could not be saved and loaded from database.");
     }
 }
