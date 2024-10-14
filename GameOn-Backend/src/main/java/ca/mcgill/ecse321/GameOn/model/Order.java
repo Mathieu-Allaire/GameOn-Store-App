@@ -1,12 +1,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.31.1.5860.78bb27cc6 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
+
 package ca.mcgill.ecse321.GameOn.model;
 import jakarta.persistence.*;
+
 import java.sql.Date;
 import java.util.*;
 
-// line 49 "GameOn.ump"
-
+// line 46 "model.ump"
+// line 185 "model.ump"
 @Entity
 @Table(name = "\"order\"")
 public class Order
@@ -24,53 +26,31 @@ public class Order
   private Date purchaseDate;
 
   //Order Associations
-  @OneToOne // Order --> Cart
-  private Cart cart;
-
-  @OneToMany // Order --> Specific Game
+  @OneToMany
   private List<SpecificGame> orderGames;
 
-  @OneToOne
+  @ManyToOne
   private Customer orderCustomer;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Order(int aId, Date aPurchaseDate, Cart aCart, Customer aOrderCustomer)
+  public Order(int aId, Date aPurchaseDate, Customer aOrderCustomer)
   {
     id = aId;
     purchaseDate = aPurchaseDate;
-    if (aCart == null || aCart.getOrder() != null)
-    {
-      throw new RuntimeException("Unable to create Order due to aCart. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-    cart = aCart;
     orderGames = new ArrayList<SpecificGame>();
     boolean didAddOrderCustomer = setOrderCustomer(aOrderCustomer);
     if (!didAddOrderCustomer)
     {
-      throw new RuntimeException("Unable to create customerOrder due to orderCustomer. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create customerOrder due to orderCustomer. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 
-  public Order(int aId, Date aPurchaseDate, Date aDateAddedForCart, int aIdForCart, Customer aOrderCustomer)
-  {
-    id = aId;
-    purchaseDate = aPurchaseDate;
-    cart = new Cart(aDateAddedForCart, aIdForCart, this);
-    orderGames = new ArrayList<SpecificGame>();
-    boolean didAddOrderCustomer = setOrderCustomer(aOrderCustomer);
-    if (!didAddOrderCustomer)
-    {
-      throw new RuntimeException("Unable to create customerOrder due to orderCustomer. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-  }
+  protected Order(){
 
-  protected Order()
-  {
   }
-
   //------------------------
   // INTERFACE
   //------------------------
@@ -99,11 +79,6 @@ public class Order
   public Date getPurchaseDate()
   {
     return purchaseDate;
-  }
-  /* Code from template association_GetOne */
-  public Cart getCart()
-  {
-    return cart;
   }
   /* Code from template association_GetMany */
   public SpecificGame getOrderGame(int index)
@@ -167,7 +142,7 @@ public class Order
   }
   /* Code from template association_AddIndexControlFunctions */
   public boolean addOrderGameAt(SpecificGame aOrderGame, int index)
-  {  
+  {
     boolean wasAdded = false;
     if(addOrderGame(aOrderGame))
     {
@@ -190,8 +165,8 @@ public class Order
       orderGames.remove(aOrderGame);
       orderGames.add(index, aOrderGame);
       wasAdded = true;
-    } 
-    else 
+    }
+    else
     {
       wasAdded = addOrderGameAt(aOrderGame, index);
     }
@@ -219,12 +194,6 @@ public class Order
 
   public void delete()
   {
-    Cart existingCart = cart;
-    cart = null;
-    if (existingCart != null)
-    {
-      existingCart.delete();
-    }
     orderGames.clear();
     Customer placeholderOrderCustomer = orderCustomer;
     this.orderCustomer = null;
@@ -240,7 +209,8 @@ public class Order
     return super.toString() + "["+
             "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "purchaseDate" + "=" + (getPurchaseDate() != null ? !getPurchaseDate().equals(this)  ? getPurchaseDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "cart = "+(getCart()!=null?Integer.toHexString(System.identityHashCode(getCart())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "orderCustomer = "+(getOrderCustomer()!=null?Integer.toHexString(System.identityHashCode(getOrderCustomer())):"null");
   }
 }
+
+

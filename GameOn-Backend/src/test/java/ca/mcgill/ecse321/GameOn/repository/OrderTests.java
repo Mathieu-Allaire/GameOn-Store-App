@@ -24,8 +24,6 @@ public class OrderTests {
     @Autowired
     private CustomerRepository customerRepo;
     @Autowired
-    private CartRepository cartRepo;
-    @Autowired
     private WishlistRepository wishlistRepo;
 
     @BeforeEach
@@ -33,7 +31,6 @@ public class OrderTests {
     public void clearDatabase() {
         orderRepo.deleteAll();
         customerRepo.deleteAll();
-        cartRepo.deleteAll();
         wishlistRepo.deleteAll();
     }
 
@@ -54,10 +51,7 @@ public class OrderTests {
         aCustomer = customerRepo.save(aCustomer);
         
         // Create Order
-        int aIdForCart = 2;
-        Cart aCart = new Cart(aCustomerDate, aIdForCart);
-        aCart = cartRepo.save(aCart);
-        Order aOrder = new Order(aId, aCustomerDate, aCart, aCustomer);
+        Order aOrder = new Order(aId, aCustomerDate, aCustomer);
         aOrder = orderRepo.save(aOrder);
         
         int id = aOrder.getId();
@@ -68,7 +62,6 @@ public class OrderTests {
         // Assert
         assertNotNull(result);
         assertEquals(result.getId(), aOrder.getId());
-        assertEquals(result.getCart().getId(), aOrder.getCart().getId());
         assertEquals(result.getOrderCustomer().getBillingAddress(), aOrder.getOrderCustomer().getBillingAddress());
         assertEquals(result.getOrderCustomer().getCardExpiryDate(), aOrder.getOrderCustomer().getCardExpiryDate());
         assertEquals(result.getOrderCustomer().getCardNum(), aOrder.getOrderCustomer().getCardNum());
