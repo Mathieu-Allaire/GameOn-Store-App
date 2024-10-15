@@ -35,7 +35,7 @@ More information about the app is available in the [wiki](https://github.com/McG
 ## Individual Effort
 Person | Hours |
 --- | --- |
-Camilo Berdugo | 20
+Camilo Berdugo | 19
 Neeshal Imrit | 19
 Luis Jarquin | 19
 Mathieu Allaire | 18
