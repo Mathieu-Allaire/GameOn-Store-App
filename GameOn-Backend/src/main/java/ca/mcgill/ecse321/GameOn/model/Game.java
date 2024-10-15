@@ -4,6 +4,9 @@ package ca.mcgill.ecse321.GameOn.model;
 import jakarta.persistence.*;
 import java.util.*;
 
+import ca.mcgill.ecse321.GameOn.model.WishlistLink.Key;
+import ca.mcgill.ecse321.GameOn.model.WishlistLink;
+
 // line 2 "GameState.ump"
 // line 61 "GameOn.ump"
 
@@ -326,70 +329,10 @@ public class Game
   /* Code from template association_AddManyToOne */
   public WishlistLink addWishlistlink(Wishlist aWishlist)
   {
-    return new WishlistLink(this, aWishlist);
+    Key aKey = new Key(this, aWishlist);
+    return new WishlistLink(aKey);
   }
 
-  public boolean addWishlistlink(WishlistLink aWishlistlink)
-  {
-    boolean wasAdded = false;
-    if (wishlistlink.contains(aWishlistlink)) { return false; }
-    Game existingWishlistGames = aWishlistlink.getWishlistGames();
-    boolean isNewWishlistGames = existingWishlistGames != null && !this.equals(existingWishlistGames);
-    if (isNewWishlistGames)
-    {
-      aWishlistlink.setWishlistGames(this);
-    }
-    else
-    {
-      wishlistlink.add(aWishlistlink);
-    }
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeWishlistlink(WishlistLink aWishlistlink)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aWishlistlink, as it must always have a wishlistGames
-    if (!this.equals(aWishlistlink.getWishlistGames()))
-    {
-      wishlistlink.remove(aWishlistlink);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addWishlistlinkAt(WishlistLink aWishlistlink, int index)
-  {  
-    boolean wasAdded = false;
-    if(addWishlistlink(aWishlistlink))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfWishlistlink()) { index = numberOfWishlistlink() - 1; }
-      wishlistlink.remove(aWishlistlink);
-      wishlistlink.add(index, aWishlistlink);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveWishlistlinkAt(WishlistLink aWishlistlink, int index)
-  {
-    boolean wasAdded = false;
-    if(wishlistlink.contains(aWishlistlink))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfWishlistlink()) { index = numberOfWishlistlink() - 1; }
-      wishlistlink.remove(aWishlistlink);
-      wishlistlink.add(index, aWishlistlink);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addWishlistlinkAt(aWishlistlink, index);
-    }
-    return wasAdded;
-  }
   /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfReviews()
   {
@@ -451,10 +394,6 @@ public class Game
   public void delete()
   {
     category = null;
-    for(int i=wishlistlink.size(); i > 0; i--){
-      WishlistLink aWishlistlink = wishlistlink.get(i - 1);
-      aWishlistlink.delete();
-    }
     reviews.clear();
   }
 

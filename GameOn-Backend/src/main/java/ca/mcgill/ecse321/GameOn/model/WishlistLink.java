@@ -18,7 +18,6 @@ public class WishlistLink{
     private Key key;
 
     public WishlistLink(){
-
     }
 
     public WishlistLink(Key key){
@@ -53,6 +52,12 @@ public class WishlistLink{
       public Wishlist getWishList(){
         return wishlist;
       }
+
+      public Wishlist getWishlist()
+      {
+        return this.getWishlist();
+      }
+    
       @Override
 		public boolean equals(Object obj) {
 			if (!(obj instanceof Key)) {
@@ -66,6 +71,8 @@ public class WishlistLink{
 		@Override
 		public int hashCode() {
 			return Objects.hash(this.getWishList().getId(), this.getWishlistGames().getName());
-		}
+    }
+  
   }
+    
 }
