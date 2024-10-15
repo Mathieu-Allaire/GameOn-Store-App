@@ -41,6 +41,6 @@ Luis Jarquin | 19
 Mathieu Allaire | 18
 Joel Boyer | 17
 Joseph Feghaly | 15
---------------
+---
 
 [Deliverable 1 report](https://github.com/McGill-ECSE321-Fall2024/project-group-3/wiki/Deliverable-1)
