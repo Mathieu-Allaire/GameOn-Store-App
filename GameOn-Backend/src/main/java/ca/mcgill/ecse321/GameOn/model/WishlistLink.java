@@ -32,8 +32,10 @@ public class WishlistLink{
     public static class Key implements Serializable{
 
       @ManyToOne //WishList Link --> Game  
+      @JoinColumn(name = "game_id", nullable = false)
       private Game wishlistGames;
       @ManyToOne
+      @JoinColumn(name = "wishlist_id", nullable = false)
       private Wishlist wishlist;
 
       public Key() {

@@ -22,7 +22,7 @@ public class Wishlist
 
   //Wishlist Associations
 
-    @OneToMany //Wishlist --> WishList Link
+    @OneToMany(fetch = FetchType.EAGER) //Wishlist --> WishList Link
   private List<WishlistLink> wishlistLink;
 
   //------------------------

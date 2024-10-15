@@ -37,7 +37,7 @@ public class Game
     @ManyToOne
   private Category category;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
   private List<WishlistLink> wishlistlink;
 
     @OneToMany //Game --> Review
