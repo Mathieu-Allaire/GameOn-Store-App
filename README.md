@@ -17,3 +17,28 @@ As a team, we :
 * set up and test the database
 * create the user interface
 * manage all interactions in the backend to provide a user-friendly platform
+
+# Scope of the Project
+The goal of the project is to design, develop, and test a web store application for a game shop.
+This app will be used by the manager, the customers, and the employees on a daily basis.
+The main goals are:
+* Let new customers create an account with the store.
+* Allow the gamers to purchase one or many games from the store
+* Allow the manager to add new game categories to the store
+* Permit the addition of new games to the store
+* Ensure an intuitive interface for the users
+
+After the last deliverable, there will be a thoroughly tested, functional, and user-friendly application that will allow the business of the game shop owner to grow and give the customers a great experience.
+More information about the app is available in the [wiki](https://github.com/McGill-ECSE321-Fall2024/project-group-3/wiki).
+
+# Deliverable 1
+## Individual Effort
+Person | Hours |
+--- | --- |
+Camilo Berdugo | 20
+Neeshal Imrit | 19
+Luis Jarquin | 19
+Mathieu Allaire | 18
+Joel Boyer | 17
+Joseph Feghaly | 15
+[Deliverable 1 report](https://github.com/McGill-ECSE321-Fall2024/project-group-3/wiki/Deliverable-1)
