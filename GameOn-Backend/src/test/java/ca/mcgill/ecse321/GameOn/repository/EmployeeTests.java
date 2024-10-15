@@ -9,10 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.sql.Date;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ca.mcgill.ecse321.GameOn.model.*;
+import ca.mcgill.ecse321.GameOn.model.Category;
+import ca.mcgill.ecse321.GameOn.model.Employee;
+import ca.mcgill.ecse321.GameOn.model.Game;
+import ca.mcgill.ecse321.GameOn.model.GameRequest;
+import ca.mcgill.ecse321.GameOn.model.Manager;
+
 import ca.mcgill.ecse321.GameOn.model.Employee.EmployeeStatus;
 import ca.mcgill.ecse321.GameOn.model.RequestType;
 
@@ -28,10 +32,6 @@ public class EmployeeTests {
     private CategoryRepository categoryRepo;
     @Autowired
     private GameRepository gameRepo;
-
-
-
-
 
     @BeforeEach
     @AfterEach
@@ -73,11 +73,7 @@ public class EmployeeTests {
         aEmployee.addGameRequest(gameRequest);
         gameRequest = gameRequestRepo.save(gameRequest);
 
-
-        int aGameRequestId = gameRequest.getId();
-
         //Save object
-
         int id =  aEmployee.getId().intValue();
 
         //Act
@@ -87,9 +83,6 @@ public class EmployeeTests {
         assertNotNull(employeeDB);
         assertEquals(employeeDB.getIsEmployed(),aIsEmployed);
         assertEquals(employeeDB.getEmployeeStatus(),EmployeeStatus.Employed);
-
-
-
 
     }
 }

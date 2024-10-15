@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import java.util.*;
 
 import ca.mcgill.ecse321.GameOn.model.WishlistLink.Key;
-import ca.mcgill.ecse321.GameOn.model.WishlistLink;
 
 // line 2 "GameState.ump"
 // line 61 "GameOn.ump"
@@ -37,7 +36,7 @@ public class Game
     @ManyToOne
   private Category category;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
   private List<WishlistLink> wishlistlink;
 
     @OneToMany //Game --> Review

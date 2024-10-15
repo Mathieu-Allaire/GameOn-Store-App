@@ -28,15 +28,19 @@ public class WishlistLink{
       return key;
     }
 
+    public void setKey(Key key){
+      this.key = key;
+    }
+
     @Embeddable
     public static class Key implements Serializable{
 
-      @ManyToOne //WishList Link --> Game  
-      @JoinColumn(name = "game_id", nullable = false)
-      private Game wishlistGames;
       @ManyToOne
-      @JoinColumn(name = "wishlist_id", nullable = false)
+      private Game wishlistGames;
+
+      @ManyToOne
       private Wishlist wishlist;
+
 
       public Key() {
         super();
@@ -51,13 +55,8 @@ public class WishlistLink{
         return wishlistGames;
       }
 
-      public Wishlist getWishList(){
+      public Wishlist getWishlist(){
         return wishlist;
-      }
-
-      public Wishlist getWishlist()
-      {
-        return this.getWishlist();
       }
     
       @Override
@@ -66,13 +65,13 @@ public class WishlistLink{
 				return false;
 			}
 			Key that = (Key) obj;
-			return this.getWishList().getId() == that.getWishList().getId()
+			return this.getWishlist().getId() == that.getWishlist().getId()
 					&& this.getWishlistGames().getName() == that.getWishlistGames().getName();
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(this.getWishList().getId(), this.getWishlistGames().getName());
+			return Objects.hash(this.getWishlist().getId(), this.getWishlistGames().getName());
     }
   
   }
