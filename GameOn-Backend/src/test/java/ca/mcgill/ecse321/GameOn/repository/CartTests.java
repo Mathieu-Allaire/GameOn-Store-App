@@ -13,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.GameOn.model.*;
 
-
-
 @SpringBootTest
 public class CartTests {
     @Autowired
@@ -36,7 +34,6 @@ public class CartTests {
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
-
         cartRepo.deleteAll();
         orderRepo.deleteAll();
         customerRepo.deleteAll();
@@ -103,6 +100,5 @@ public class CartTests {
         assertEquals(cartDB.getDateAdded().toString(), aDate.toString());
         assertEquals(cartDB.getId(), id);
         assertEquals(cartDB.getOrder().getPurchaseDate().toString(), aDate.toString());
-
     }
 }

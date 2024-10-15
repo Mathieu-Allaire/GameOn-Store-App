@@ -85,55 +85,6 @@ public class Wishlist
   {
     return 0;
   }
-  /* Code from template association_AddManyToOne */
-  public WishlistLink addWishlistLink(Game aWishlistGames)
-  {
-    return new WishlistLink(aWishlistGames, this);
-  }
-
-  public boolean addWishlistLink(WishlistLink aWishlistLink)
-  {
-    boolean wasAdded = false;
-    if (wishlistLink.contains(aWishlistLink)) { return false; }
-    Wishlist existingWishlist = aWishlistLink.getWishlist();
-    boolean isNewWishlist = existingWishlist != null && !this.equals(existingWishlist);
-    if (isNewWishlist)
-    {
-      aWishlistLink.setWishlist(this);
-    }
-    else
-    {
-      wishlistLink.add(aWishlistLink);
-    }
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeWishlistLink(WishlistLink aWishlistLink)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aWishlistLink, as it must always have a wishlist
-    if (!this.equals(aWishlistLink.getWishlist()))
-    {
-      wishlistLink.remove(aWishlistLink);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addWishlistLinkAt(WishlistLink aWishlistLink, int index)
-  {  
-    boolean wasAdded = false;
-    if(addWishlistLink(aWishlistLink))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfWishlistLink()) { index = numberOfWishlistLink() - 1; }
-      wishlistLink.remove(aWishlistLink);
-      wishlistLink.add(index, aWishlistLink);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
 
   public boolean addOrMoveWishlistLinkAt(WishlistLink aWishlistLink, int index)
   {
@@ -145,23 +96,9 @@ public class Wishlist
       wishlistLink.remove(aWishlistLink);
       wishlistLink.add(index, aWishlistLink);
       wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addWishlistLinkAt(aWishlistLink, index);
     }
     return wasAdded;
   }
-
-  public void delete()
-  {
-    for(int i=wishlistLink.size(); i > 0; i--)
-    {
-      WishlistLink aWishlistLink = wishlistLink.get(i - 1);
-      aWishlistLink.delete();
-    }
-  }
-
 
   public String toString()
   {

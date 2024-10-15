@@ -14,8 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ca.mcgill.ecse321.GameOn.model.Order;
 import ca.mcgill.ecse321.GameOn.model.Wishlist;
 import ca.mcgill.ecse321.GameOn.model.Customer;
-import ca.mcgill.ecse321.GameOn.model.Cart;
-
 
 @SpringBootTest
 public class OrderTests {
