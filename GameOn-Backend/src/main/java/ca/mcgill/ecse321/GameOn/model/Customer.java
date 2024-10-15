@@ -164,9 +164,9 @@ public class Customer extends Role
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Order addCustomerOrder(int aId, Date aPurchaseDate, Cart aCart)
+  public Order addCustomerOrder(int aId, Date aPurchaseDate)
   {
-    return new Order(aId, aPurchaseDate, aCart, this);
+    return new Order(aId, aPurchaseDate, this);
   }
 
   public boolean addCustomerOrder(Order aCustomerOrder)
