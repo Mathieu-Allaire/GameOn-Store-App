@@ -24,8 +24,7 @@ public class Person
 
   //Person Associations
 
-    @OneToMany // Person --> Role
-    //Might need more complex annotation because of player-role abstraction pattern
+    @OneToMany(fetch = FetchType.EAGER) // Person --> Role
     
   private List<Role> roles;
 
@@ -46,6 +45,8 @@ public class Person
       throw new RuntimeException("Unable to create Person, must have 1 to 3 roles. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
+
+  protected Person() {}
 
   //------------------------
   // INTERFACE
