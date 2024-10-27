@@ -24,6 +24,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	//API docs
+	implementation 'org.springdoc:springdoc-openapi-ui:2.6.0' // not sure about version
+
 }
 
 tasks.named('test') {
