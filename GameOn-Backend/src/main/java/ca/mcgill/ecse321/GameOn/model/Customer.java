@@ -258,7 +258,7 @@ public class Customer extends Role
   /* Code from template association_AddManyToOne */
   public Order addCustomerOrder(int aId, Date aPurchaseDate, Cart aCart)
   {
-    return new Order(aId, aPurchaseDate, aCart, this);
+    return new Order(aPurchaseDate, aCart, this);
   }
 
   public boolean addCustomerOrder(Order aCustomerOrder)
@@ -328,9 +328,9 @@ public class Customer extends Role
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Review addCustomerReview(int aId, String aDescription, int aStars, int aLikes, int aDislikes, Manager aManager)
+  public Review addCustomerReview(String aDescription, int aStars, int aLikes, int aDislikes, Manager aManager)
   {
-    return new Review(aId, aDescription, aStars, aLikes, aDislikes, this, aManager);
+    return new Review(aDescription, aStars, aLikes, aDislikes, this, aManager);
   }
 
   public boolean addCustomerReview(Review aCustomerReview)

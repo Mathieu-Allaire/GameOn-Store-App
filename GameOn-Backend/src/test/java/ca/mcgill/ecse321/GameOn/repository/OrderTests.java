@@ -35,7 +35,6 @@ public class OrderTests {
     @Test
     public void testCreateandReadOrder(){
         // Arrange
-        int aId = 1;
         int aCardNumber = 1343;
         long millis = System.currentTimeMillis();
         String anAddress = "123 main st";
