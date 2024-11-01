@@ -35,9 +35,8 @@ public class Review
   // CONSTRUCTOR
   //------------------------
 
-  public Review(int aId, String aDescription, int aStars, int aLikes, int aDislikes, Customer aReviewAuthor, Manager aManager)
+  public Review(String aDescription, int aStars, int aLikes, int aDislikes, Customer aReviewAuthor, Manager aManager)
   {
-    id = aId;
     description = aDescription;
     stars = aStars;
     likes = aLikes;

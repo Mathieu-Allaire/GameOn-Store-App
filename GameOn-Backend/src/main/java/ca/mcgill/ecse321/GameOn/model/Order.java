@@ -35,9 +35,8 @@ public class Order
   // CONSTRUCTOR
   //------------------------
 
-  public Order(int aId, Date aPurchaseDate, Cart aCart, Customer aOrderCustomer)
+  public Order(Date aPurchaseDate, Cart aCart, Customer aOrderCustomer)
   {
-    id = aId;
     purchaseDate = aPurchaseDate;
     boolean didAddCart = setCart(aCart);
     if (!didAddCart)

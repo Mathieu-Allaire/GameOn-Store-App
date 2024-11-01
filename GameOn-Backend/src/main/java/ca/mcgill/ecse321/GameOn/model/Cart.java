@@ -33,10 +33,9 @@ public class Cart
   // CONSTRUCTOR
   //------------------------
 
-  public Cart(Date aDateAdded, int aId)
+  public Cart(Date aDateAdded)
   {
     dateAdded = aDateAdded;
-    id = aId;
     specificGame = new ArrayList<SpecificGame>();
   }
 
