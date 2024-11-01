@@ -47,20 +47,17 @@ public class CartTests {
         //Arrange
         long millis = System.currentTimeMillis();
         Date aDate = new Date(millis);
-        int aId = 2;
-        int aCartId = 1;
-
 
         //Create Customer
         int aCardNumber = 1111;
         String anAddress = "123 main street";
         Customer aCustomer = new Customer(aCardNumber, aDate, anAddress);
-        Cart aCart = new Cart(aDate, aCartId);
+        Cart aCart = new Cart(aDate);
         aCustomer = customerRepo.save(aCustomer);
         aCart = cartRepo.save(aCart);
 
         //Create Order
-        Order aOrder = new Order(aId, aDate, aCart, aCustomer);
+        Order aOrder = new Order(aDate, aCart, aCustomer);
         aOrder = orderRepo.save(aOrder);
 
 

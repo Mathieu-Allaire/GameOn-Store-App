@@ -14,7 +14,8 @@ import java.sql.Date;
 
 import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.model.Customer;
-import ca.mcgill.ecse321.GameOn.model.Wishlist;
+import ca.mcgill.ecse321.GameOn.model.Game;
+import ca.mcgill.ecse321.GameOn.model.WishlistLink;
 
 @SpringBootTest
 public class PersonTests {
@@ -23,14 +24,14 @@ public class PersonTests {
     @Autowired
     private CustomerRepository customerRepo;
     @Autowired
-    private WishlistRepository wishlistRepo;
+    private WishlistLinkRepository wishlistLinkRepo;
 
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
         personRepo.deleteAll();
         customerRepo.deleteAll();
-        wishlistRepo.deleteAll();
+        wishlistLinkRepo.deleteAll();
     }
 
     @Test
@@ -39,20 +40,18 @@ public class PersonTests {
         String aName = "John Doe";
         String aEmail = "email@email.com";
         String aPassword = "password";
-        int aPersonId = 1;
 
         // Create Customer
         int cardNum = 1234;
         long millis = System.currentTimeMillis();
         Date aCustomerDate = new Date(millis);
         String aCustomerAddress = "123 main st";
-        Wishlist aWishlist = new Wishlist();
-        aWishlist = wishlistRepo.save(aWishlist);
-        Customer aCustomer = new Customer(cardNum, aCustomerDate, aCustomerAddress, aWishlist);
+
+        Customer aCustomer = new Customer(cardNum, aCustomerDate, aCustomerAddress);
         aCustomer = customerRepo.save(aCustomer);
 
         // Create Person
-        Person aPerson = new Person(aPersonId, aEmail, aName, aPassword, aCustomer);
+        Person aPerson = new Person(aEmail, aName, aPassword, aCustomer);
         aPerson = personRepo.save(aPerson);
 
         int id = aPerson.getId();
