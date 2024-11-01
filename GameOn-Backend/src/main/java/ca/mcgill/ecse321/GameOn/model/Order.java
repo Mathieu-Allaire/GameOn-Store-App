@@ -3,14 +3,13 @@
 
 package ca.mcgill.ecse321.GameOn.model;
 import jakarta.persistence.*;
-
 import java.sql.Date;
 import java.util.*;
 
-// line 46 "model.ump"
-// line 185 "model.ump"
+// line 48 "model.ump"
+// line 179 "model.ump"
+
 @Entity
-@Table(name = "\"order\"")
 public class Order
 {
 
@@ -20,15 +19,15 @@ public class Order
 
   //Order Attributes
   @Id
-  @GeneratedValue( strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
-
   private Date purchaseDate;
 
   //Order Associations
+  @OneToOne
+  private Cart cart;
   @OneToMany
   private List<SpecificGame> orderGames;
-
   @ManyToOne
   private Customer orderCustomer;
 
@@ -36,10 +35,15 @@ public class Order
   // CONSTRUCTOR
   //------------------------
 
-  public Order(int aId, Date aPurchaseDate, Customer aOrderCustomer)
+  public Order(int aId, Date aPurchaseDate, Cart aCart, Customer aOrderCustomer)
   {
     id = aId;
     purchaseDate = aPurchaseDate;
+    boolean didAddCart = setCart(aCart);
+    if (!didAddCart)
+    {
+      throw new RuntimeException("Unable to create order due to cart. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
     orderGames = new ArrayList<SpecificGame>();
     boolean didAddOrderCustomer = setOrderCustomer(aOrderCustomer);
     if (!didAddOrderCustomer)
@@ -48,9 +52,9 @@ public class Order
     }
   }
 
-  protected Order(){
-
+  protected Order() {
   }
+
   //------------------------
   // INTERFACE
   //------------------------
@@ -79,6 +83,11 @@ public class Order
   public Date getPurchaseDate()
   {
     return purchaseDate;
+  }
+  /* Code from template association_GetOne */
+  public Cart getCart()
+  {
+    return cart;
   }
   /* Code from template association_GetMany */
   public SpecificGame getOrderGame(int index)
@@ -115,6 +124,34 @@ public class Order
   {
     return orderCustomer;
   }
+  /* Code from template association_SetOneToOptionalOne */
+  public boolean setCart(Cart aNewCart)
+  {
+    boolean wasSet = false;
+    if (aNewCart == null)
+    {
+      //Unable to setCart to null, as order must always be associated to a cart
+      return wasSet;
+    }
+    
+    Order existingOrder = aNewCart.getOrder();
+    if (existingOrder != null && !equals(existingOrder))
+    {
+      //Unable to setCart, the current cart already has a order, which would be orphaned if it were re-assigned
+      return wasSet;
+    }
+    
+    Cart anOldCart = cart;
+    cart = aNewCart;
+    cart.setOrder(this);
+
+    if (anOldCart != null)
+    {
+      anOldCart.setOrder(null);
+    }
+    wasSet = true;
+    return wasSet;
+  }
   /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfOrderGames()
   {
@@ -142,7 +179,7 @@ public class Order
   }
   /* Code from template association_AddIndexControlFunctions */
   public boolean addOrderGameAt(SpecificGame aOrderGame, int index)
-  {
+  {  
     boolean wasAdded = false;
     if(addOrderGame(aOrderGame))
     {
@@ -165,8 +202,8 @@ public class Order
       orderGames.remove(aOrderGame);
       orderGames.add(index, aOrderGame);
       wasAdded = true;
-    }
-    else
+    } 
+    else 
     {
       wasAdded = addOrderGameAt(aOrderGame, index);
     }
@@ -194,6 +231,12 @@ public class Order
 
   public void delete()
   {
+    Cart existingCart = cart;
+    cart = null;
+    if (existingCart != null)
+    {
+      existingCart.setOrder(null);
+    }
     orderGames.clear();
     Customer placeholderOrderCustomer = orderCustomer;
     this.orderCustomer = null;
@@ -209,8 +252,7 @@ public class Order
     return super.toString() + "["+
             "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "purchaseDate" + "=" + (getPurchaseDate() != null ? !getPurchaseDate().equals(this)  ? getPurchaseDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "cart = "+(getCart()!=null?Integer.toHexString(System.identityHashCode(getCart())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "orderCustomer = "+(getOrderCustomer()!=null?Integer.toHexString(System.identityHashCode(getOrderCustomer())):"null");
   }
 }
-
-
