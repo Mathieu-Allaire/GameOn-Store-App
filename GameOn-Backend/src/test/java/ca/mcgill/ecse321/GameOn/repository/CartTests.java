@@ -22,8 +22,6 @@ public class CartTests {
     @Autowired
     private OrderRepository orderRepo;
     @Autowired
-    private WishlistRepository wishListRepo;
-    @Autowired
     private SpecificGameRepository specGamerepo;
     @Autowired
     private CategoryRepository categoryRepo;
@@ -37,7 +35,6 @@ public class CartTests {
         cartRepo.deleteAll();
         orderRepo.deleteAll();
         customerRepo.deleteAll();
-        wishListRepo.deleteAll();
 
         specGamerepo.deleteAll();
         gameRepo.deleteAll();
@@ -51,23 +48,21 @@ public class CartTests {
         long millis = System.currentTimeMillis();
         Date aDate = new Date(millis);
         int aId = 2;
-
-        Wishlist aCustomerWishlist = new Wishlist();
-        aCustomerWishlist = wishListRepo.save(aCustomerWishlist);
+        int aCartId = 1;
 
 
         //Create Customer
         int aCardNumber = 1111;
         String anAddress = "123 main street";
-        Customer aCustomer = new Customer(aCardNumber, aDate, anAddress, aCustomerWishlist);
+        Customer aCustomer = new Customer(aCardNumber, aDate, anAddress);
+        Cart aCart = new Cart(aDate, aCartId);
         aCustomer = customerRepo.save(aCustomer);
+        aCart = cartRepo.save(aCart);
 
         //Create Order
-        Order aOrder = new Order(aId, aDate, aCustomer);
+        Order aOrder = new Order(aId, aDate, aCart, aCustomer);
         aOrder = orderRepo.save(aOrder);
 
-        //Create Class
-        Cart aCart = new Cart(aDate,aOrder);
 
         //Create Game and Add Game to Cart
         String aPicture = "url";

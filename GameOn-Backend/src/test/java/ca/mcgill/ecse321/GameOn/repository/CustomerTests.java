@@ -12,20 +12,16 @@ import java.sql.Date;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.GameOn.model.Customer;
-import ca.mcgill.ecse321.GameOn.model.Wishlist;
 
 @SpringBootTest
 public class CustomerTests {
     @Autowired
     private CustomerRepository customerRepo;
-    @Autowired
-    private WishlistRepository wishlistRepo;
 
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
         customerRepo.deleteAll();
-        wishlistRepo.deleteAll();
     }
 
     @Test
@@ -36,13 +32,8 @@ public class CustomerTests {
         Date aCustomerDate = new Date(millis);
         String aCustomerAddress = "123 main st";
 
-        // Create Wishlist
-        Wishlist aWishlist = new Wishlist();
-
         // Create Customer with no wishlist
-        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, aCustomerAddress, aWishlist);
-
-        aWishlist = wishlistRepo.save(aWishlist);
+        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, aCustomerAddress);
 
         aCustomer = customerRepo.save(aCustomer);
 
@@ -58,6 +49,5 @@ public class CustomerTests {
         assertEquals(customerDB.getCardNum(), aCustomer.getCardNum());
         assertEquals(customerDB.getCardExpiryDate().toString(), aCustomer.getCardExpiryDate().toString());
         assertEquals(customerDB.getBillingAddress(), aCustomer.getBillingAddress());
-        assertEquals(customerDB.getCustomerWishlist().getId(), aCustomer.getCustomerWishlist().getId());
     }        
 }
