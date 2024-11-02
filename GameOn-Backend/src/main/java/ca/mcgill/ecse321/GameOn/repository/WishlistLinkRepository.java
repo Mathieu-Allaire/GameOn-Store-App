@@ -5,5 +5,4 @@ import ca.mcgill.ecse321.GameOn.model.WishlistLink;
 
 public interface WishlistLinkRepository extends CrudRepository<WishlistLink, WishlistLink.Key> {
     WishlistLink findWishlistLinkByKey(WishlistLink.Key key);
-    
 }

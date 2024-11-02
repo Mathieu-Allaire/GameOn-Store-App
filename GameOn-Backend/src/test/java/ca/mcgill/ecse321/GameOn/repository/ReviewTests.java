@@ -51,9 +51,11 @@ public class ReviewTests {
 
         // Create Customer
         Customer aCustomer = new Customer(aCustomerCardNum, aCustomerDate, aCustomerAddress);
+        aCustomer = customerRepo.save(aCustomer);
 
         // Create Manager
         Manager aManager = new Manager();
+        aManager = managerRepo.save(aManager);
 
         // Create Review
         Review aReview = new Review(aDescription, aStars, aLikes, aDislikes, aCustomer, aManager);
