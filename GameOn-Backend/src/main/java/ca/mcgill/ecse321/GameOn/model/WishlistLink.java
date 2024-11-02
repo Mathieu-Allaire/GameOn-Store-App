@@ -17,8 +17,12 @@ public class WishlistLink{
     @EmbeddedId
     private Key key;
 
-      //WishlistLink Associations
+    //WishlistLink Associations
+    @ManyToOne
+    @JoinColumn(name = "wishlistGames_id", insertable = false, updatable = false)
     private Game wishlistGames;
+    @ManyToOne
+    @JoinColumn(name = "customerWish_id", insertable = false, updatable = false)
     private Customer CustomerWish;
 
     //------------------------
@@ -125,9 +129,11 @@ public class WishlistLink{
     public static class Key implements Serializable{
 
       @ManyToOne
+      @JoinColumn(name = "wishlistGames_id")
       private Game wishlistGames;
 
       @ManyToOne
+      @JoinColumn(name = "customerWishlist_id")
       private Customer customerWishlist;
 
       public Key() {

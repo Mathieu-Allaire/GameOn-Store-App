@@ -22,13 +22,13 @@ public class Customer extends Role
 
   //Customer Associations
 
-    @OneToMany
+  @OneToMany
   private List<Order> customerOrder;
 
-    @OneToOne
+  @OneToMany(mappedBy = "CustomerWish" ,cascade = CascadeType.ALL, orphanRemoval = true)
   private List<WishlistLink> CustomerWish;
 
-    @OneToMany
+  @OneToMany
   private List<Review> customerReview;
 
  //------------------------
