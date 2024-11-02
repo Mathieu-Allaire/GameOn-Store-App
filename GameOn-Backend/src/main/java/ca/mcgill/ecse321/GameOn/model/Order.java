@@ -10,6 +10,7 @@ import java.util.*;
 // line 179 "model.ump"
 
 @Entity
+@Table(name = "\"order\"")
 public class Order
 {
 

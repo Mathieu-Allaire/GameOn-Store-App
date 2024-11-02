@@ -36,9 +36,8 @@ public class OrderTests {
     public void testCreateandReadOrder(){
         // Arrange
         int aCardNumber = 1343;
-        long millis = System.currentTimeMillis();
         String anAddress = "123 main st";
-        Date aCustomerDate = new Date(millis);
+        Date aCustomerDate = Date.valueOf("2024-11-02");
 
         // Create Customer
         Customer aCustomer = new Customer(aCardNumber, aCustomerDate, anAddress);

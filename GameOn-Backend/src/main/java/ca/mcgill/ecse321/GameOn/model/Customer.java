@@ -46,6 +46,9 @@ public class Customer extends Role
     customerReview = new ArrayList<Review>();
   }
 
+  protected Customer() {
+  }
+
   //------------------------
   // INTERFACE
   //------------------------
