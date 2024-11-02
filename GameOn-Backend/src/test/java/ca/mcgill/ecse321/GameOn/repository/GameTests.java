@@ -35,11 +35,13 @@ public class GameTests {
         String description = "Hero-based combat";
         int price = 5;
         int quantity = 1;
-        Category category = new Category("Fight");
-        Game game = new Game( picture, name, description, price, quantity, category);
 
-        //Save
+        //Create and Save Category
+        Category category = new Category("Fight");
         category = categoryRepo.save(category);
+
+        //Create and Save Game
+        Game game = new Game( picture, name, description, price, quantity, category);
         game = gameRepo.save(game);
 
         //Read

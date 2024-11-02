@@ -22,7 +22,7 @@ public class SpecificGame
 
   //SpecificGame Associations
 
-    @ManyToOne //SpecificGame --> Game
+  @ManyToOne //SpecificGame --> Game
   private Game game;
 
   //------------------------
