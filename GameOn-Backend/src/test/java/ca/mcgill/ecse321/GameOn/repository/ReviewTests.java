@@ -12,7 +12,6 @@ import java.sql.Date;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.GameOn.model.Review;
-import ca.mcgill.ecse321.GameOn.model.Wishlist;
 import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Manager;
 
@@ -24,15 +23,12 @@ public class ReviewTests {
     private CustomerRepository customerRepo;
     @Autowired
     private ManagerRepository managerRepo;
-    @Autowired
-    private WishlistRepository wishlistRepo;
 
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
         reviewRepo.deleteAll();
         customerRepo.deleteAll();
-        wishlistRepo.deleteAll();
         managerRepo.deleteAll();
     }
 
@@ -52,11 +48,9 @@ public class ReviewTests {
         long millis = System.currentTimeMillis();
         Date aCustomerDate = new Date(millis);
         String aCustomerAddress = "123 main st";
-        Wishlist aWishlist = new Wishlist();
-        aWishlist = wishlistRepo.save(aWishlist);
 
         // Create Customer
-        Customer aCustomer = new Customer(aCustomerCardNum, aCustomerDate, aCustomerAddress, aWishlist);
+        Customer aCustomer = new Customer(aCustomerCardNum, aCustomerDate, aCustomerAddress);
         aCustomer = customerRepo.save(aCustomer);
 
         // Create Manager
@@ -64,8 +58,7 @@ public class ReviewTests {
         aManager = managerRepo.save(aManager);
 
         // Create Review
-        int aReviewId = 4321;
-        Review aReview = new Review(aReviewId, aDescription, aStars, aLikes, aDislikes, aCustomer, aManager);
+        Review aReview = new Review(aDescription, aStars, aLikes, aDislikes, aCustomer, aManager);
         aReview.setReply(aReply);
         aReview = reviewRepo.save(aReview);
 

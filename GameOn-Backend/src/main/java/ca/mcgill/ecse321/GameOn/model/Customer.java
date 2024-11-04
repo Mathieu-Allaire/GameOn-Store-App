@@ -22,35 +22,33 @@ public class Customer extends Role
 
   //Customer Associations
 
-    @OneToMany
+  @OneToMany
   private List<Order> customerOrder;
 
-    @OneToOne
-  private Wishlist customerWishlist;
+  @OneToMany(mappedBy = "CustomerWish" ,cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<WishlistLink> CustomerWish;
 
-    @OneToMany
+  @OneToMany
   private List<Review> customerReview;
 
-  //------------------------
+ //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Customer(int aCardNum, Date aCardExpiryDate, String aBillingAddress, Wishlist aCustomerWishlist)
+  public Customer(int aCardNum, Date aCardExpiryDate, String aBillingAddress)
   {
     super();
     cardNum = aCardNum;
     cardExpiryDate = aCardExpiryDate;
     billingAddress = aBillingAddress;
+    CustomerWish = new ArrayList<WishlistLink>();
     customerOrder = new ArrayList<Order>();
-    if (!setCustomerWishlist(aCustomerWishlist))
-    {
-      throw new RuntimeException("Unable to create Customer due to aCustomerWishlist. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
     customerReview = new ArrayList<Review>();
   }
 
-  protected Customer(){
+  protected Customer() {
   }
+
   //------------------------
   // INTERFACE
   //------------------------
@@ -94,6 +92,36 @@ public class Customer extends Role
     return billingAddress;
   }
   /* Code from template association_GetMany */
+  public WishlistLink getCustomerWish(int index)
+  {
+    WishlistLink aCustomerWish = CustomerWish.get(index);
+    return aCustomerWish;
+  }
+
+  public List<WishlistLink> getCustomerWish()
+  {
+    List<WishlistLink> newCustomerWish = Collections.unmodifiableList(CustomerWish);
+    return newCustomerWish;
+  }
+
+  public int numberOfCustomerWish()
+  {
+    int number = CustomerWish.size();
+    return number;
+  }
+
+  public boolean hasCustomerWish()
+  {
+    boolean has = CustomerWish.size() > 0;
+    return has;
+  }
+
+  public int indexOfCustomerWish(WishlistLink aCustomerWish)
+  {
+    int index = CustomerWish.indexOf(aCustomerWish);
+    return index;
+  }
+  /* Code from template association_GetMany */
   public Order getCustomerOrder(int index)
   {
     Order aCustomerOrder = customerOrder.get(index);
@@ -122,11 +150,6 @@ public class Customer extends Role
   {
     int index = customerOrder.indexOf(aCustomerOrder);
     return index;
-  }
-  /* Code from template association_GetOne */
-  public Wishlist getCustomerWishlist()
-  {
-    return customerWishlist;
   }
   /* Code from template association_GetMany */
   public Review getCustomerReview(int index)
@@ -159,14 +182,86 @@ public class Customer extends Role
     return index;
   }
   /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfCustomerWish()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToOne */
+  public WishlistLink addCustomerWish(Game aWishlistGames)
+  {
+    return new WishlistLink(aWishlistGames, this);
+  }
+
+  public boolean addCustomerWish(WishlistLink aCustomerWish)
+  {
+    boolean wasAdded = false;
+    if (CustomerWish.contains(aCustomerWish)) { return false; }
+    Customer existingCustomerWish = aCustomerWish.getCustomerWish();
+    boolean isNewCustomerWish = existingCustomerWish != null && !this.equals(existingCustomerWish);
+    if (isNewCustomerWish)
+    {
+      aCustomerWish.setCustomerWish(this);
+    }
+    else
+    {
+      CustomerWish.add(aCustomerWish);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeCustomerWish(WishlistLink aCustomerWish)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aCustomerWish, as it must always have a CustomerWish
+    if (!this.equals(aCustomerWish.getCustomerWish()))
+    {
+      CustomerWish.remove(aCustomerWish);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addCustomerWishAt(WishlistLink aCustomerWish, int index)
+  {  
+    boolean wasAdded = false;
+    if(addCustomerWish(aCustomerWish))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCustomerWish()) { index = numberOfCustomerWish() - 1; }
+      CustomerWish.remove(aCustomerWish);
+      CustomerWish.add(index, aCustomerWish);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveCustomerWishAt(WishlistLink aCustomerWish, int index)
+  {
+    boolean wasAdded = false;
+    if(CustomerWish.contains(aCustomerWish))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCustomerWish()) { index = numberOfCustomerWish() - 1; }
+      CustomerWish.remove(aCustomerWish);
+      CustomerWish.add(index, aCustomerWish);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addCustomerWishAt(aCustomerWish, index);
+    }
+    return wasAdded;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfCustomerOrder()
   {
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Order addCustomerOrder(int aId, Date aPurchaseDate)
+  public Order addCustomerOrder(int aId, Date aPurchaseDate, Cart aCart)
   {
-    return new Order(aId, aPurchaseDate, this);
+    return new Order(aPurchaseDate, aCart, this);
   }
 
   public boolean addCustomerOrder(Order aCustomerOrder)
@@ -230,26 +325,15 @@ public class Customer extends Role
     }
     return wasAdded;
   }
-  /* Code from template association_SetUnidirectionalOne */
-  public boolean setCustomerWishlist(Wishlist aNewCustomerWishlist)
-  {
-    boolean wasSet = false;
-    if (aNewCustomerWishlist != null)
-    {
-      customerWishlist = aNewCustomerWishlist;
-      wasSet = true;
-    }
-    return wasSet;
-  }
   /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfCustomerReview()
   {
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Review addCustomerReview(int aId, String aDescription, int aStars, int aLikes, int aDislikes, String aReply, Manager aManager)
+  public Review addCustomerReview(String aDescription, int aStars, int aLikes, int aDislikes, Manager aManager)
   {
-    return new Review(aId, aDescription, aStars, aLikes, aDislikes, this, aManager);
+    return new Review(aDescription, aStars, aLikes, aDislikes, this, aManager);
   }
 
   public boolean addCustomerReview(Review aCustomerReview)
@@ -316,12 +400,16 @@ public class Customer extends Role
 
   public void delete()
   {
+    for(int i=CustomerWish.size(); i > 0; i--)
+    {
+      WishlistLink aCustomerWish = CustomerWish.get(i - 1);
+      aCustomerWish.delete();
+    }
     for(int i=customerOrder.size(); i > 0; i--)
     {
       Order aCustomerOrder = customerOrder.get(i - 1);
       aCustomerOrder.delete();
     }
-    customerWishlist = null;
     for(int i=customerReview.size(); i > 0; i--)
     {
       Review aCustomerReview = customerReview.get(i - 1);
@@ -336,7 +424,6 @@ public class Customer extends Role
     return super.toString() + "["+
             "cardNum" + ":" + getCardNum()+ "," +
             "billingAddress" + ":" + getBillingAddress()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "cardExpiryDate" + "=" + (getCardExpiryDate() != null ? !getCardExpiryDate().equals(this)  ? getCardExpiryDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "customerWishlist = "+(getCustomerWishlist()!=null?Integer.toHexString(System.identityHashCode(getCustomerWishlist())):"null");
+            "  " + "cardExpiryDate" + "=" + (getCardExpiryDate() != null ? !getCardExpiryDate().equals(this)  ? getCardExpiryDate().toString().replaceAll("  ","    ") : "this" : "null");
   }
 }

@@ -11,94 +11,33 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.sql.Date;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ca.mcgill.ecse321.GameOn.model.*;
+import ca.mcgill.ecse321.GameOn.model.Cart;
 
 @SpringBootTest
 public class CartTests {
     @Autowired
     private CartRepository cartRepo;
-    @Autowired
-    private CustomerRepository customerRepo;
-    @Autowired
-    private OrderRepository orderRepo;
-    @Autowired
-    private WishlistRepository wishListRepo;
-    @Autowired
-    private SpecificGameRepository specGamerepo;
-    @Autowired
-    private CategoryRepository categoryRepo;
-    @Autowired
-    private GameRepository gameRepo;
-
-
+   
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
         cartRepo.deleteAll();
-        orderRepo.deleteAll();
-        customerRepo.deleteAll();
-        wishListRepo.deleteAll();
-
-        specGamerepo.deleteAll();
-        gameRepo.deleteAll();
-        categoryRepo.deleteAll();
-
     }
 
     @Test
     public void testCreateCart(){
         //Arrange
-        long millis = System.currentTimeMillis();
-        Date aDate = new Date(millis);
-        int aId = 2;
-
-        Wishlist aCustomerWishlist = new Wishlist();
-        aCustomerWishlist = wishListRepo.save(aCustomerWishlist);
-
-
-        //Create Customer
-        int aCardNumber = 1111;
-        String anAddress = "123 main street";
-        Customer aCustomer = new Customer(aCardNumber, aDate, anAddress, aCustomerWishlist);
-        aCustomer = customerRepo.save(aCustomer);
-
-        //Create Order
-        Order aOrder = new Order(aId, aDate, aCustomer);
-        aOrder = orderRepo.save(aOrder);
-
-        //Create Class
-        Cart aCart = new Cart(aDate,aOrder);
-
-        //Create Game and Add Game to Cart
-        String aPicture = "url";
-        String aName = "Overwatch";
-        String aDescription = "Hero-based combat";
-        int aPrice = 5;
-        int aQuantity = 1;
-        Category aCategory = new Category("Fight");
-        Game gameTest = new Game( aPicture, aName, aDescription, aPrice, aQuantity, aCategory);
-        SpecificGame specificGameTest = new SpecificGame(gameTest); // not sure if we need to put the id in the constructor
-
-        aCart.addSpecificGame(specificGameTest);
-
-        aCategory = categoryRepo.save(aCategory);
-        gameTest = gameRepo.save(gameTest);
-        specificGameTest = specGamerepo.save(specificGameTest);
-
-
-        //Save Object
+        Date date = Date.valueOf("2024-02-09");
+        Cart aCart = new Cart(date);
         aCart = cartRepo.save(aCart);
-        int id = aCart.getId();
-
 
         //Act
-        Cart cartDB = cartRepo.findCartById(id);
+        Cart result = cartRepo.findCartById(aCart.getId());
 
+        //Assert
+        assertNotNull(result);
+        assertEquals(aCart.getId(), result.getId());
+        assertEquals(aCart.getDateAdded(), result.getDateAdded());
 
-        // Assert
-        assertNotNull(cartDB);
-        assertEquals(cartDB.getDateAdded().toString(), aDate.toString());
-        assertEquals(cartDB.getId(), id);
-        assertEquals(cartDB.getOrder().getPurchaseDate().toString(), aDate.toString());
     }
 }

@@ -12,8 +12,8 @@ import java.sql.Date;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.GameOn.model.Order;
-import ca.mcgill.ecse321.GameOn.model.Wishlist;
 import ca.mcgill.ecse321.GameOn.model.Customer;
+import ca.mcgill.ecse321.GameOn.model.Cart;
 
 @SpringBootTest
 public class OrderTests {
@@ -22,34 +22,33 @@ public class OrderTests {
     @Autowired
     private CustomerRepository customerRepo;
     @Autowired
-    private WishlistRepository wishlistRepo;
+    private CartRepository cartRepo;
 
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
         orderRepo.deleteAll();
+        cartRepo.deleteAll();
         customerRepo.deleteAll();
-        wishlistRepo.deleteAll();
     }
 
     @Test
     public void testCreateandReadOrder(){
         // Arrange
-        int aId = 1;
         int aCardNumber = 1343;
-        long millis = System.currentTimeMillis();
         String anAddress = "123 main st";
-        Date aCustomerDate = new Date(millis);
+        Date aCustomerDate = Date.valueOf("2024-11-02");
 
-        // Create Wishlist
-        Wishlist aWishlist = new Wishlist();
-        aWishlist = wishlistRepo.save(aWishlist);
         // Create Customer
-        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, anAddress, aWishlist);
+        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, anAddress);
         aCustomer = customerRepo.save(aCustomer);
+
+        // Create Cart
+        Cart aCart = new Cart(aCustomerDate);
+        aCart = cartRepo.save(aCart);
         
         // Create Order
-        Order aOrder = new Order(aId, aCustomerDate, aCustomer);
+        Order aOrder = new Order(aCustomerDate, aCart, aCustomer);
         aOrder = orderRepo.save(aOrder);
         
         int id = aOrder.getId();

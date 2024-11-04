@@ -1,13 +1,15 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.31.1.5860.78bb27cc6 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
+
 package ca.mcgill.ecse321.GameOn.model;
-import jakarta.persistence.*;
 import java.util.*;
 
-import ca.mcgill.ecse321.GameOn.model.WishlistLink.Key;
+import jakarta.persistence.*;
 
 // line 2 "GameState.ump"
-// line 61 "GameOn.ump"
+// line 22 "GameState.ump"
+// line 60 "model.ump"
+// line 189 "model.ump"
 
 @Entity
 public class Game
@@ -32,14 +34,11 @@ public class Game
   private GameStatus gameStatus;
 
   //Game Associations
-
-    @ManyToOne
+  @ManyToOne
   private Category category;
-
-    @OneToMany
+  @OneToMany
   private List<WishlistLink> wishlistlink;
-
-    @OneToMany //Game --> Review
+  @OneToMany
   private List<Review> reviews;
 
   //------------------------
@@ -56,15 +55,14 @@ public class Game
     boolean didAddCategory = setCategory(aCategory);
     if (!didAddCategory)
     {
-      throw new RuntimeException("Unable to create game due to category. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create game due to category. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     wishlistlink = new ArrayList<WishlistLink>();
     reviews = new ArrayList<Review>();
     setGameStatus(GameStatus.Available);
   }
 
-  protected Game(){
-
+  protected Game() {
   }
 
   //------------------------
@@ -150,7 +148,7 @@ public class Game
     return gameStatus;
   }
 
-  private boolean __autotransition7__()
+  private boolean __autotransition2698__()
   {
     boolean wasEventProcessed = false;
     
@@ -190,7 +188,7 @@ public class Game
     return wasEventProcessed;
   }
 
-  private boolean __autotransition8__()
+  private boolean __autotransition2699__()
   {
     boolean wasEventProcessed = false;
     
@@ -238,10 +236,10 @@ public class Game
     switch(gameStatus)
     {
       case Available:
-        __autotransition7__();
+        __autotransition2698__();
         break;
       case OutOfStock:
-        __autotransition8__();
+        __autotransition2699__();
         break;
     }
   }
@@ -311,13 +309,22 @@ public class Game
     return index;
   }
   /* Code from template association_SetOneToMany */
-  public boolean setCategory(Category aNewCategory)
+  public boolean setCategory(Category aCategory)
   {
     boolean wasSet = false;
-    if (aNewCategory != null){
-      category = aNewCategory;
-      wasSet = true;
+    if (aCategory == null)
+    {
+      return wasSet;
     }
+
+    Category existingCategory = category;
+    category = aCategory;
+    if (existingCategory != null && !existingCategory.equals(aCategory))
+    {
+      existingCategory.removeGame(this);
+    }
+    category.addGame(this);
+    wasSet = true;
     return wasSet;
   }
   /* Code from template association_MinimumNumberOfMethod */
@@ -326,12 +333,72 @@ public class Game
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public WishlistLink addWishlistlink(Wishlist aWishlist)
+  public WishlistLink addWishlistlink(Customer aCustomerWish)
   {
-    Key aKey = new Key(this, aWishlist);
-    return new WishlistLink(aKey);
+    return new WishlistLink(this, aCustomerWish);
   }
 
+  public boolean addWishlistlink(WishlistLink aWishlistlink)
+  {
+    boolean wasAdded = false;
+    if (wishlistlink.contains(aWishlistlink)) { return false; }
+    Game existingWishlistGames = aWishlistlink.getWishlistGames();
+    boolean isNewWishlistGames = existingWishlistGames != null && !this.equals(existingWishlistGames);
+    if (isNewWishlistGames)
+    {
+      aWishlistlink.setWishlistGames(this);
+    }
+    else
+    {
+      wishlistlink.add(aWishlistlink);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeWishlistlink(WishlistLink aWishlistlink)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aWishlistlink, as it must always have a wishlistGames
+    if (!this.equals(aWishlistlink.getWishlistGames()))
+    {
+      wishlistlink.remove(aWishlistlink);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addWishlistlinkAt(WishlistLink aWishlistlink, int index)
+  {  
+    boolean wasAdded = false;
+    if(addWishlistlink(aWishlistlink))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfWishlistlink()) { index = numberOfWishlistlink() - 1; }
+      wishlistlink.remove(aWishlistlink);
+      wishlistlink.add(index, aWishlistlink);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveWishlistlinkAt(WishlistLink aWishlistlink, int index)
+  {
+    boolean wasAdded = false;
+    if(wishlistlink.contains(aWishlistlink))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfWishlistlink()) { index = numberOfWishlistlink() - 1; }
+      wishlistlink.remove(aWishlistlink);
+      wishlistlink.add(index, aWishlistlink);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addWishlistlinkAt(aWishlistlink, index);
+    }
+    return wasAdded;
+  }
   /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfReviews()
   {
@@ -392,7 +459,17 @@ public class Game
 
   public void delete()
   {
-    category = null;
+    Category placeholderCategory = category;
+    this.category = null;
+    if(placeholderCategory != null)
+    {
+      placeholderCategory.removeGame(this);
+    }
+    for(int i=wishlistlink.size(); i > 0; i--)
+    {
+      WishlistLink aWishlistlink = wishlistlink.get(i - 1);
+      aWishlistlink.delete();
+    }
     reviews.clear();
   }
 

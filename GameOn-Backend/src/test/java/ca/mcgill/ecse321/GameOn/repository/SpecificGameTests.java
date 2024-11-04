@@ -37,13 +37,23 @@ public class SpecificGameTests {
         String aDescription = "Hero-based combat";
         int aPrice = 5;
         int aQuantity = 1;
-        Category aCategory = new Category("Fight");
-        Game gameTest = new Game( aPicture, aName, aDescription, aPrice, aQuantity, aCategory);
-        SpecificGame specificGameTest = new SpecificGame(gameTest); // not sure if we need to put the id in the constructor
 
+        //Create Category
+        Category aCategory = new Category("Fight");
+        //Game gameTest = aCategory.addGame(aPicture,aName,aDescription,aPrice,aQuantity); add the game to the category
+        //Save Category
         aCategory = categoryRepo.save(aCategory);
+
+        //Create Game
+        Game gameTest = new Game( aPicture, aName, aDescription, aPrice, aQuantity, aCategory);
+        //Save Game
         gameTest = gameRepo.save(gameTest);
+
+        //Create Specific Game
+        SpecificGame specificGameTest = new SpecificGame(gameTest); // not sure if we need to put the id in the constructor
+        //Save Specific Game
         specificGameTest = specGamerepo.save(specificGameTest);
+        
         int id = specificGameTest.getId();
 
         // Act
