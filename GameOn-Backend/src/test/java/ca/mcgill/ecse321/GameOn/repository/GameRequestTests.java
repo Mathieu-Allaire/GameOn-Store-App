@@ -78,7 +78,7 @@ public class GameRequestTests {
         assertEquals(gameRequest.getRequestCreator().getEmployeeStatus(), aEmployee.getEmployeeStatus());
         assertEquals(gameRequest.getResquestedGame().getName(), game.getName());
         assertEquals(gameRequest.getResquestedGame().getPicture(), game.getPicture());
-        assertEquals(gameRequest.getResquestedGame().getCategory().getId(), game.getCategory().getId());
+        assertEquals(gameRequest.getResquestedGame().getCategory().getName(), game.getCategory().getName());
         assertEquals(gameRequest.getResquestedGame().getPrice(), game.getPrice());
         assertEquals(gameRequest.getResquestedGame().getQuantity(), game.getQuantity());
         assertEquals(gameRequest.getRequestApprover().getClass(), manager.getClass());
