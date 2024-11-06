@@ -14,6 +14,8 @@ import java.sql.Date;
 
 import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.model.Customer;
+import ca.mcgill.ecse321.GameOn.model.Cart;
+
 
 @SpringBootTest
 public class PersonTests {
@@ -22,6 +24,8 @@ public class PersonTests {
     @Autowired
     private CustomerRepository customerRepo;
     @Autowired
+    private CartRepository cartRepository;
+    @Autowired
     private WishlistLinkRepository wishlistLinkRepo;
 
     @BeforeEach
@@ -29,6 +33,7 @@ public class PersonTests {
     public void clearDatabase() {
         personRepo.deleteAll();
         customerRepo.deleteAll();
+        cartRepository.deleteAll();
         wishlistLinkRepo.deleteAll();
     }
 
@@ -45,7 +50,10 @@ public class PersonTests {
         Date aCustomerDate = new Date(millis);
         String aCustomerAddress = "123 main st";
 
-        Customer aCustomer = new Customer(cardNum, aCustomerDate, aCustomerAddress);
+        Cart cart = new Cart();
+        cartRepository.save(cart);
+
+        Customer aCustomer = new Customer(cardNum, aCustomerDate, aCustomerAddress,cart);
         aCustomer = customerRepo.save(aCustomer);
 
         // Create Person

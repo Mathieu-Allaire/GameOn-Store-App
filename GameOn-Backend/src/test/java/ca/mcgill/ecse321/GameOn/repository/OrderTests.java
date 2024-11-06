@@ -15,6 +15,7 @@ import ca.mcgill.ecse321.GameOn.model.Order;
 import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Cart;
 
+
 @SpringBootTest
 public class OrderTests {
     @Autowired
@@ -28,8 +29,8 @@ public class OrderTests {
     @AfterEach
     public void clearDatabase() {
         orderRepo.deleteAll();
-        cartRepo.deleteAll();
         customerRepo.deleteAll();
+        cartRepo.deleteAll();
     }
 
     @Test
@@ -40,15 +41,13 @@ public class OrderTests {
         Date aCustomerDate = Date.valueOf("2024-11-02");
 
         // Create Customer
-        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, anAddress);
+        Cart cart = new Cart();
+        cartRepo.save(cart);
+        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, anAddress,cart);
         aCustomer = customerRepo.save(aCustomer);
-
-        // Create Cart
-        Cart aCart = new Cart(aCustomerDate);
-        aCart = cartRepo.save(aCart);
         
         // Create Order
-        Order aOrder = new Order(aCustomerDate, aCart, aCustomer);
+        Order aOrder = new Order(aCustomerDate, cart, aCustomer);
         aOrder = orderRepo.save(aOrder);
         
         int id = aOrder.getId();
