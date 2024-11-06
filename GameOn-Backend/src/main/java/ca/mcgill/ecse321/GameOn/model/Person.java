@@ -16,8 +16,6 @@ public class Person
   //Person Attributes
 
   @Id
-  @GeneratedValue( strategy = GenerationType.IDENTITY)
-  private int id;
   private String email;
   private String name;
   private String password;
@@ -51,14 +49,6 @@ public class Person
   // INTERFACE
   //------------------------
 
-  public boolean setId(int aId)
-  {
-    boolean wasSet = false;
-    id = aId;
-    wasSet = true;
-    return wasSet;
-  }
-
   public boolean setEmail(String aEmail)
   {
     boolean wasSet = false;
@@ -81,11 +71,6 @@ public class Person
     password = aPassword;
     wasSet = true;
     return wasSet;
-  }
-
-  public int getId()
-  {
-    return id;
   }
 
   /**
@@ -241,7 +226,6 @@ public class Person
   public String toString()
   {
     return super.toString() + "["+
-            "id" + ":" + getId()+ "," +
             "email" + ":" + getEmail()+ "," +
             "name" + ":" + getName()+ "," +
             "password" + ":" + getPassword()+ "]";
