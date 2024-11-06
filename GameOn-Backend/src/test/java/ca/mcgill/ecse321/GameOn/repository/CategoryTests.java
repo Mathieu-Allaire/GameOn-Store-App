@@ -26,11 +26,8 @@ public class CategoryTests {
         String aName = "war";
         Category war = new Category(aName);
         war = categoryRepo.save(war);
-
-        int id = war.getId();
-
         //Act
-        Category categoryDB = categoryRepo.findCategoryById(id);
+        Category categoryDB = categoryRepo.findCategoryByName(aName);
 
         //Assert
         assertNotNull(categoryDB);

@@ -18,14 +18,11 @@ public class Category
   //------------------------
 
   //Category Attributes
+  @Id
   private String name;
 
-  @Id
-  @GeneratedValue
-  private int id;
-
   //Category Associations
-  @OneToMany
+  @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Game> games;
 
   //------------------------
@@ -54,23 +51,11 @@ public class Category
     return wasSet;
   }
 
-  public boolean setId(int aId)
-  {
-    boolean wasSet = false;
-    id = aId;
-    wasSet = true;
-    return wasSet;
-  }
-
   public String getName()
   {
     return name;
   }
 
-  public int getId()
-  {
-    return id;
-  }
   /* Code from template association_GetMany */
   public Game getGame(int index)
   {
@@ -187,7 +172,6 @@ public class Category
   public String toString()
   {
     return super.toString() + "["+
-            "name" + ":" + getName()+ "," +
-            "id" + ":" + getId()+ "]";
+            "name" + ":" + getName() +"]";
   }
 }

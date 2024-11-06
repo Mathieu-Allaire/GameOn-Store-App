@@ -63,12 +63,8 @@ public class EmployeeTests {
         Game game = new Game( picture, name, description, price, quantity, category);
         game = gameRepo.save(game);
 
-        //Create Manager
-        Manager manager = new Manager();
-        manager = managerRepo.save(manager);
-
         //Create GameRequest
-        GameRequest gameRequest = new GameRequest(RequestType.Create, aEmployee, game, manager);
+        GameRequest gameRequest = new GameRequest(RequestType.Create, aEmployee, game);
 
         aEmployee.addGameRequest(gameRequest);
         gameRequest = gameRequestRepo.save(gameRequest);
