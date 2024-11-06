@@ -44,7 +44,7 @@ public class OrderTests {
         aCustomer = customerRepo.save(aCustomer);
 
         // Create Cart
-        Cart aCart = new Cart(aCustomerDate);
+        Cart aCart = new Cart(aCustomer);
         aCart = cartRepo.save(aCart);
         
         // Create Order

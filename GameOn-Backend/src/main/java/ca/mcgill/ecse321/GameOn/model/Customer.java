@@ -30,7 +30,8 @@ public class Customer extends Role
 
   @OneToMany
   private List<Review> customerReview;
-
+  @OneToOne
+  private Cart cart;
  //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -86,7 +87,42 @@ public class Customer extends Role
   {
     return cardExpiryDate;
   }
+  public Cart getCart()
+  {
+    return cart;
+  }
 
+  public boolean hasCart()
+  {
+    boolean has = cart != null;
+    return has;
+  }
+  public boolean setCart(Cart aNewCart)
+  {
+    boolean wasSet = false;
+    if (cart != null && !cart.equals(aNewCart) && equals(cart.getCustomer()))
+    {
+      //Unable to setCart, as existing cart would become an orphan
+      return wasSet;
+    }
+
+    cart = aNewCart;
+    Customer anOldCustomer = aNewCart != null ? aNewCart.getCustomer() : null;
+
+    if (!this.equals(anOldCustomer))
+    {
+      if (anOldCustomer != null)
+      {
+        anOldCustomer.cart = null;
+      }
+      if (cart != null)
+      {
+        cart.setCustomer(this);
+      }
+    }
+    wasSet = true;
+    return wasSet;
+  }
   public String getBillingAddress()
   {
     return billingAddress;
@@ -414,6 +450,12 @@ public class Customer extends Role
     {
       Review aCustomerReview = customerReview.get(i - 1);
       aCustomerReview.delete();
+    }
+    Cart existingCart = cart;
+    cart = null;
+    if (existingCart != null)
+    {
+      existingCart.delete();
     }
     super.delete();
   }
