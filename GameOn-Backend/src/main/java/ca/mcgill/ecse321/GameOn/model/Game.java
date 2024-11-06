@@ -35,6 +35,7 @@ public class Game
 
   //Game Associations
   @ManyToOne
+  @JoinColumn(name = "category_name")
   private Category category;
   @OneToMany
   private List<WishlistLink> wishlistlink;
@@ -59,7 +60,7 @@ public class Game
     }
     wishlistlink = new ArrayList<WishlistLink>();
     reviews = new ArrayList<Review>();
-    setGameStatus(GameStatus.Available);
+    setGameStatus(GameStatus.Unavailable);
   }
 
   protected Game() {
@@ -228,7 +229,7 @@ public class Game
     return wasEventProcessed;
   }
 
-  private void setGameStatus(GameStatus aGameStatus)
+  public void setGameStatus(GameStatus aGameStatus)
   {
     gameStatus = aGameStatus;
 
