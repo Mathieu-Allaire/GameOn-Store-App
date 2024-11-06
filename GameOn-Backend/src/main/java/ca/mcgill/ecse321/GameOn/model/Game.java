@@ -35,6 +35,7 @@ public class Game
 
   //Game Associations
   @ManyToOne
+  @JoinColumn(name = "category_name")
   private Category category;
   @OneToMany
   private List<WishlistLink> wishlistlink;
