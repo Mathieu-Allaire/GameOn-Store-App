@@ -31,6 +31,9 @@ public class Customer extends Role
   @OneToMany
   private List<Review> customerReview;
 
+  @OneToOne
+  private Cart cart;
+
  //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -81,12 +84,20 @@ public class Customer extends Role
   {
     return cardNum;
   }
-
+  public Cart getCart()
+  {
+    return cart;
+  }
+  public boolean hasCart()
+  {
+    boolean has = cart != null;
+    return has;
+  }
   public Date getCardExpiryDate()
   {
     return cardExpiryDate;
   }
-
+  
   public String getBillingAddress()
   {
     return billingAddress;
@@ -263,7 +274,33 @@ public class Customer extends Role
   {
     return new Order(aPurchaseDate, aCart, this);
   }
+  
+  public boolean setCart(Cart aNewCart)
+  {
+    boolean wasSet = false;
+    if (cart != null && !cart.equals(aNewCart) && equals(cart.getCustomer()))
+    {
+      //Unable to setCart, as existing cart would become an orphan
+      return wasSet;
+    }
 
+    cart = aNewCart;
+    Customer anOldCustomer = aNewCart != null ? aNewCart.getCustomer() : null;
+
+    if (!this.equals(anOldCustomer))
+    {
+      if (anOldCustomer != null)
+      {
+        anOldCustomer.cart = null;
+      }
+      if (cart != null)
+      {
+        cart.setCustomer(this);
+      }
+    }
+    wasSet = true;
+    return wasSet;
+  }
   public boolean addCustomerOrder(Order aCustomerOrder)
   {
     boolean wasAdded = false;
@@ -415,6 +452,12 @@ public class Customer extends Role
       Review aCustomerReview = customerReview.get(i - 1);
       aCustomerReview.delete();
     }
+    Cart existingCart = cart;
+    cart = null;
+    if (existingCart != null)
+    {
+      existingCart.delete();
+    }
     super.delete();
   }
 
@@ -424,6 +467,7 @@ public class Customer extends Role
     return super.toString() + "["+
             "cardNum" + ":" + getCardNum()+ "," +
             "billingAddress" + ":" + getBillingAddress()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "cardExpiryDate" + "=" + (getCardExpiryDate() != null ? !getCardExpiryDate().equals(this)  ? getCardExpiryDate().toString().replaceAll("  ","    ") : "this" : "null");
+            "  " + "cardExpiryDate" + "=" + (getCardExpiryDate() != null ? !getCardExpiryDate().equals(this)  ? getCardExpiryDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "cart = "+(getCart()!=null?Integer.toHexString(System.identityHashCode(getCart())):"null");
   }
 }

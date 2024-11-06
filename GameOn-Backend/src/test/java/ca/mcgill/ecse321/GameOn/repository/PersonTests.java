@@ -14,8 +14,6 @@ import java.sql.Date;
 
 import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.model.Customer;
-import ca.mcgill.ecse321.GameOn.model.Game;
-import ca.mcgill.ecse321.GameOn.model.WishlistLink;
 
 @SpringBootTest
 public class PersonTests {

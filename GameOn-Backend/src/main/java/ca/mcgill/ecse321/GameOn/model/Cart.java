@@ -19,24 +19,27 @@ public class Cart
   //Cart Attributes
   private Date dateAdded;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
-
   //Cart Associations
   @OneToOne
   private Order order;
   @OneToMany
   private List<SpecificGame> specificGame;
-
+  
+  @OneToOne
+  @Id
+  private Customer customer;
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Cart(Date aDateAdded)
+  public Cart(Customer aCustomer)
   {
-    dateAdded = aDateAdded;
     specificGame = new ArrayList<SpecificGame>();
+    boolean didAddCustomer = setCustomer(aCustomer);
+
+    if (!didAddCustomer) { 
+      throw new RuntimeException("Unable to create cart due to customer. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
   }
 
   protected Cart() {
@@ -53,24 +56,44 @@ public class Cart
     wasSet = true;
     return wasSet;
   }
-
-  public boolean setId(int aId)
-  {
+  public Customer getCustomer() {
+    return customer;
+  }
+  public boolean setCustomer(Customer aNewCustomer)
+{
     boolean wasSet = false;
-    id = aId;
+    if (aNewCustomer == null)
+    {
+        // Unable to setCustomer to null, as cart must always be associated to a customer
+        return wasSet;
+    }
+
+    Cart existingCart = aNewCustomer.getCart();
+    if (existingCart != null && !equals(existingCart))
+    {
+        // Unable to setCustomer, the current customer already has a cart, which would be orphaned if it were re-assigned
+        return wasSet;
+    }
+
+    Customer anOldCustomer = customer;
+    customer = aNewCustomer;
+    customer.setCart(this);
+
+    if (anOldCustomer != null)
+    {
+        anOldCustomer.setCart(null);
+    }
     wasSet = true;
     return wasSet;
-  }
+}
+
 
   public Date getDateAdded()
   {
     return dateAdded;
   }
 
-  public int getId()
-  {
-    return id;
-  }
+
   /* Code from template association_GetOne */
   public Order getOrder()
   {
@@ -206,13 +229,18 @@ public class Cart
       existingOrder.delete();
     }
     specificGame.clear();
+    Customer existingCustomer = customer;
+    customer = null;
+    if (existingCustomer != null)
+    {
+      existingCustomer.setCart(null);
+    }
   }
 
 
   public String toString()
   {
-    return super.toString() + "["+
-            "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
+    return super.toString() + System.getProperties().getProperty("line.separator") +
             "  " + "dateAdded" + "=" + (getDateAdded() != null ? !getDateAdded().equals(this)  ? getDateAdded().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "order = "+(getOrder()!=null?Integer.toHexString(System.identityHashCode(getOrder())):"null");
   }

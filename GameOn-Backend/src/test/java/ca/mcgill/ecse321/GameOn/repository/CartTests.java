@@ -10,34 +10,35 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.Date;
 import org.springframework.boot.test.context.SpringBootTest;
-
+import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Cart;
 
 @SpringBootTest
 public class CartTests {
     @Autowired
     private CartRepository cartRepo;
+    @Autowired
+    private CustomerRepository customerRepository;
    
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
         cartRepo.deleteAll();
+        customerRepository.deleteAll();
     }
 
     @Test
     public void testCreateCart(){
         //Arrange
         Date date = Date.valueOf("2024-02-09");
-        Cart aCart = new Cart(date);
+        Customer customer = new Customer(111, date, "123 mcgill street");
+        Cart aCart = new Cart(customer);
         aCart = cartRepo.save(aCart);
-
         //Act
-        Cart result = cartRepo.findCartById(aCart.getId());
+        Cart result = cartRepo.findCartByCustomer(aCart.getCustomer());
 
         //Assert
         assertNotNull(result);
-        assertEquals(aCart.getId(), result.getId());
-        assertEquals(aCart.getDateAdded(), result.getDateAdded());
-
+        assertEquals(aCart.getCustomer(), result.getCustomer());
     }
 }
