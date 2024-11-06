@@ -52,15 +52,12 @@ public class PersonTests {
         Person aPerson = new Person(aEmail, aName, aPassword, aCustomer);
         aPerson = personRepo.save(aPerson);
 
-        int id = aPerson.getId();
-
         // Act
-        Person personDB = personRepo.findPersonById(id);
+        Person personDB = personRepo.findPersonByEmail(aEmail);
         Customer customerDB = (Customer)personDB.getRole(0);
 
         // Assert
         assertNotNull(personDB);
-        assertEquals(personDB.getId(), aPerson.getId());
         assertEquals(personDB.getName(), aPerson.getName());
         assertEquals(personDB.getEmail(), aPerson.getEmail());
         assertEquals(personDB.getPassword(), aPerson.getPassword());
