@@ -155,9 +155,9 @@ public class Employee extends Staff
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public GameRequest addGameRequest(RequestType aRequestType, Game aResquestedGame, Manager aRequestApprover)
+  public GameRequest addGameRequest(RequestType aRequestType, Game aResquestedGame)
   {
-    return new GameRequest(aRequestType, this, aResquestedGame, aRequestApprover);
+    return new GameRequest(aRequestType, this, aResquestedGame);
   }
 
   public boolean addGameRequest(GameRequest aGameRequest)

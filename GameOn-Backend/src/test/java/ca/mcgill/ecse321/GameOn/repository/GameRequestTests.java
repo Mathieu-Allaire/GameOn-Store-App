@@ -64,7 +64,7 @@ public class GameRequestTests {
         manager = managerRepo.save(manager);
 
         //Create GameRequest
-        GameRequest gameRequest = new GameRequest(RequestType.Create, aEmployee, game, manager);
+        GameRequest gameRequest = new GameRequest(RequestType.Create, aEmployee, game);
         gameRequest = gameRequestRepo.save(gameRequest);
 
         int id = gameRequest.getId();
@@ -81,6 +81,5 @@ public class GameRequestTests {
         assertEquals(gameRequest.getResquestedGame().getCategory().getName(), game.getCategory().getName());
         assertEquals(gameRequest.getResquestedGame().getPrice(), game.getPrice());
         assertEquals(gameRequest.getResquestedGame().getQuantity(), game.getQuantity());
-        assertEquals(gameRequest.getRequestApprover().getClass(), manager.getClass());
     }
 }

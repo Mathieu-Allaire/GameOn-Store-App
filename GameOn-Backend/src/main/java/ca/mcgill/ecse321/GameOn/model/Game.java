@@ -59,7 +59,7 @@ public class Game
     }
     wishlistlink = new ArrayList<WishlistLink>();
     reviews = new ArrayList<Review>();
-    setGameStatus(GameStatus.Available);
+    setGameStatus(GameStatus.Unavailable);
   }
 
   protected Game() {
@@ -228,7 +228,7 @@ public class Game
     return wasEventProcessed;
   }
 
-  private void setGameStatus(GameStatus aGameStatus)
+  public void setGameStatus(GameStatus aGameStatus)
   {
     gameStatus = aGameStatus;
 

@@ -8,8 +8,6 @@ import jakarta.persistence.*;
 @Entity
 public class GameRequest
 {
-
-
   //------------------------
   // MEMBER VARIABLES
   //------------------------
@@ -28,14 +26,11 @@ public class GameRequest
     @OneToOne // GameRequest --> Game
   private Game resquestedGame;
 
-    @ManyToOne //GameRequest --> Manager (don't need this, only one manager)
-  private Manager requestApprover;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public GameRequest(RequestType aRequestType, Employee aRequestCreator, Game aResquestedGame, Manager aRequestApprover)
+  public GameRequest(RequestType aRequestType, Employee aRequestCreator, Game aResquestedGame)
   {
     requestType = aRequestType;
     boolean didAddRequestCreator = setRequestCreator(aRequestCreator);
@@ -47,11 +42,6 @@ public class GameRequest
     {
       throw new RuntimeException("Unable to create GameRequest due to aResquestedGame. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
-    boolean didAddRequestApprover = setRequestApprover(aRequestApprover);
-    if (!didAddRequestApprover)
-    {
-      throw new RuntimeException("Unable to create gameRequest due to requestApprover. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
   }
 
   protected GameRequest()
@@ -61,6 +51,7 @@ public class GameRequest
   //------------------------
   // INTERFACE
   //------------------------
+  
 
   public boolean setRequestType(RequestType aRequestType)
   {
@@ -87,11 +78,6 @@ public class GameRequest
   public Game getResquestedGame()
   {
     return resquestedGame;
-  }
-  /* Code from template association_GetOne */
-  public Manager getRequestApprover()
-  {
-    return requestApprover;
   }
   /* Code from template association_SetOneToMany */
   public boolean setRequestCreator(Employee aRequestCreator)
@@ -123,26 +109,6 @@ public class GameRequest
     }
     return wasSet;
   }
-  /* Code from template association_SetOneToMany */
-  public boolean setRequestApprover(Manager aRequestApprover)
-  {
-    boolean wasSet = false;
-    if (aRequestApprover == null)
-    {
-      return wasSet;
-    }
-
-    Manager existingRequestApprover = requestApprover;
-    requestApprover = aRequestApprover;
-    if (existingRequestApprover != null && !existingRequestApprover.equals(aRequestApprover))
-    {
-      existingRequestApprover.removeGameRequest(this);
-    }
-    requestApprover.addGameRequest(this);
-    wasSet = true;
-    return wasSet;
-  }
-
   public void delete()
   {
     Employee placeholderRequestCreator = requestCreator;
@@ -152,12 +118,6 @@ public class GameRequest
       placeholderRequestCreator.removeGameRequest(this);
     }
     resquestedGame = null;
-    Manager placeholderRequestApprover = requestApprover;
-    this.requestApprover = null;
-    if(placeholderRequestApprover != null)
-    {
-      placeholderRequestApprover.removeGameRequest(this);
-    }
   }
 
 
@@ -166,7 +126,6 @@ public class GameRequest
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "requestType" + "=" + (getRequestType() != null ? !getRequestType().equals(this)  ? getRequestType().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "requestCreator = "+(getRequestCreator()!=null?Integer.toHexString(System.identityHashCode(getRequestCreator())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "resquestedGame = "+(getResquestedGame()!=null?Integer.toHexString(System.identityHashCode(getResquestedGame())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "requestApprover = "+(getRequestApprover()!=null?Integer.toHexString(System.identityHashCode(getRequestApprover())):"null");
+            "  " + "resquestedGame = "+(getResquestedGame()!=null?Integer.toHexString(System.identityHashCode(getResquestedGame())):"null") + System.getProperties().getProperty("line.separator");
   }
 }
