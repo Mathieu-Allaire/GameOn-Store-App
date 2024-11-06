@@ -34,8 +34,9 @@ public class CustomerTests {
 
         // Create Customer with no wishlist
         Customer aCustomer = new Customer(aCardNumber, aCustomerDate, aCustomerAddress);
-
         aCustomer = customerRepo.save(aCustomer);
+
+        
 
         Long LongId = aCustomer.getId();
         int id = LongId.intValue();
