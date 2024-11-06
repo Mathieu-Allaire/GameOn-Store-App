@@ -3,6 +3,9 @@ package ca.mcgill.ecse321.GameOn.service;
 import java.sql.Date;
 import java.time.LocalDate;
 
+import ca.mcgill.ecse321.GameOn.model.Cart;
+import ca.mcgill.ecse321.GameOn.repository.CartRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,8 @@ public class AccountService {
     private CustomerRepository customerRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private CartRepository cartRepository;
 
     /**
      * 
@@ -98,10 +103,11 @@ public class AccountService {
         //     decryptedPassword += reverseDecryptedPassword.charAt(i);
         // }
 
-        Customer customer = new Customer(aCardNum, aCardExpiryDate, BillingAddress);
-        Person person = new Person(aEmail, aName, asciiEncryptedPassword, customer);
-
+        Cart cart = new Cart();
+        cartRepository.save(cart);
+        Customer customer = new Customer(aCardNum, aCardExpiryDate, BillingAddress,cart);
         customerRepository.save(customer);
+        Person person = new Person(aEmail, aName, asciiEncryptedPassword, customer);
         personRepository.save(person);
         return person;
 
@@ -130,9 +136,9 @@ public class AccountService {
 
     public Person createEmployee(String aEmail, String aName){
         Employee employeeRole = new Employee(true);
-        Person employee = new Person(aEmail, aName, "GameOn123!", employeeRole);
-
         employeeRepository.save(employeeRole);
+        
+        Person employee = new Person(aEmail, aName, "GameOn123!", employeeRole);
         personRepository.save(employee);
         return employee;
     }
