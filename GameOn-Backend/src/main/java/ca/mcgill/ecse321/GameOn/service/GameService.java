@@ -15,8 +15,16 @@ import ca.mcgill.ecse321.GameOn.model.Manager;
 import ca.mcgill.ecse321.GameOn.model.RequestType;
 import ca.mcgill.ecse321.GameOn.model.Game.GameStatus;
 
+/**
+ * This class represents the Game Service, which has the business logic
+ * to handle the creation, deletion, and retrieval of games.
+ * 
+ * It also provides methods to handle game requests.
+ *
+ * @author Neeshal Imrit
+ */
 @Service
-public class GameController {
+public class GameService {
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -278,19 +286,21 @@ public class GameController {
      * @param aQuantity
      */
     @Transactional
-    public void updateGameQuantity(Game aGame, int aQuantity){
+    public Game updateGameQuantity(String aGame, int aQuantity){
         if (aGame == null) {
             throw new IllegalArgumentException("Game is invalid");
         }
 
-        Game game = gameRepository.findGameByName(aGame.getName());
+        Game game = gameRepository.findGameByName(aGame);
 
         if (game == null) {
             throw new IllegalArgumentException("Game does not exist");
         }
 
         game.setQuantity(aQuantity);
-        gameRepository.save(game);
+        game = gameRepository.save(game);
+
+        return game;
     }
 
     /**
@@ -322,19 +332,21 @@ public class GameController {
      * @throws IllegalArgumentException if game does not exist
      */
     @Transactional
-    public void updateGamePrice(Game aGame, int aPrice){
+    public Game updateGamePrice(String aGame, int aPrice){
         if (aGame == null) {
             throw new IllegalArgumentException("Game is invalid");
         }
 
-        Game game = gameRepository.findGameByName(aGame.getName());
-
+        Game game = gameRepository.findGameByName(aGame);
+       
         if (game == null) {
             throw new IllegalArgumentException("Game does not exist");
         }
 
         game.setPrice(aPrice);
-        gameRepository.save(game);
+        game = gameRepository.save(game);
+
+        return game; 
     }
 
 }
