@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ca.mcgill.ecse321.GameOn.model.Review;
 import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Manager;
+import ca.mcgill.ecse321.GameOn.model.Cart;
 
 @SpringBootTest
 public class ReviewTests {
@@ -23,6 +24,8 @@ public class ReviewTests {
     private CustomerRepository customerRepo;
     @Autowired
     private ManagerRepository managerRepo;
+    @Autowired
+    private CartRepository cartRepository;
 
     @BeforeEach
     @AfterEach
@@ -50,7 +53,10 @@ public class ReviewTests {
         String aCustomerAddress = "123 main st";
 
         // Create Customer
-        Customer aCustomer = new Customer(aCustomerCardNum, aCustomerDate, aCustomerAddress);
+        Cart cart = new Cart();
+        cartRepository.save(cart);
+
+        Customer aCustomer = new Customer(aCustomerCardNum, aCustomerDate, aCustomerAddress,cart);
         aCustomer = customerRepo.save(aCustomer);
 
         // Create Manager

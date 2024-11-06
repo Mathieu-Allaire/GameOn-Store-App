@@ -12,6 +12,8 @@ import ca.mcgill.ecse321.GameOn.model.Category;
 import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.model.WishlistLink;
+import ca.mcgill.ecse321.GameOn.model.Cart;
+
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -25,12 +27,15 @@ public class WishlistLinkTests {
     private GameRepository gameRepo;
     @Autowired
     private CategoryRepository categoryRepo;
+    @Autowired
+    private CartRepository cartRepository;
 
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
         wishlistLinkRepo.deleteAll();
         customerRepo.deleteAll();
+        cartRepository.deleteAll();
         gameRepo.deleteAll();
         categoryRepo.deleteAll();
     }
@@ -59,8 +64,9 @@ public class WishlistLinkTests {
         String aCustomerAddress = "123 main st";
 
         // Create Customer with no wishlist
-        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, aCustomerAddress);
-
+        Cart cart = new Cart();
+        cartRepository.save(cart);
+        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, aCustomerAddress,cart);
         aCustomer = customerRepo.save(aCustomer);
 
         // Create WishlistLink
