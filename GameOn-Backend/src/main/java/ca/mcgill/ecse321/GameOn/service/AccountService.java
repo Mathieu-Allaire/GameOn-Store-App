@@ -102,12 +102,12 @@ public class AccountService {
      * 
      * @param id
      */
-    public Customer findCustomerById(int id){
+    public Customer findCustomerByEmail(String email){
         if (id < 0) {
             throw new IllegalArgumentException("Id is invalid");
         }
         
-        Customer customer = customerRepository.findCustomerById(id);
+        Customer customer = customerRepository.findCustomerByEmail(email);
         if (customer == null) {
             throw new IllegalArgumentException("Customer not found");
         }
