@@ -31,6 +31,9 @@ public class Customer extends Role
   @OneToMany
   private List<Review> customerReview;
 
+  @OneToOne
+  private Cart cart;
+
  //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -41,6 +44,7 @@ public class Customer extends Role
     cardNum = aCardNum;
     cardExpiryDate = aCardExpiryDate;
     billingAddress = aBillingAddress;
+    cart = new Cart();
     CustomerWish = new ArrayList<WishlistLink>();
     customerOrder = new ArrayList<Order>();
     customerReview = new ArrayList<Review>();

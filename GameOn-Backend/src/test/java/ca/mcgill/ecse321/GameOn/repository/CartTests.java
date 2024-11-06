@@ -27,8 +27,8 @@ public class CartTests {
     @Test
     public void testCreateCart(){
         //Arrange
-        Date date = Date.valueOf("2024-02-09");
-        Cart aCart = new Cart(date);
+        
+        Cart aCart = new Cart();
         aCart = cartRepo.save(aCart);
 
         //Act
@@ -37,7 +37,7 @@ public class CartTests {
         //Assert
         assertNotNull(result);
         assertEquals(aCart.getId(), result.getId());
-        assertEquals(aCart.getDateAdded(), result.getDateAdded());
+
 
     }
 }
