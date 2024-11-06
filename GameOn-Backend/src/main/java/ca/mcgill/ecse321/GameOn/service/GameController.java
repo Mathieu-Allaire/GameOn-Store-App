@@ -318,6 +318,8 @@ public class GameController {
      * 
      * @param aGame
      * @param aPrice
+     * @throws IllegalArgumentException if game is invalid
+     * @throws IllegalArgumentException if game does not exist
      */
     @Transactional
     public void updateGamePrice(Game aGame, int aPrice){
