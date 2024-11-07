@@ -74,7 +74,7 @@ public class Cart
   /* Code from template association_GetOne */
   public Order getOrder()
   {
-    return order;
+    return Order;
   }
 
   public boolean hasOrder()
@@ -177,6 +177,10 @@ public class Cart
       wasAdded = true;
     }
     return wasAdded;
+  }
+
+  public void removeAllGamesFromCart() {
+    specificGame.clear();
   }
 
   public boolean addOrMoveSpecificGameAt(SpecificGame aSpecificGame, int index)
