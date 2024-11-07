@@ -1,10 +1,12 @@
 package ca.mcgill.ecse321.GameOn.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+//import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.GameOn.service.AccountService;
@@ -15,6 +17,12 @@ import ca.mcgill.ecse321.GameOn.dto.EmployeeRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.EmployeeResponseDto;
 import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Employee;
+
+
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
+
+import java.sql.Date;
 
 @RestController
 public class AccountController {
@@ -29,9 +37,13 @@ public class AccountController {
      * @return The customer with the given email.
      */
     @GetMapping("/customer/{email}")
-    public CustomerResponseDto findCustomerByEmail(@PathVariable String email){
-        Person customer = accountService.findCustomerByEmail(email);
-        return new CustomerResponseDto(customer);
+    public ResponseEntity<?> findCustomerByEmail(@PathVariable String email){
+        try {
+            Person customer = accountService.findCustomerByEmail(email);
+            return new ResponseEntity<>(new CustomerResponseDto(customer), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -41,9 +53,13 @@ public class AccountController {
      * @return The employee with the given email.
      */
     @GetMapping("/employee/{email}")
-    public EmployeeResponseDto findEmployeeByEmail(@PathVariable String email){
-        Person employee = accountService.findEmployeeByEmail(email);
-        return new EmployeeResponseDto(employee);
+    public ResponseEntity<?> findEmployeeByEmail(@PathVariable String email){
+        try {
+            Person employee = accountService.findEmployeeByEmail(email);
+            return new ResponseEntity<>(new EmployeeResponseDto(employee), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
     }
 
      /**
@@ -53,9 +69,15 @@ public class AccountController {
      * @return The created customer 
      */
     @PostMapping("/customer")
-    public CustomerResponseDto createCustomer(@RequestBody CustomerRequestDto customer){
-        Person createdCustomer = accountService.createCustomer(customer.getEmail(), customer.getName(), customer.getPassword(), customer.getCardNumber(), customer.getExpiracyDate(), customer.getBillingAddress());
-        return new CustomerResponseDto(createdCustomer);
+    public ResponseEntity<?> createCustomer(@Valid @RequestBody CustomerRequestDto customer){
+        try {
+            int cardNumber = Integer.parseInt(customer.getCardNumber());
+            Date expiryDate = Date.valueOf(customer.getExpiracyDate());
+            Person createdCustomer = accountService.createCustomer(customer.getEmail(), customer.getName(), customer.getPassword(), cardNumber, expiryDate, customer.getBillingAddress());
+            return new ResponseEntity<>(new CustomerResponseDto(createdCustomer), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -65,12 +87,13 @@ public class AccountController {
      * @return The created employee 
      */
     @PostMapping("/employee")
-    public EmployeeResponseDto createEmployee(@RequestBody EmployeeRequestDto employee){
-        Person createdEmployee = accountService.createEmployee(employee.getEmail(), employee.getName());
-        return new EmployeeResponseDto(createdEmployee);
+    public ResponseEntity<?> createEmployee(@Valid @RequestBody EmployeeRequestDto employee){
+        try {
+            Person createdEmployee = accountService.createEmployee(employee.getEmail(), employee.getName());
+            return new ResponseEntity<>(new EmployeeResponseDto(createdEmployee), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
     }
 
-
-
-    
 }

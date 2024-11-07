@@ -6,14 +6,14 @@ import ca.mcgill.ecse321.GameOn.model.Employee;
 public class EmployeeResponseDto {
     private String email;
     private String name;
-    private boolean isEmployed;
+    private String isEmployed;
 
     public EmployeeResponseDto(Person person){
         this.email = person.getEmail();
         this.name = person.getName();
         
         Employee employeeRole = (Employee) person.getRole(0);
-        this.isEmployed = employeeRole.getIsEmployed();
+        this.isEmployed = employeeRole.getIsEmployed() ? "true" : "false";
 
     }
 
@@ -25,7 +25,7 @@ public class EmployeeResponseDto {
         return name;
     }
 
-    public  boolean getIsEmployed(){
+    public  String getIsEmployed(){
         return isEmployed;
     }
 }
