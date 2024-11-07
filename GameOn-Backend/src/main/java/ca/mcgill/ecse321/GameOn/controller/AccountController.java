@@ -64,7 +64,7 @@ public class AccountController {
      * @param employee The employee to create
      * @return The created employee 
      */
-    @PostMapping("/customer")
+    @PostMapping("/employee")
     public EmployeeResponseDto createEmployee(@RequestBody EmployeeRequestDto employee){
         Person createdEmployee = accountService.createEmployee(employee.getEmail(), employee.getName());
         return new EmployeeResponseDto(createdEmployee);
