@@ -22,8 +22,7 @@ public class Person
 
   //Person Associations
 
-    @OneToMany(fetch = FetchType.EAGER) // Person --> Role
-    
+  @OneToMany(fetch = FetchType.EAGER) // Person --> Role
   private List<Role> roles;
 
   //------------------------

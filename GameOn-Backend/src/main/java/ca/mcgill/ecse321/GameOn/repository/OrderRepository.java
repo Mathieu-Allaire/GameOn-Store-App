@@ -4,5 +4,5 @@ import ca.mcgill.ecse321.GameOn.model.Order;
 
 public interface OrderRepository extends CrudRepository<Order, Integer> {
     Order findOrderById(int id);
-    
+
 }

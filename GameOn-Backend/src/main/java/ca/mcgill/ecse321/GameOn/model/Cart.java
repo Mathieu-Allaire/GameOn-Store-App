@@ -3,7 +3,6 @@
 
 package ca.mcgill.ecse321.GameOn.model;
 import jakarta.persistence.*;
-import java.sql.Date;
 import java.util.*;
 
 // line 74 "model.ump"
@@ -29,6 +28,7 @@ public class Cart
   @OneToMany
   private List<SpecificGame> specificGame;
   @OneToOne
+  @JoinColumn(name = "customer_id", nullable = false, unique = true)
   private Customer customer;
 
   //------------------------
@@ -98,6 +98,9 @@ public class Cart
     boolean has = specificGame.size() > 0;
     return has;
   }
+
+  public void setCustomer(Customer aCustomer) {this.customer = aCustomer;}
+  public Customer getCustomer() {return customer;}
 
   public int indexOfSpecificGame(SpecificGame aSpecificGame)
   {

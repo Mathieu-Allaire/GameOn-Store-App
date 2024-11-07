@@ -38,14 +38,18 @@ public class CustomerTests {
         Date aCustomerDate = new Date(millis);
         String aCustomerAddress = "123 main st";
         Cart cart = new Cart();
-        cartRepository.save(cart);
+        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, aCustomerAddress,null);
+        aCustomer = customerRepo.save(aCustomer);
+        
 
         // Create Customer with no wishlist
-        
-        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, aCustomerAddress,cart);
-        aCustomer = customerRepo.save(aCustomer);
 
-        
+        cart.setCustomer(aCustomer); // Set the Customer in Cart
+        aCustomer.setCart(cart); // Link Cart back to Customer
+
+        // Save the Cart now that Customer ID is set
+        cart = cartRepository.save(cart);
+        customerRepo.save(aCustomer); // Optional: Save Customer again if bidirectional
 
         Long LongId = aCustomer.getId();
         int id = LongId.intValue();

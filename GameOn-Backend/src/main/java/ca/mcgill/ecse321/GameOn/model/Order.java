@@ -25,7 +25,8 @@ public class Order
   private Date purchaseDate;
 
   //Order Associations
-  @OneToOne
+  @OneToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "cart_id", nullable = false)
   private Cart cart;
   @OneToMany
   private List<SpecificGame> orderGames;

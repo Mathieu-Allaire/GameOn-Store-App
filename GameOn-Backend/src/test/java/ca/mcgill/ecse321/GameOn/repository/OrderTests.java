@@ -36,20 +36,20 @@ public class OrderTests {
     @Test
     public void testCreateandReadOrder(){
         // Arrange
-        int aCardNumber = 1343;
-        String anAddress = "123 main st";
-        Date aCustomerDate = Date.valueOf("2024-11-02");
-
-        // Create Customer
-        Cart cart = new Cart();
-        cartRepo.save(cart);
-        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, anAddress,cart);
+        // Step 1: Create and save Customer
+        Customer aCustomer = new Customer(1343, Date.valueOf("2024-11-02"), "123 main st", null);
         aCustomer = customerRepo.save(aCustomer);
-        
-        // Create Order
-        Order aOrder = new Order(aCustomerDate, cart, aCustomer);
+
+        // Step 2: Create Cart, link to Customer, and save Cart
+        Cart cart = new Cart();
+        cart.setCustomer(aCustomer);
+        aCustomer.setCart(cart);
+        cart = cartRepo.save(cart); // Ensure Cart has an ID
+
+        // Step 3: Use the saved Cart to create Order, then save Order
+        Order aOrder = new Order(Date.valueOf("2024-11-02"), cart, aCustomer);
         aOrder = orderRepo.save(aOrder);
-        
+            
         int id = aOrder.getId();
 
         // Act

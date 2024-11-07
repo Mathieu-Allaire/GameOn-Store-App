@@ -47,17 +47,21 @@ public class ReviewTests {
         String aReply = "THANKS";
 
         // Customer attributes
-        int aCustomerCardNum = 1234;
+        Cart aCart = new Cart();
+
+        // Create and save Customer first
         long millis = System.currentTimeMillis();
-        Date aCustomerDate = new Date(millis);
-        String aCustomerAddress = "123 main st";
+        Date aDate = new Date(millis);
+        Customer aCustomer = new Customer(111, aDate, "111 mcgill street", null); // Set cart as null initially
+        aCustomer = customerRepo.save(aCustomer); // Save Customer first to assign an ID
 
-        // Create Customer
-        Cart cart = new Cart();
-        cartRepository.save(cart);
+        // Now link Customer and Cart
+        aCart.setCustomer(aCustomer); // Set the Customer in Cart
+        aCustomer.setCart(aCart); // Link Cart back to Customer
 
-        Customer aCustomer = new Customer(aCustomerCardNum, aCustomerDate, aCustomerAddress,cart);
-        aCustomer = customerRepo.save(aCustomer);
+        // Save the Cart now that Customer ID is set
+        aCart = cartRepository.save(aCart);
+        customerRepo.save(aCustomer); // Optional: Save Customer again if bidirectional
 
         // Create Manager
         Manager aManager = new Manager();

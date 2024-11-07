@@ -22,7 +22,7 @@ public class WishlistLinkTests {
     @Autowired
     private WishlistLinkRepository wishlistLinkRepo;
     @Autowired
-    private CustomerRepository customerRepo;
+    private CustomerRepository customerRepository;
     @Autowired
     private GameRepository gameRepo;
     @Autowired
@@ -34,7 +34,7 @@ public class WishlistLinkTests {
     @AfterEach
     public void clearDatabase() {
         wishlistLinkRepo.deleteAll();
-        customerRepo.deleteAll();
+        customerRepository.deleteAll();
         cartRepository.deleteAll();
         gameRepo.deleteAll();
         categoryRepo.deleteAll();
@@ -58,16 +58,21 @@ public class WishlistLinkTests {
         Game game = new Game( picture, name, description, price, quantity, category);
         game = gameRepo.save(game);
 
-        int aCardNumber = 1234;
-        long millis = System.currentTimeMillis();
-        Date aCustomerDate = new Date(millis);
-        String aCustomerAddress = "123 main st";
+        Cart aCart = new Cart();
 
-        // Create Customer with no wishlist
-        Cart cart = new Cart();
-        cartRepository.save(cart);
-        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, aCustomerAddress,cart);
-        aCustomer = customerRepo.save(aCustomer);
+        // Create and save Customer first
+        long millis = System.currentTimeMillis();
+        Date aDate = new Date(millis);
+        Customer aCustomer = new Customer(111, aDate, "111 mcgill street", null); // Set cart as null initially
+        aCustomer = customerRepository.save(aCustomer); // Save Customer first to assign an ID
+
+        // Now link Customer and Cart
+        aCart.setCustomer(aCustomer); // Set the Customer in Cart
+        aCustomer.setCart(aCart); // Link Cart back to Customer
+
+        // Save the Cart now that Customer ID is set
+        aCart = cartRepository.save(aCart);
+        customerRepository.save(aCustomer); // Optional: Save Customer again if bidirectional
 
         // Create WishlistLink
         WishlistLink.Key key = new WishlistLink.Key(game, aCustomer);

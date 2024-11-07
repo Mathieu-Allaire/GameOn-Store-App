@@ -7,7 +7,6 @@ import ca.mcgill.ecse321.GameOn.model.Cart;
 import ca.mcgill.ecse321.GameOn.repository.CartRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import ca.mcgill.ecse321.GameOn.model.Person;
@@ -90,7 +89,7 @@ public class AccountService {
                 asciiEncryptedPassword += ",";
             }
         }
-        // TODO: remove this comment
+        // remove this comment
         // This is how we decrypt the password
         // String reverseDecryptedPassword = "";
         // String[] asciiEncryptedPasswordArray = asciiEncryptedPassword.split(",");

@@ -31,7 +31,7 @@ public class Customer extends Role
   @OneToMany
   private List<Review> customerReview;
 
-  @OneToOne
+  @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
   private Cart cart;
 
  //------------------------

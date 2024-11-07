@@ -121,6 +121,7 @@ public class GameRequest
   }
 
 
+  @SuppressWarnings("unlikely-arg-type")
   public String toString()
   {
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
