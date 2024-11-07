@@ -1,37 +1,58 @@
 package ca.mcgill.ecse321.GameOn.dto;
-import java.sql.Date;
 
 public class CustomerRequestDto {
     private String email;
     private String name;
     private String password;
-    private int cardNum;
-    private Date aCardExpiracyDate;
+    private String cardNum;
+    private String aCardExpiracyDate;
     private String billingAddress;
 
-    public  String getEmail(){
+    public String getEmail() {
         return email;
     }
 
-    public  String getName(){
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getName() {
         return name;
     }
 
-    public  String getPassword(){
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
         return password;
     }
 
-    public  Integer getCardNumber(){
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getCardNumber() {
         return cardNum;
     }
 
-    public  Date getExpiracyDate(){
+    public void setCardNumber(String cardNum) {
+        this.cardNum = cardNum;
+    }
+
+    public String getExpiracyDate() {
         return aCardExpiracyDate;
     }
 
-    public  String getBillingAddress(){
+    public void setExpiracyDate(String aCardExpiracyDate) {
+        this.aCardExpiracyDate = aCardExpiracyDate;
+    }
+
+    public String getBillingAddress() {
         return billingAddress;
     }
 
-    
+    public void setBillingAddress(String billingAddress) {
+        this.billingAddress = billingAddress;
+    }
 }
