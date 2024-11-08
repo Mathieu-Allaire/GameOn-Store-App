@@ -33,7 +33,7 @@ public class PurchaseGameController {
     private AccountService accountService;
     
     @GetMapping("/carts/{email}")
-    public CartResponseDto findCartById(@PathVariable String email){
+    public CartResponseDto findCartByEmail(@PathVariable String email){
         Person person = accountService.findCustomerByEmail(email);
         Customer customer = (Customer) person.getRole(0);
         Cart cart = customer.getCart();
@@ -53,7 +53,7 @@ public class PurchaseGameController {
     }
 
     @PostMapping("/add_to_cart/{id}")
-    public void addSpecificGameToCart(@RequestBody SpecificGame specificGame, @PathVariable String email) {\
+    public void addSpecificGameToCart(@RequestBody SpecificGame specificGame, @PathVariable String email) {
         Person person = accountService.findCustomerByEmail(email);
         Customer customer = (Customer) person.getRole(0);
         Cart cart = customer.getCart();
