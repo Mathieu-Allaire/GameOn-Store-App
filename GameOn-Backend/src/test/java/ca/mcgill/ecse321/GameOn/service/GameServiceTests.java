@@ -297,21 +297,92 @@ public class GameServiceTests {
 
     @Test
     public void testGetGameQuantity(){
+        // Arrange
+        Game game = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+        game.setQuantity(VALID_QUANTITY);
+        when(gameMockRepo.findGameByName(VALID_GAME_NAME)).thenReturn(game);
 
+        // Act
+        int quantity = service.getGameQuantity(game);
+
+        // Assert
+        assertEquals(VALID_QUANTITY, quantity);
     }
 
     @Test
     public void testUpdateGameQuantity(){
+        // Arrange
+        Game game = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+        game.setQuantity(VALID_QUANTITY);
+        when(gameMockRepo.findGameByName(VALID_GAME_NAME)).thenReturn(game);
+        when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
+        // Act
+        service.updateGameQuantity(VALID_GAME_NAME, VALID_QUANTITY + 1);
+
+        // Assert
+        assertEquals(VALID_QUANTITY + 1, game.getQuantity());
+    }
+
+    @Test
+    public void testUpdateInvalidGameQuantity(){
+        // Arrange
+        Game game = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+        game.setQuantity(VALID_QUANTITY);
+        when(gameMockRepo.findGameByName(VALID_GAME_NAME)).thenReturn(game);
+        when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+    
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.updateGameQuantity(VALID_GAME_NAME, -1);
+        });
+
+        assertEquals(ex.getMessage(), "Quantity is invalid");
     }
 
     @Test
     public void testGetGamePrice(){
+        // Arrange
+        Game game = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+        game.setPrice(VALID_PRICE);
+        when(gameMockRepo.findGameByName(VALID_GAME_NAME)).thenReturn(game);
 
+        // Act
+        int price = service.getGamePrice(game);
+
+        // Assert
+        assertEquals(VALID_PRICE, price);
     }
 
     @Test
     public void testUpdateGamePrice(){
+        // Arrange
+        Game game = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+        game.setPrice(VALID_PRICE);
+        when(gameMockRepo.findGameByName(VALID_GAME_NAME)).thenReturn(game);
+        when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
+        // Act
+        service.updateGamePrice(VALID_GAME_NAME, VALID_PRICE + 1);
+
+        // Assert
+        assertEquals(VALID_PRICE + 1, game.getPrice());
     }
+
+    @Test
+    public void testUpdateInvalidGamePrice(){
+        // Arrange
+        Game game = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+        game.setPrice(VALID_PRICE);
+        when(gameMockRepo.findGameByName(VALID_GAME_NAME)).thenReturn(game);
+        when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.updateGamePrice(VALID_GAME_NAME, -1);
+        });
+
+        assertEquals(ex.getMessage(), "Price is invalid");
+    }
+
 }
