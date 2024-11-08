@@ -5,7 +5,7 @@ public class EmployeeRequestDto {
     private String email;
     private String name;
     private String password;
-    private boolean isEmployed;
+    private String isEmployed;
 
     public  String getEmail(){
         return email;
@@ -19,7 +19,7 @@ public class EmployeeRequestDto {
         return password;
     }
 
-    public  boolean getIsEmployed(){
+    public  String getIsEmployed(){
         return isEmployed;
     }
 }

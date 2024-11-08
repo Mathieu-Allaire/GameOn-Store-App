@@ -7,7 +7,6 @@ import ca.mcgill.ecse321.GameOn.model.Cart;
 import ca.mcgill.ecse321.GameOn.repository.CartRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import ca.mcgill.ecse321.GameOn.model.Person;
@@ -45,7 +44,7 @@ public class AccountService {
      */
     @Transactional
     public Person createCustomer(String aEmail, String aName, String aPassword, int aCardNum, Date aCardExpiryDate, String BillingAddress){
-        if (aEmail == null || aEmail.trim().length() == 0 || aEmail.contains(" ") || aEmail.contains("@") == false || aEmail.contains(".") == false) {
+        if (aEmail == null || aEmail.trim().length() == 0 || aEmail.contains(" ") || !aEmail.contains("@") || !aEmail.contains(".")) {
             throw new IllegalArgumentException("Email is invalid");
         }
 
@@ -107,8 +106,8 @@ public class AccountService {
         Customer customer = new Customer(aCardNum, aCardExpiryDate, BillingAddress,cart);
         customerRepository.save(customer);
         Person person = new Person(aEmail, aName, asciiEncryptedPassword, customer);
-        personRepository.save(person);
-        return person;
+    
+        return personRepository.save(person);
 
     }
 
@@ -134,11 +133,29 @@ public class AccountService {
     }
 
     public Person createEmployee(String aEmail, String aName){
+        //Make sure we got a correct email 
+        if (aEmail == null || aEmail.trim().length() == 0 || aEmail.contains(" ") || aEmail.contains("@") == false || aEmail.contains(".") == false) {
+            throw new IllegalArgumentException("Email is invalid");
+        }
+        //Make sure the name is not empty
+        if (aName == null || aName.trim().length() == 0) {
+            throw new IllegalArgumentException("Name is invalid");
+        }
+
+        //Make sure no repeated emails
+        if (personRepository.findPersonByEmail(aEmail) != null) {
+            throw new IllegalArgumentException("Email is already taken");
+        }
+
         Employee employeeRole = new Employee(true);
         employeeRepository.save(employeeRole);
         
-        Person employee = new Person(aEmail, aName, "GameOn123!", employeeRole);
+        String genericPassword = "GameOn123!";
+        Person employee = new Person(aEmail, aName, genericPassword, employeeRole);
+        String encryptedPassword = employee.getEncryptedPassword(genericPassword);
+        employee.setPassword(encryptedPassword); // this sets the generic password into an encrypted password
         personRepository.save(employee);
+
         return employee;
     }
 
