@@ -4,26 +4,39 @@ import ca.mcgill.ecse321.GameOn.dto.CartResponseDto;
 import ca.mcgill.ecse321.GameOn.dto.OrderResponseDto;
 import ca.mcgill.ecse321.GameOn.dto.SpecificGameResponseDto;
 import ca.mcgill.ecse321.GameOn.model.Cart;
-
+import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Order;
+import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.model.SpecificGame;
+import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
+import ca.mcgill.ecse321.GameOn.service.AccountService;
 import ca.mcgill.ecse321.GameOn.service.PurchaseGameService;
+
+import java.beans.Customizer;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
+/**
+ * 
+ * @author Joseph Rouhana Feghaly, Joël Boyer
+ */
 @RestController
 public class PurchaseGameController {
 
     @Autowired
     private PurchaseGameService purchaseGameService;
-
-    @GetMapping("/carts/{id}")
-    public CartResponseDto findCartById(@PathVariable int id){
-        Cart cart = purchaseGameService.findCartByID(id);
+    @Autowired
+    private AccountService accountService;
+    
+    @GetMapping("/carts/{email}")
+    public CartResponseDto findCartById(@PathVariable String email){
+        Person person = accountService.findCustomerByEmail(email);
+        Customer customer = (Customer) person.getRole(0);
+        Cart cart = customer.getCart();
         return new CartResponseDto(cart);
     }
 
@@ -40,23 +53,36 @@ public class PurchaseGameController {
     }
 
     @PostMapping("/add_to_cart/{id}")
-    public void addSpecificGameToCart(@RequestBody SpecificGame specificGame, @PathVariable int id) {
-        purchaseGameService.addSpecificGameToCart(specificGame, id);
+    public void addSpecificGameToCart(@RequestBody SpecificGame specificGame, @PathVariable String email) {\
+        Person person = accountService.findCustomerByEmail(email);
+        Customer customer = (Customer) person.getRole(0);
+        Cart cart = customer.getCart();
+        purchaseGameService.addSpecificGameToCart(specificGame, cart.getId());
     }
 
     @PostMapping("/remove_from_cart/{id}")
-    public void removeSpecificGameFromCart(@RequestBody SpecificGame specificGame, @PathVariable int id){
-        purchaseGameService.removeSpecificGameFromCart(specificGame, id);
+    public void removeSpecificGameFromCart(@RequestBody SpecificGame specificGame, @PathVariable String email){
+        Person person = accountService.findCustomerByEmail(email);
+        Customer customer = (Customer) person.getRole(0);
+        Cart cart = customer.getCart();
+        purchaseGameService.removeSpecificGameFromCart(specificGame, cart.getId());
     }
 
-    @PostMapping("/remove_all_games_from_cart")
-    public void removeAllGamesFromCart(@PathVariable int id){
-        purchaseGameService.removeAllGamesFromCart(id);
+    @PostMapping("/remove_all_games_from_cart/{id}")
+    public void removeAllGamesFromCart(@PathVariable String email){
+        Person person = accountService.findCustomerByEmail(email);
+        Customer customer = (Customer) person.getRole(0);
+        Cart cart = customer.getCart();
+        purchaseGameService.removeAllGamesFromCart(cart.getId());
     }
 
-    @PostMapping("TODO")
-    public void cartToOrderForPurchase(){
-
+    @PostMapping("/cart_to_order_for_purchase/{id}")
+    public OrderResponseDto cartToOrderForPurchase(@PathVariable String email){
+        Person person = accountService.findCustomerByEmail(email);
+        Customer customer = (Customer) person.getRole(0);
+        Cart cart = customer.getCart();
+        Order order = purchaseGameService.createOrderFromCart(cart.getId());
+        return new OrderResponseDto(order);
     }
 
 }
