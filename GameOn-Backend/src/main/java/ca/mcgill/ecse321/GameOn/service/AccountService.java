@@ -53,7 +53,6 @@ public class AccountService {
             throw new IllegalArgumentException("Email is already taken");
         }
 
-
         if (aName == null || aName.trim().length() == 0) {
             throw new IllegalArgumentException("Name is invalid");
         }
