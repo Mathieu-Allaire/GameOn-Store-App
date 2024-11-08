@@ -180,6 +180,111 @@ public class AccountServiceTests {
         }
     }
 
+    //EMPLOYEES TESTS
+
+    @SuppressWarnings("null")
+    @Test
+    public void testCreateValidEmployee(){
+        //Arrange 
+        // Whenever we save personRepositoy.save(person) -> it will return person, same for customer and cart
+        when(personRepository.save(any(Person.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+        when(employeeRepository.save(any(Employee.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+
+        //Act
+        Person createdEmployee = accountService.createEmployee(VALID_EMAIL, VALID_NAME);
+
+        //Assert
+        assertNotNull(createdEmployee);
+        assertEquals(VALID_NAME, createdEmployee.getName());
+        assertEquals(VALID_EMAIL, createdEmployee.getEmail());
+
+        //The password saved is encrypted, so its need to be the same as the basePassword : GameOn123
+        String preSetPassword = "GameOn123!";
+        String encryptedPassword = createdEmployee.getEncryptedPassword(preSetPassword);
+        assertEquals(encryptedPassword, createdEmployee.getPassword()); //Check if the password saved is the encrypted version
+        
+        //Check the customer class atributes
+        Employee customerRole = (Employee) createdEmployee.getRole(0);
+        assertEquals(true, customerRole.getIsEmployed()); //When we create an employee it is always true
+        //Verifiy we saved once
+        verify(personRepository, times(1)).save(createdEmployee);
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testCreateInvalidEmployeeAlreadyCreated(){
+        //Arrange 
+        //Create an existing employee
+        Cart cart = new Cart();
+        Employee employeeRole = new Employee(true);
+        Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, employeeRole);
+        // Whenever we save personRepositoy.save(person) -> it will return person, same for customer and cart
+        when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob); // Bob will be already created in the data base
+
+        //Test if it's possible to create a new employee if there is an existing email in the data base.
+        try {
+            Person createdEmployee = accountService.createEmployee(VALID_EMAIL, VALID_NAME);
+         } catch (Exception e) {
+         assertEquals("Email is already taken", e.getMessage());
+         }
+
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testReadEmployeeByValidEmail(){
+        //Arrange 
+        //Create an employee
+        Employee employeeRole = new Employee(true);
+        String preSetPassword = "GameOn123!";
+        Person bob = new Person(VALID_EMAIL, VALID_NAME, preSetPassword, employeeRole);
+        String encryptedPassword = bob.getEncryptedPassword(preSetPassword);
+        bob.setPassword(encryptedPassword);
+        
+        when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
+
+        //Act : find employee
+        Person wantedEmployee = accountService.findEmployeeByEmail(VALID_EMAIL);
+
+        //Assert
+        assertNotNull(wantedEmployee);
+        assertEquals(bob.getName(), wantedEmployee.getName());
+        assertEquals(bob.getEmail(), wantedEmployee.getEmail());
+
+        //The password saved is encrypted, so we need to compare the encrypted password
+        
+        assertEquals(encryptedPassword, wantedEmployee.getPassword()); 
+        
+        //Check the customer class atributes
+        Employee wantedEmployeeRole = (Employee) wantedEmployee.getRole(0);
+
+        assertEquals(true, wantedEmployeeRole.getIsEmployed());  //Employee role attribute
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testReadEmployeeByInvalidEmail(){
+        //Arrange 
+        //Create an employee
+        Employee employeeRole = new Employee(true);
+        String preSetPassword = "GameOn123!";
+        Person bob = new Person(VALID_EMAIL, VALID_NAME, preSetPassword, employeeRole);
+        String encryptedPassword = bob.getEncryptedPassword(preSetPassword);
+        bob.setPassword(encryptedPassword);
+        
+        //CASE when there is no employee with the given email
+        when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(null);
+
+        //Act : find employee
+        try {
+            Person wantedEmployee = accountService.findEmployeeByEmail(VALID_EMAIL);
+         } catch (Exception e) {
+         assertEquals("Employee not found", e.getMessage());
+         }
+        
+
+    }
+
 
 
 

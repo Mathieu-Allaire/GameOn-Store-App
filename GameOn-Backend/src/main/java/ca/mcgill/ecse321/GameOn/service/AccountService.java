@@ -134,6 +134,20 @@ public class AccountService {
     }
 
     public Person createEmployee(String aEmail, String aName){
+        //Make sure we got a correct email 
+        if (aEmail == null || aEmail.trim().length() == 0 || aEmail.contains(" ") || aEmail.contains("@") == false || aEmail.contains(".") == false) {
+            throw new IllegalArgumentException("Email is invalid");
+        }
+        //Make sure the name is not empty
+        if (aName == null || aName.trim().length() == 0) {
+            throw new IllegalArgumentException("Name is invalid");
+        }
+
+        //Make sure no repeated emails
+        if (personRepository.findPersonByEmail(aEmail) != null) {
+            throw new IllegalArgumentException("Email is already taken");
+        }
+
         Employee employeeRole = new Employee(true);
         employeeRepository.save(employeeRole);
         
