@@ -28,18 +28,15 @@ public class Cart
   private Order order;
   @OneToMany
   private List<SpecificGame> specificGame;
-
+  @OneToOne
+  private Customer customer;
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Cart(Date aDateAdded)
+  public Cart()
   {
-    dateAdded = aDateAdded;
     specificGame = new ArrayList<SpecificGame>();
-  }
-
-  protected Cart() {
   }
 
   //------------------------
@@ -66,6 +63,11 @@ public class Cart
   {
     return dateAdded;
   }
+ public void setCustomer(Customer aCustomer) {
+    customer = aCustomer;
+ }
+
+  public Customer getCustomer() {return customer;}
 
   public int getId()
   {
@@ -74,7 +76,7 @@ public class Cart
   /* Code from template association_GetOne */
   public Order getOrder()
   {
-    return Order;
+    return this.order;
   }
 
   public boolean hasOrder()

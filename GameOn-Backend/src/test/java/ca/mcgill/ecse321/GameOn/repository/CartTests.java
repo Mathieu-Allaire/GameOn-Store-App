@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.sql.Date;
+
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.GameOn.model.Cart;
@@ -27,8 +27,7 @@ public class CartTests {
     @Test
     public void testCreateCart(){
         //Arrange
-        Date date = Date.valueOf("2024-02-09");
-        Cart aCart = new Cart(date);
+        Cart aCart = new Cart();
         aCart = cartRepo.save(aCart);
 
         //Act
@@ -37,7 +36,7 @@ public class CartTests {
         //Assert
         assertNotNull(result);
         assertEquals(aCart.getId(), result.getId());
-        assertEquals(aCart.getDateAdded(), result.getDateAdded());
+        
 
     }
 }

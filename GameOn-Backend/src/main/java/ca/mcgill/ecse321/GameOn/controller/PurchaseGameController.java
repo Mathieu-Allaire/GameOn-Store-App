@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,18 +40,18 @@ public class PurchaseGameController {
     }
 
     @PostMapping("/add_to_cart/{id}")
-    public void addSpecificGameToCart(@PathVariable int id) {
-        purchaseGameService.addSpecificGameToCart();
+    public void addSpecificGameToCart(@RequestBody SpecificGame specificGame, @PathVariable int id) {
+        purchaseGameService.addSpecificGameToCart(specificGame, id);
     }
 
     @PostMapping("/remove_from_cart/{id}")
-    public void removeSpecificGameFromCart(@PathVariable int id){
-        purchaseGameService.removeSpecificGameFromCart();
+    public void removeSpecificGameFromCart(@RequestBody SpecificGame specificGame, @PathVariable int id){
+        purchaseGameService.removeSpecificGameFromCart(specificGame, id);
     }
 
     @PostMapping("/remove_all_games_from_cart")
-    public void removeAllGamesFromCart(){
-        purchaseGameService.removeAllGamesFromCart();
+    public void removeAllGamesFromCart(@PathVariable int id){
+        purchaseGameService.removeAllGamesFromCart(id);
     }
 
     @PostMapping("TODO")
