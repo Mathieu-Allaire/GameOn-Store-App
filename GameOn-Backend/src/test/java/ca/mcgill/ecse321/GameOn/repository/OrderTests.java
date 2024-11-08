@@ -45,6 +45,12 @@ public class OrderTests {
         cartRepo.save(cart);
         Customer aCustomer = new Customer(aCardNumber, aCustomerDate, anAddress,cart);
         aCustomer = customerRepo.save(aCustomer);
+
+
+        // Create Cart
+        Cart aCart = new Cart();
+        aCart = cartRepo.save(aCart);
+
         
         // Create Order
         Order aOrder = new Order(aCustomerDate, cart, aCustomer);

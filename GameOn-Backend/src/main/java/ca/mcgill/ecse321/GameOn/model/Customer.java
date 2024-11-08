@@ -73,6 +73,10 @@ public class Customer extends Role
     return wasSet;
   }
 
+  public void setCart(Cart aCart) {cart = aCart;}
+  public Cart getCart() {return cart;}
+  public boolean hasCart(){return cart != null;}
+
   public boolean setBillingAddress(String aBillingAddress)
   {
     boolean wasSet = false;
