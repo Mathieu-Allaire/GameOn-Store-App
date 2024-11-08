@@ -42,7 +42,6 @@ public class GameService {
             throw new IllegalArgumentException("Name is invalid");
         }
         Category category = new Category(aName);
-        category.setName(aName);
         categoryRepository.save(category);
         return category;
     }
@@ -98,6 +97,9 @@ public class GameService {
      */
     @Transactional
     public Game createGame(String aPicture, String aName, String aDescription, int aPrice, int aQuantity, Category aCategory){
+        if (aPicture == null || aPicture.trim().length() == 0) {
+            throw new IllegalArgumentException("Picture is invalid");
+        }
         if (aName == null || aName.trim().length() == 0) {
             throw new IllegalArgumentException("Name is invalid");
         }
