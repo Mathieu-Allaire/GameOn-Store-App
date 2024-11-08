@@ -33,16 +33,18 @@ public class Customer extends Role
 
   @OneToOne
   private Cart cart;
+
  //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Customer(int aCardNum, Date aCardExpiryDate, String aBillingAddress)
+  public Customer(int aCardNum, Date aCardExpiryDate, String aBillingAddress, Cart aCart)
   {
     super();
     cardNum = aCardNum;
     cardExpiryDate = aCardExpiryDate;
     billingAddress = aBillingAddress;
+    cart = aCart;
     CustomerWish = new ArrayList<WishlistLink>();
     customerOrder = new ArrayList<Order>();
     customerReview = new ArrayList<Review>();
@@ -120,6 +122,13 @@ public class Customer extends Role
   {
     boolean has = CustomerWish.size() > 0;
     return has;
+  }
+  public Cart getCart(){
+    return cart;
+  }
+
+  public void setCart(Cart aCart){
+    cart = aCart;
   }
 
   public int indexOfCustomerWish(WishlistLink aCustomerWish)

@@ -17,7 +17,7 @@ public class Cart
   //------------------------
 
   //Cart Attributes
-  private Date dateAdded;
+ 
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,26 +30,24 @@ public class Cart
   private List<SpecificGame> specificGame;
   @OneToOne
   private Customer customer;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
   public Cart()
   {
+    
     specificGame = new ArrayList<SpecificGame>();
   }
+
+  
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public boolean setDateAdded(Date aDateAdded)
-  {
-    boolean wasSet = false;
-    dateAdded = aDateAdded;
-    wasSet = true;
-    return wasSet;
-  }
+  
 
   public boolean setId(int aId)
   {
@@ -58,6 +56,7 @@ public class Cart
     wasSet = true;
     return wasSet;
   }
+
 
   public Date getDateAdded()
   {
@@ -68,6 +67,7 @@ public class Cart
  }
 
   public Customer getCustomer() {return customer;}
+
 
   public int getId()
   {
@@ -219,7 +219,7 @@ public class Cart
   {
     return super.toString() + "["+
             "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "dateAdded" + "=" + (getDateAdded() != null ? !getDateAdded().equals(this)  ? getDateAdded().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "dateAdded" + "="  + System.getProperties().getProperty("line.separator") +
             "  " + "order = "+(getOrder()!=null?Integer.toHexString(System.identityHashCode(getOrder())):"null");
   }
 }

@@ -12,16 +12,22 @@ import java.sql.Date;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.GameOn.model.Customer;
+import ca.mcgill.ecse321.GameOn.model.Cart;
+
 
 @SpringBootTest
 public class CustomerTests {
     @Autowired
     private CustomerRepository customerRepo;
+    @Autowired
+    private CartRepository cartRepository;
+
 
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
         customerRepo.deleteAll();
+        cartRepository.deleteAll(); //NOT SURE
     }
 
     @Test
@@ -31,9 +37,12 @@ public class CustomerTests {
         long millis = System.currentTimeMillis();
         Date aCustomerDate = new Date(millis);
         String aCustomerAddress = "123 main st";
+        Cart cart = new Cart();
+        cartRepository.save(cart);
 
         // Create Customer with no wishlist
-        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, aCustomerAddress);
+        
+        Customer aCustomer = new Customer(aCardNumber, aCustomerDate, aCustomerAddress,cart);
         aCustomer = customerRepo.save(aCustomer);
 
         
