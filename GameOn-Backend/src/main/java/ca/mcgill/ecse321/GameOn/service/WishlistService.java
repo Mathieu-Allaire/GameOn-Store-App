@@ -1,4 +1,7 @@
 package ca.mcgill.ecse321.GameOn.service;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
@@ -146,5 +149,35 @@ public class WishlistService {
                 wishlistLinkRepository.delete(wishlistLink);
             }
         }
+    }
+
+    /**
+     * Retrieve the wishlist of a customer.
+     * 
+     * @param customerEmail the email of the customer
+     * @throws IllegalArgumentException if the customer is null
+     */
+    @Transactional
+    public List<Game> getAllGamesFromWishlist(String customerEmail) {
+        if (customerEmail == null) {
+            throw new IllegalArgumentException("Customer email cannot be null");
+        }
+        Person aPerson = personRepository.findPersonByEmail(customerEmail);
+        if (aPerson == null) {
+            throw new IllegalArgumentException("Person not found");
+        }
+        if (!(aPerson.getRole(0).getClass() != Customer.class)) {
+            throw new IllegalArgumentException("Person is not a customer");
+        }
+        Long aCustomerId = aPerson.getRole(0).getId();
+        Customer aCustomer = customerRepository.findCustomerById(aCustomerId.intValue());
+        Iterable<WishlistLink> wishlistsCustomer = aCustomer.getCustomerWish();
+        List<Game> games = new ArrayList<>();
+        // Get all games from wishlist
+        for (WishlistLink wishlistLink : wishlistsCustomer) {
+            games.add(wishlistLink.getKey().getWishlistGames());
+        }
+
+        return games;
     }
 }
