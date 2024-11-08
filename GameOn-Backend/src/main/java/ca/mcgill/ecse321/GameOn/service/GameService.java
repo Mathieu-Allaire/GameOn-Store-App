@@ -11,7 +11,6 @@ import ca.mcgill.ecse321.GameOn.model.Category;
 import ca.mcgill.ecse321.GameOn.model.Employee;
 import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.model.GameRequest;
-import ca.mcgill.ecse321.GameOn.model.Manager;
 import ca.mcgill.ecse321.GameOn.model.RequestType;
 import ca.mcgill.ecse321.GameOn.model.Game.GameStatus;
 
@@ -229,15 +228,11 @@ public class GameService {
      * This changes the game status to available.
      * 
      * @param aGameRequest
-     * @param aManager
      * @throws IllegalArgumentException if game or manager is invalid
      */
-    public void approveGameRequest(GameRequest aGameRequest, Manager aManager){
+    public void approveGameRequest(GameRequest aGameRequest){
         if (aGameRequest == null) {
             throw new IllegalArgumentException("Game Request is invalid");
-        }
-        if (aManager == null) {
-            throw new IllegalArgumentException("Manager is invalid");
         }
 
         GameRequest gameRequest = gameRequestRepository.findGameRequestById(aGameRequest.getId());
@@ -247,16 +242,16 @@ public class GameService {
         }
 
         if (gameRequest.getRequestType() == RequestType.Create) {
-            if (gameRequest.getResquestedGame().getGameStatus().equals(GameStatus.Available)) {
+            if (gameRequest.getRequestedGame().getGameStatus().equals(GameStatus.Available)) {
                 throw new IllegalArgumentException("Game is already available");
             } else {
-                gameRequest.getResquestedGame().setAvailable();
+                gameRequest.getRequestedGame().setAvailable();
             }
         } else if (gameRequest.getRequestType() == RequestType.Archive) {
-            gameRequest.getResquestedGame().setUnavailable();
+            gameRequest.getRequestedGame().setUnavailable();
         }
 
-        gameRepository.save(gameRequest.getResquestedGame());
+        gameRepository.save(gameRequest.getRequestedGame());
     }
 
     /**
@@ -266,12 +261,12 @@ public class GameService {
      * @return int quantity
      */
     @Transactional
-    public int getGameQuantity(Game aGame){
-        if (aGame == null) {
+    public int getGameQuantity(GameRequest aGameRequest){
+        if (aGameRequest == null) {
             throw new IllegalArgumentException("Game is invalid");
         }
 
-        Game game = gameRepository.findGameByName(aGame.getName());
+        Game game = gameRepository.findGameByName(aGameRequest.getRequestedGame().getName());
 
         if (game == null) {
             throw new IllegalArgumentException("Game does not exist");
