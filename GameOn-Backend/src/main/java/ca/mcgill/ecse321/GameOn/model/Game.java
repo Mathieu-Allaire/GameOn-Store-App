@@ -148,26 +148,8 @@ public class Game
     return gameStatus;
   }
 
-  private boolean __autotransition2698__()
-  {
-    boolean wasEventProcessed = false;
-    
-    GameStatus aGameStatus = gameStatus;
-    switch (aGameStatus)
-    {
-      case Available:
-        if (!isInStock)
-        {
-          setGameStatus(GameStatus.OutOfStock);
-          wasEventProcessed = true;
-          break;
-        }
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
+  public void updateIsInStock() {
+    isInStock = this.getQuantity() > 0;
   }
 
   public boolean setUnavailable()
@@ -230,19 +212,9 @@ public class Game
 
   public void setGameStatus(GameStatus aGameStatus)
   {
-    gameStatus = aGameStatus;
-
-    // entry actions and do activities
-    switch(gameStatus)
-    {
-      case Available:
-        __autotransition2698__();
-        break;
-      case OutOfStock:
-        __autotransition2699__();
-        break;
-    }
+    this.gameStatus = aGameStatus;
   }
+
   /* Code from template association_GetOne */
   public Category getCategory()
   {
