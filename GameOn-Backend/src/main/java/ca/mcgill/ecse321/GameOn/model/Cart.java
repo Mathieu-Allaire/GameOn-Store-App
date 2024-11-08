@@ -3,7 +3,6 @@
 
 package ca.mcgill.ecse321.GameOn.model;
 import jakarta.persistence.*;
-import java.sql.Date;
 import java.util.*;
 
 // line 74 "model.ump"
@@ -58,10 +57,7 @@ public class Cart
   }
 
 
-  public Date getDateAdded()
-  {
-    return dateAdded;
-  }
+  
  public void setCustomer(Customer aCustomer) {
     customer = aCustomer;
  }
