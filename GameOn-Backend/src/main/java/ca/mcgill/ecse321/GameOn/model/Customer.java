@@ -31,6 +31,8 @@ public class Customer extends Role
   @OneToMany
   private List<Review> customerReview;
 
+  @OneToOne
+  private Cart cart;
  //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -68,6 +70,10 @@ public class Customer extends Role
     wasSet = true;
     return wasSet;
   }
+
+  public void setCart(Cart aCart) {cart = aCart;}
+  public Cart getCart() {return cart;}
+  public boolean hasCart(){return cart != null;}
 
   public boolean setBillingAddress(String aBillingAddress)
   {
