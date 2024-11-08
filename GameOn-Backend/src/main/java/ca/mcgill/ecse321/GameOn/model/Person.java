@@ -49,6 +49,25 @@ public class Person
   // INTERFACE
   //------------------------
 
+  public String getEncryptedPassword(String aPassword){
+    String encryptedPassword = "";
+        for (int i = aPassword.length() - 1; i >= 0; i--) {
+            encryptedPassword += aPassword.charAt(i);
+        }
+
+        // encryptedPassword to ascii multiplied by two as a string seperated by commas
+        String asciiEncryptedPassword = "";
+        for (int i = 0; i < encryptedPassword.length(); i++) {
+            asciiEncryptedPassword += (int) encryptedPassword.charAt(i) * 2;
+            if (i != encryptedPassword.length() - 1) {
+                asciiEncryptedPassword += ",";
+            }
+        }
+
+        return asciiEncryptedPassword;
+
+  }
+
   public boolean setEmail(String aEmail)
   {
     boolean wasSet = false;
@@ -64,6 +83,8 @@ public class Person
     wasSet = true;
     return wasSet;
   }
+
+  
 
   public boolean setPassword(String aPassword)
   {

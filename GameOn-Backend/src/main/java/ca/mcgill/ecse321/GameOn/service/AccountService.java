@@ -106,8 +106,8 @@ public class AccountService {
         Customer customer = new Customer(aCardNum, aCardExpiryDate, BillingAddress,cart);
         customerRepository.save(customer);
         Person person = new Person(aEmail, aName, asciiEncryptedPassword, customer);
-        personRepository.save(person);
-        return person;
+    
+        return personRepository.save(person);
 
     }
 
@@ -136,8 +136,12 @@ public class AccountService {
         Employee employeeRole = new Employee(true);
         employeeRepository.save(employeeRole);
         
-        Person employee = new Person(aEmail, aName, "GameOn123!", employeeRole);
+        String genericPassword = "GameOn123!";
+        Person employee = new Person(aEmail, aName, genericPassword, employeeRole);
+        String encryptedPassword = employee.getEncryptedPassword(genericPassword);
+        employee.setPassword(encryptedPassword); // this sets the generic password into an encrypted password
         personRepository.save(employee);
+
         return employee;
     }
 
