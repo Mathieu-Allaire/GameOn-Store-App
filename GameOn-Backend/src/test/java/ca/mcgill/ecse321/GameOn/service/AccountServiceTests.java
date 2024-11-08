@@ -285,6 +285,32 @@ public class AccountServiceTests {
 
     }
 
+    @SuppressWarnings("null")
+    @Test
+    public void testDesactivateEmployee(){
+        //Arrange 
+        //Create an employee
+        Employee employeeRole = new Employee(true);
+        String preSetPassword = "GameOn123!";
+        Person bob = new Person(VALID_EMAIL, VALID_NAME, preSetPassword, employeeRole);
+        String encryptedPassword = bob.getEncryptedPassword(preSetPassword);
+        bob.setPassword(encryptedPassword);
+        
+        //CASE where bob is an existing employee
+        when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
+        when(personRepository.save(any(Person.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+        when(employeeRepository.save(any(Employee.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+
+        //Act: fire employee
+        accountService.deactivateEmployee(VALID_EMAIL);
+        
+        assertEquals(employeeRole.isIsEmployed(), false);
+        verify(personRepository, times(1)).save(bob);
+        verify(employeeRepository, times(1)).save(employeeRole);
+    }
+
+    
+
 
 
 
