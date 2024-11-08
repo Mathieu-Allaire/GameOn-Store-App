@@ -62,10 +62,14 @@ public class PersonTests {
 
         // Act
         Person personDB = personRepo.findPersonByEmail(aEmail);
+
         Customer customerDB = (Customer)personDB.getRole(0);
+        Long custId = aCustomer.getId();
+        String email = personRepo.findPersonEmailByRoleId(custId.intValue());
 
         // Assert
         assertNotNull(personDB);
+        assertEquals(email, aEmail);
         assertEquals(personDB.getName(), aPerson.getName());
         assertEquals(personDB.getEmail(), aPerson.getEmail());
         assertEquals(personDB.getPassword(), aPerson.getPassword());
