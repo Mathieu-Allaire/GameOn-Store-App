@@ -16,6 +16,11 @@ import ca.mcgill.ecse321.GameOn.dto.GameResponseDTO;
 import ca.mcgill.ecse321.GameOn.dto.GameCreateDto;
 import ca.mcgill.ecse321.GameOn.service.GameService;
 import ca.mcgill.ecse321.GameOn.model.Game;
+import ca.mcgill.ecse321.GameOn.dto.CategoryResponseDto;
+import ca.mcgill.ecse321.GameOn.dto.CategoryRequestDto;
+import ca.mcgill.ecse321.GameOn.model.Category;
+import ca.mcgill.ecse321.GameOn.model.GameRequest;
+import ca.mcgill.ecse321.GameOn.dto.GameRequestResponseDto;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 
@@ -170,7 +175,84 @@ public class GameController {
         }
     }
 
+    /**
+     * Create a category
+     * @param GameCreateDto the game create DTO
+     * @return the game response DTO
+     */
+    @PostMapping("/categories")
+    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryRequestDto categoryRequestDto){
+        try{
+            Category category = gameService.createCategory(categoryRequestDto.getName());
+            CategoryResponseDto response = new CategoryResponseDto(category);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Delete a category
+     * @param name the name of the category to delete
+     * @return the HTTP response status
+     */
+    @DeleteMapping("/categories/{name}")
+    public ResponseEntity<?> deleteCategory(@PathVariable String name){
+        try{
+            gameService.deleteCategory(name);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Retrieves all categories
+     * @return a list of category response DTOs
+     */
+    @GetMapping("/categories")
+    public ResponseEntity<?> findAllCategories(){
+        List<CategoryResponseDto> dtos = new ArrayList<>();
+        try{
+            for (Category c : gameService.getAllCategories()) {
+                dtos.add(new CategoryResponseDto(c));
+            }
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * Create a game request
+     * @param gameRequestResponseDto the game request response DTO
+     * @return game request response DTO
+     */
+    public ResponseEntity<?> createGameRequest(@Valid @RequestBody GameRequestResponseDto gameRequestResponseDto){
+        try{
+            GameRequest gameRequest = gameService.createGameRequest(
+                gameRequestResponseDto.getARequestCreator(),
+                gameRequestResponseDto.getARequestedGame(),
+                gameRequestResponseDto.getARequestType()
+            );
+            GameRequestResponseDto response = new GameRequestResponseDto(gameRequest);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
     
-
-
+    /**
+     * Approve a game request
+     * @param gameRequest the name of the game request to approve
+     */
+    @PostMapping("/games/request/{name}/approve")
+    public ResponseEntity<?> approveGameRequest(@Valid @RequestBody GameRequestResponseDto gameRequest){
+        try{
+            gameService.approveGameRequest(gameRequest.getGameRequest());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
