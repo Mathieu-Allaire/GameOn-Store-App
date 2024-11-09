@@ -91,7 +91,7 @@ public class PurchaseGameService {
             throw new IllegalArgumentException("Cart ID is invalid.");
         }
         if (aGameName == null || aGameName.trim().length() == 0) {
-            throw new IllegalArgumentException("SpecificGame ID cannot be empty.");
+            throw new IllegalArgumentException("Name cannot be empty.");
         }
 
         Cart cart = findCartByID(cartId);
