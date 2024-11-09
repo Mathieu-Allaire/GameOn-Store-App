@@ -3,7 +3,6 @@
 
 package ca.mcgill.ecse321.GameOn.model;
 import jakarta.persistence.*;
-import java.sql.Date;
 import java.util.*;
 
 // line 74 "model.ump"
@@ -17,7 +16,7 @@ public class Cart
   //------------------------
 
   //Cart Attributes
-  private Date dateAdded;
+ 
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,31 +27,26 @@ public class Cart
   private Order order;
   @OneToMany
   private List<SpecificGame> specificGame;
+  @OneToOne
+  private Customer customer;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Cart(Date aDateAdded)
+  public Cart()
   {
-    dateAdded = aDateAdded;
+    
     specificGame = new ArrayList<SpecificGame>();
   }
 
-  protected Cart() {
-  }
+  
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public boolean setDateAdded(Date aDateAdded)
-  {
-    boolean wasSet = false;
-    dateAdded = aDateAdded;
-    wasSet = true;
-    return wasSet;
-  }
+  
 
   public boolean setId(int aId)
   {
@@ -62,10 +56,14 @@ public class Cart
     return wasSet;
   }
 
-  public Date getDateAdded()
-  {
-    return dateAdded;
-  }
+
+  
+ public void setCustomer(Customer aCustomer) {
+    customer = aCustomer;
+ }
+
+  public Customer getCustomer() {return customer;}
+
 
   public int getId()
   {
@@ -74,7 +72,7 @@ public class Cart
   /* Code from template association_GetOne */
   public Order getOrder()
   {
-    return order;
+    return this.order;
   }
 
   public boolean hasOrder()
@@ -179,6 +177,10 @@ public class Cart
     return wasAdded;
   }
 
+  public void removeAllGamesFromCart() {
+    specificGame.clear();
+  }
+
   public boolean addOrMoveSpecificGameAt(SpecificGame aSpecificGame, int index)
   {
     boolean wasAdded = false;
@@ -213,7 +215,7 @@ public class Cart
   {
     return super.toString() + "["+
             "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "dateAdded" + "=" + (getDateAdded() != null ? !getDateAdded().equals(this)  ? getDateAdded().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "dateAdded" + "="  + System.getProperties().getProperty("line.separator") +
             "  " + "order = "+(getOrder()!=null?Integer.toHexString(System.identityHashCode(getOrder())):"null");
   }
 }

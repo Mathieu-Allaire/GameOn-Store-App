@@ -11,7 +11,6 @@ import ca.mcgill.ecse321.GameOn.model.Category;
 import ca.mcgill.ecse321.GameOn.model.Employee;
 import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.model.GameRequest;
-import ca.mcgill.ecse321.GameOn.model.Manager;
 import ca.mcgill.ecse321.GameOn.model.RequestType;
 import ca.mcgill.ecse321.GameOn.model.Game.GameStatus;
 
@@ -43,7 +42,6 @@ public class GameService {
             throw new IllegalArgumentException("Name is invalid");
         }
         Category category = new Category(aName);
-        category.setName(aName);
         categoryRepository.save(category);
         return category;
     }
@@ -99,6 +97,9 @@ public class GameService {
      */
     @Transactional
     public Game createGame(String aPicture, String aName, String aDescription, int aPrice, int aQuantity, Category aCategory){
+        if (aPicture == null || aPicture.trim().length() == 0) {
+            throw new IllegalArgumentException("Picture is invalid");
+        }
         if (aName == null || aName.trim().length() == 0) {
             throw new IllegalArgumentException("Name is invalid");
         }
@@ -229,15 +230,11 @@ public class GameService {
      * This changes the game status to available.
      * 
      * @param aGameRequest
-     * @param aManager
      * @throws IllegalArgumentException if game or manager is invalid
      */
-    public void approveGameRequest(GameRequest aGameRequest, Manager aManager){
+    public void approveGameRequest(GameRequest aGameRequest){
         if (aGameRequest == null) {
             throw new IllegalArgumentException("Game Request is invalid");
-        }
-        if (aManager == null) {
-            throw new IllegalArgumentException("Manager is invalid");
         }
 
         GameRequest gameRequest = gameRequestRepository.findGameRequestById(aGameRequest.getId());
@@ -247,16 +244,16 @@ public class GameService {
         }
 
         if (gameRequest.getRequestType() == RequestType.Create) {
-            if (gameRequest.getResquestedGame().getGameStatus().equals(GameStatus.Available)) {
+            if (gameRequest.getRequestedGame().getGameStatus().equals(GameStatus.Available)) {
                 throw new IllegalArgumentException("Game is already available");
             } else {
-                gameRequest.getResquestedGame().setAvailable();
+                gameRequest.getRequestedGame().setAvailable();
             }
         } else if (gameRequest.getRequestType() == RequestType.Archive) {
-            gameRequest.getResquestedGame().setUnavailable();
+            gameRequest.getRequestedGame().setUnavailable();
         }
 
-        gameRepository.save(gameRequest.getResquestedGame());
+        gameRepository.save(gameRequest.getRequestedGame());
     }
 
     /**
@@ -271,12 +268,7 @@ public class GameService {
             throw new IllegalArgumentException("Game is invalid");
         }
 
-        Game game = gameRepository.findGameByName(aGame.getName());
-
-        if (game == null) {
-            throw new IllegalArgumentException("Game does not exist");
-        }
-        return game.getQuantity();
+        return aGame.getQuantity();
     }
 
     /**
@@ -289,6 +281,10 @@ public class GameService {
     public Game updateGameQuantity(String aGame, int aQuantity){
         if (aGame == null) {
             throw new IllegalArgumentException("Game is invalid");
+        }
+
+        if (aQuantity <= 0) {
+            throw new IllegalArgumentException("Quantity is invalid");
         }
 
         Game game = gameRepository.findGameByName(aGame);
@@ -335,6 +331,10 @@ public class GameService {
     public Game updateGamePrice(String aGame, int aPrice){
         if (aGame == null) {
             throw new IllegalArgumentException("Game is invalid");
+        }
+
+        if (aPrice <= 0) {
+            throw new IllegalArgumentException("Price is invalid");
         }
 
         Game game = gameRepository.findGameByName(aGame);

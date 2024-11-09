@@ -14,6 +14,8 @@ import java.sql.Date;
 
 import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.model.Customer;
+import ca.mcgill.ecse321.GameOn.model.Cart;
+
 
 @SpringBootTest
 public class PersonTests {
@@ -22,6 +24,8 @@ public class PersonTests {
     @Autowired
     private CustomerRepository customerRepo;
     @Autowired
+    private CartRepository cartRepository;
+    @Autowired
     private WishlistLinkRepository wishlistLinkRepo;
 
     @BeforeEach
@@ -29,6 +33,7 @@ public class PersonTests {
     public void clearDatabase() {
         personRepo.deleteAll();
         customerRepo.deleteAll();
+        cartRepository.deleteAll();
         wishlistLinkRepo.deleteAll();
     }
 
@@ -45,22 +50,26 @@ public class PersonTests {
         Date aCustomerDate = new Date(millis);
         String aCustomerAddress = "123 main st";
 
-        Customer aCustomer = new Customer(cardNum, aCustomerDate, aCustomerAddress);
+        Cart cart = new Cart();
+        cartRepository.save(cart);
+
+        Customer aCustomer = new Customer(cardNum, aCustomerDate, aCustomerAddress,cart);
         aCustomer = customerRepo.save(aCustomer);
 
         // Create Person
         Person aPerson = new Person(aEmail, aName, aPassword, aCustomer);
         aPerson = personRepo.save(aPerson);
 
-        int id = aPerson.getId();
-
         // Act
-        Person personDB = personRepo.findPersonById(id);
+        Person personDB = personRepo.findPersonByEmail(aEmail);
+
         Customer customerDB = (Customer)personDB.getRole(0);
+        Long custId = aCustomer.getId();
+        String email = personRepo.findPersonEmailByRoleId(custId.intValue());
 
         // Assert
         assertNotNull(personDB);
-        assertEquals(personDB.getId(), aPerson.getId());
+        assertEquals(email, aEmail);
         assertEquals(personDB.getName(), aPerson.getName());
         assertEquals(personDB.getEmail(), aPerson.getEmail());
         assertEquals(personDB.getPassword(), aPerson.getPassword());

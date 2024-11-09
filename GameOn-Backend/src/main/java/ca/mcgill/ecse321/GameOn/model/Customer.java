@@ -31,16 +31,20 @@ public class Customer extends Role
   @OneToMany
   private List<Review> customerReview;
 
+  @OneToOne
+  private Cart cart;
+
  //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Customer(int aCardNum, Date aCardExpiryDate, String aBillingAddress)
+  public Customer(int aCardNum, Date aCardExpiryDate, String aBillingAddress, Cart aCart)
   {
     super();
     cardNum = aCardNum;
     cardExpiryDate = aCardExpiryDate;
     billingAddress = aBillingAddress;
+    cart = aCart;
     CustomerWish = new ArrayList<WishlistLink>();
     customerOrder = new ArrayList<Order>();
     customerReview = new ArrayList<Review>();
@@ -68,6 +72,8 @@ public class Customer extends Role
     wasSet = true;
     return wasSet;
   }
+
+  public boolean hasCart(){return cart != null;}
 
   public boolean setBillingAddress(String aBillingAddress)
   {
@@ -114,6 +120,13 @@ public class Customer extends Role
   {
     boolean has = CustomerWish.size() > 0;
     return has;
+  }
+  public Cart getCart(){
+    return cart;
+  }
+
+  public void setCart(Cart aCart){
+    cart = aCart;
   }
 
   public int indexOfCustomerWish(WishlistLink aCustomerWish)
@@ -210,17 +223,20 @@ public class Customer extends Role
     return wasAdded;
   }
 
-  public boolean removeCustomerWish(WishlistLink aCustomerWish)
-  {
+  public boolean removeCustomerWish(WishlistLink aCustomerWish) {
     boolean wasRemoved = false;
-    //Unable to remove aCustomerWish, as it must always have a CustomerWish
-    if (!this.equals(aCustomerWish.getCustomerWish()))
-    {
-      CustomerWish.remove(aCustomerWish);
-      wasRemoved = true;
+    
+
+    // Check if the CustomerWish list contains the wish
+    if (this.CustomerWish != null) {
+        // Removing the wish from the list
+        wasRemoved = this.CustomerWish.remove(aCustomerWish);
     }
+
     return wasRemoved;
-  }
+}
+
+
   /* Code from template association_AddIndexControlFunctions */
   public boolean addCustomerWishAt(WishlistLink aCustomerWish, int index)
   {  

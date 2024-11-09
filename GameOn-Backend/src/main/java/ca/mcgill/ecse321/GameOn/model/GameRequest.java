@@ -75,7 +75,7 @@ public class GameRequest
     return requestCreator;
   }
   /* Code from template association_GetOne */
-  public Game getResquestedGame()
+  public Game getRequestedGame()
   {
     return resquestedGame;
   }
@@ -126,6 +126,6 @@ public class GameRequest
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "requestType" + "=" + (getRequestType() != null ? !getRequestType().equals(this)  ? getRequestType().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "requestCreator = "+(getRequestCreator()!=null?Integer.toHexString(System.identityHashCode(getRequestCreator())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "resquestedGame = "+(getResquestedGame()!=null?Integer.toHexString(System.identityHashCode(getResquestedGame())):"null") + System.getProperties().getProperty("line.separator");
+            "  " + "resquestedGame = "+(getRequestedGame()!=null?Integer.toHexString(System.identityHashCode(getRequestedGame())):"null") + System.getProperties().getProperty("line.separator");
   }
 }

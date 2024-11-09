@@ -16,8 +16,6 @@ public class Person
   //Person Attributes
 
   @Id
-  @GeneratedValue( strategy = GenerationType.IDENTITY)
-  private int id;
   private String email;
   private String name;
   private String password;
@@ -51,12 +49,23 @@ public class Person
   // INTERFACE
   //------------------------
 
-  public boolean setId(int aId)
-  {
-    boolean wasSet = false;
-    id = aId;
-    wasSet = true;
-    return wasSet;
+  public String getEncryptedPassword(String aPassword){
+    String encryptedPassword = "";
+        for (int i = aPassword.length() - 1; i >= 0; i--) {
+            encryptedPassword += aPassword.charAt(i);
+        }
+
+        // encryptedPassword to ascii multiplied by two as a string seperated by commas
+        String asciiEncryptedPassword = "";
+        for (int i = 0; i < encryptedPassword.length(); i++) {
+            asciiEncryptedPassword += (int) encryptedPassword.charAt(i) * 2;
+            if (i != encryptedPassword.length() - 1) {
+                asciiEncryptedPassword += ",";
+            }
+        }
+
+        return asciiEncryptedPassword;
+
   }
 
   public boolean setEmail(String aEmail)
@@ -75,17 +84,14 @@ public class Person
     return wasSet;
   }
 
+  
+
   public boolean setPassword(String aPassword)
   {
     boolean wasSet = false;
     password = aPassword;
     wasSet = true;
     return wasSet;
-  }
-
-  public int getId()
-  {
-    return id;
   }
 
   /**
@@ -241,7 +247,6 @@ public class Person
   public String toString()
   {
     return super.toString() + "["+
-            "id" + ":" + getId()+ "," +
             "email" + ":" + getEmail()+ "," +
             "name" + ":" + getName()+ "," +
             "password" + ":" + getPassword()+ "]";
