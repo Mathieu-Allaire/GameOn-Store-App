@@ -7,16 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
-import ca.mcgill.ecse321.GameOn.exception.reviewException;
 
 import ca.mcgill.ecse321.GameOn.repository.ReviewRepository;
+import ca.mcgill.ecse321.GameOn.repository.GameRepository;
 import ca.mcgill.ecse321.GameOn.model.Review;
 import ca.mcgill.ecse321.GameOn.model.Game;
+import ca.mcgill.ecse321.GameOn.model.Customer;
+import ca.mcgill.ecse321.GameOn.model.Manager;
 
 @Service
 public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepo;
+    @Autowired
     private GameRepository gameRepo;
 
     /**
@@ -32,7 +35,7 @@ public class ReviewService {
         if (gameName == null || gameName.trim().length() == 0) {
             throw new IllegalArgumentException("The name is invalid");
         }
-        Game game = gameRepository.findGameByName(aName);
+        Game game = gameRepo.findGameByName(gameName);
 
         if (game == null) {
             throw new IllegalArgumentException("Game does not exist");
@@ -55,7 +58,7 @@ public class ReviewService {
      */
     public Review postReview(String aDescription, int aStars, int aLikes, int aDislikes, Customer aReviewAuthor, Manager aManager) {
         if (aDescription == null || aDescription.length() == 0) {
-            IllegalArgumentException("The review has an empty description");
+            throw new IllegalArgumentException("The review has an empty description");
         }
         if (aStars < 0 || aStars > 5) {
             throw new IllegalArgumentException("The number of stars must be between 0 and 5");
@@ -87,7 +90,7 @@ public class ReviewService {
      * @author Mathieu Allaire
      */
     public Review findReviewById(int id) {
-        Review existingReview = reviewRepo.findReviewById( int id);
+        Review existingReview = reviewRepo.findReviewById(id);
         if (existingReview == null) {
             throw new IllegalArgumentException("There is no review with ID " + id + ".");
         }
@@ -97,39 +100,43 @@ public class ReviewService {
     /**
      * Increments the like count of a given review and saves the updated review.
      *
-     * @param review The review to be liked.
+     * @param id The id of the review to be liked.
+     * @return The review with the specified ID with an additional like.
      * @throws IllegalArgumentException if the review does not exist.
      * @author Mathieu Allaire
      */
     @Transactional
-    public void likeReview(Review review) {
-        Review review = findReviewById(review.getId());
+    public Review likeReview(int id) {
+        Review review = findReviewById(id);
         if (review == null) {
             throw new IllegalArgumentException("There is no review with ID " + id + ".");
         }
         review.setLikes(review.getLikes() + 1);
         reviewRepo.save(review);
+        return review;
     }
 
     /**
      * Adds a reply to a review and saves the updated review in the repository.
      *
-     * @param review      The review to which the reply is being added.
+     * @param id     The id of the review to which the reply is being added.
      * @param description The description of the reply to be added.
+     * @return The review with the specified ID with an added reply.
      * @throws IllegalArgumentException if the reply description is empty or if the review does not exist.
      * @author Mathieu Allaire
      */
     @Transactional
-    public void addReply(Review review, String description) {
+    public Review addReply(int id, String description) {
         if (description == null || description.length() == 0) {
-            IllegalArgumentException("The reply has an empty description");
+            throw new IllegalArgumentException("The reply has an empty description");
         }
-        Review review = findReviewById(review.getId());
+        Review review = findReviewById(id);
         if (review == null) {
             throw new IllegalArgumentException("There is no review with ID " + id + ".");
         }
         review.setReply(description);
         reviewRepo.save(review);
+        return review;
     }
 
 }

@@ -11,22 +11,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ca.mcgill.ecse321.GameOn.dto.ReviewDto;
 import ca.mcgill.ecse321.GameOn.service.ReviewService;
 import ca.mcgill.ecse321.GameOn.model.Review;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
+import jakarta.validation.Valid;
+
+/**
+ * This class represents the Review Controller, which handles the HTTP
+ * requests related to reviews.
+ * It provides endpoints for posting, retrieving and liking reviews,
+ * as well as adding replies to reviews.
+ *
+ * @author Mathieu Allaire
+ */
 @RestController
 public class ReviewController{
     @Autowired
-    private ReviewService gameService;
+    private ReviewService reviewService;
 
     /**
      * Posts a new review.
      *
      * @param reviewDto The review data transfer object.
-     * @return The created review.
+     * @return The created review DTO.
      * @author Mathieu Allaire
      */
     @PostMapping("/reviews")
@@ -38,8 +49,7 @@ public class ReviewController{
                     reviewDto.getLikes(),
                     reviewDto.getDislikes(),
                     reviewDto.getReviewAuthor(),
-                    reviewDto.getManager(),
-                    reviewDto.getReply()
+                    reviewDto.getManager()
             );
             ReviewDto response = new ReviewDto(review);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -53,7 +63,7 @@ public class ReviewController{
      * Retrieves all reviews for a specified game.
      *
      * @param gameName The name of the game.
-     * @return A list of reviews for the game.
+     * @return A list of review DTOs for the game.
      * @author Mathieu Allaire
      */
     @GetMapping("/game/{gameName}/reviews")
@@ -63,7 +73,7 @@ public class ReviewController{
             List<ReviewDto> response = reviews.stream()
                     .map(ReviewDto::new)
                     .collect(Collectors.toList());
-            return new ResponseEntity<>(response, HttpStatus.OK)
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -92,7 +102,7 @@ public class ReviewController{
      *
      * @param id The review ID.
      * @param reply The reply content.
-     * @return The updated review with the new reply.
+     * @return The updated review DTO with the new reply.
      * @author Mathieu Allaire
      */
     @PostMapping("/reviews/{id}/reply")
