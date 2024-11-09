@@ -180,8 +180,6 @@ public class WhishlistServiceTests {
         bob.setPassword(encryptedPassword); // the password save into the system is encrypted
 
 
-        
-        
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
         when(gameRepository.findGameByName(VALID_GAME_NAME)).thenReturn(game);
         when(wishlistLinkRepository.findWishlistLinkByKey(new WishlistLink.Key(game, customerRole))).thenReturn(existingWishlist);
@@ -190,13 +188,123 @@ public class WhishlistServiceTests {
         Boolean deleted = wishlistService.removeGameFromWishlist(VALID_EMAIL, VALID_GAME_NAME);
 
         //Assert
-        //Verify that a game was added to the customer role
+        //Verify that the game was removed from the wishlist
         assertEquals(deleted, true);
         verify(wishlistLinkRepository, times(1)).delete(existingWishlist);
         assertEquals(customerRole.getCustomerWish().size(), 0);
-
         
     }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testInvalidRemoveGameWishList(){
+       //Create a game
+       Game game = new Game(VALID_PICTURE, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+
+       //Create a cart and customer
+       Cart cart = new Cart();
+       Customer customerRole = new Customer(VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS, cart);
+
+       //Create Wishlist
+       WishlistLink existingWishlist = new WishlistLink(game, customerRole);
+
+       //Create a customer
+       customerRole.addCustomerWish(existingWishlist); // the customer has 1 game in his wishlist
+       Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, customerRole);
+       String encryptedPassword = bob.getEncryptedPassword(VALID_PASSWORD);
+       bob.setPassword(encryptedPassword); // the password save into the system is encrypted
+
+
+        when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
+        when(gameRepository.findGameByName(VALID_GAME_NAME)).thenReturn(game);
+        when(wishlistLinkRepository.findWishlistLinkByKey(new WishlistLink.Key(game, customerRole))).thenReturn(null);
+        
+
+        try {
+            //Act 
+        //Case when there is no game in the wishlist to remove
+        Boolean deleted = wishlistService.removeGameFromWishlist(VALID_EMAIL, VALID_GAME_NAME);
+            } catch (Exception e) {
+            assertEquals("The Game is not in the customer's wishlist", e.getMessage());
+            }
+        
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testFindWishList(){
+       //Create a game
+       Game game = new Game(VALID_PICTURE, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+
+       //Create a cart and customer
+       Cart cart = new Cart();
+       Customer customerRole = new Customer(VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS, cart);
+
+       //Create Wishlist
+       WishlistLink existingWishlist = new WishlistLink(game, customerRole);
+
+       //Create a customer
+       customerRole.addCustomerWish(existingWishlist); // the customer has 1 game in his wishlist
+       Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, customerRole);
+       String encryptedPassword = bob.getEncryptedPassword(VALID_PASSWORD);
+       bob.setPassword(encryptedPassword); // the password save into the system is encrypted
+        
+        when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
+        when(gameRepository.findGameByName(VALID_GAME_NAME)).thenReturn(game);
+        when(wishlistLinkRepository.findWishlistLinkByKey(new WishlistLink.Key(game, customerRole))).thenReturn(existingWishlist);
+        
+        //Act 
+        WishlistLink createdWishlist = wishlistService.findWishlistLink(VALID_EMAIL, VALID_GAME_NAME);
+
+        //Assert
+        //Verify the customer
+        assertNotNull(createdWishlist);
+        assertEquals(createdWishlist.getCustomerWish().getBillingAddress(), VALID_BILLING_ADDRESS);
+        assertEquals(createdWishlist.getCustomerWish().getCardExpiryDate(), VALID_DATE);
+        assertEquals(createdWishlist.getCustomerWish().getCardNum(), VALID_CARD_NUM);
+        //Verify the game
+        assertEquals(createdWishlist.getWishlistGames().getName(), VALID_GAME_NAME);
+        assertEquals(createdWishlist.getWishlistGames().getDescription(), VALID_DESCRIPTION);
+        assertEquals(createdWishlist.getWishlistGames().getPicture(), VALID_PICTURE);
+        assertEquals(createdWishlist.getWishlistGames().getPrice(), VALID_PRICE);
+        assertEquals(createdWishlist.getWishlistGames().getQuantity(), VALID_QUANTITY);
+        assertEquals(createdWishlist.getWishlistGames().getCategory().getName(), "WAR");
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testInvalidFindWishList(){
+       //Create a game
+       Game game = new Game(VALID_PICTURE, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+
+       //Create a cart and customer
+       Cart cart = new Cart();
+       Customer customerRole = new Customer(VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS, cart);
+
+       //Create a customer
+       Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, customerRole);
+       String encryptedPassword = bob.getEncryptedPassword(VALID_PASSWORD);
+       bob.setPassword(encryptedPassword); // the password save into the system is encrypted
+        
+        when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
+        when(gameRepository.findGameByName(VALID_GAME_NAME)).thenReturn(game);
+        when(wishlistLinkRepository.findWishlistLinkByKey(new WishlistLink.Key(game, customerRole))).thenReturn(null);
+        
+    
+        try {
+
+            //Act 
+            //Case when there is not the wanted game in the wishlist 
+            WishlistLink createdWishlist = wishlistService.findWishlistLink(VALID_EMAIL, VALID_GAME_NAME);
+            } catch (Exception e) {
+            assertEquals("The game is not in the wishlist of the client", e.getMessage());
+            }
+    
+    }
+
+
+
+    
 
 
 
