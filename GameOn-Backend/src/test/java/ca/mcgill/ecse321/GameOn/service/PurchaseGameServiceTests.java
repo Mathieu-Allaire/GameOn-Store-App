@@ -11,10 +11,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
 import java.sql.Date;
 
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -33,6 +35,31 @@ public class PurchaseGameServiceTests {
 
     @SuppressWarnings("null")
 
+    //Helper Test Functions
+    private SpecificGame exampleSpecificGame() {
+        String aPicture = "url";
+        String aName = "Elden Ring";
+        String aDescription = "Open World Dark Souls";
+        int aPrice = 60;
+        int aQuantity = 100;
+        Category aCategory = new Category("Open World");
+
+        Game aGame = new Game(aPicture, aName, aDescription, aPrice, aQuantity, aCategory);
+
+        return new SpecificGame(aGame);
+    }
+
+    private boolean specificGameEqual(SpecificGame specificGame1, SpecificGame specificGame2) {
+
+        return specificGame1.getGame().getPicture().equals(specificGame2.getGame().getPicture())
+                && specificGame1.getGame().getName().equals(specificGame2.getGame().getName())
+                && specificGame1.getGame().getDescription().equals(specificGame2.getGame().getDescription())
+                && specificGame1.getGame().getPrice() == specificGame2.getGame().getPrice()
+                && specificGame1.getGame().getQuantity() == specificGame2.getGame().getQuantity()
+                && specificGame1.getGame().getCategory().equals(specificGame2.getGame().getCategory());
+    }
+
+
     //Find Cart by ID
     @Test
     public void testFindValidCart() {
@@ -46,6 +73,7 @@ public class PurchaseGameServiceTests {
 
         //Assert
         assertNotNull(cart);
+        assertEquals(aCart.getId(), cart.getId());
     }
     @Test
     public void testFindInvalidCart() {
@@ -65,15 +93,7 @@ public class PurchaseGameServiceTests {
         //Arrange
         int id = 420;
 
-        String aPicture = "url";
-        String aName = "Elden Ring";
-        String aDescription = "Open World Dark Souls";
-        int aPrice = 60;
-        int aQuantity = 100;
-        Category aCategory = new Category("Open World");
-
-        Game aGame = new Game(aPicture, aName, aDescription, aPrice, aQuantity, aCategory);
-        SpecificGame aSpecificGame = new SpecificGame(aGame);
+        SpecificGame aSpecificGame = exampleSpecificGame();
 
         when(specificGameRepository.findSpecificGameById(id)).thenReturn(aSpecificGame);
 
@@ -82,7 +102,7 @@ public class PurchaseGameServiceTests {
 
         //Assert
         assertNotNull(specificGame);
-        assertEquals(aSpecificGame.getGame(), specificGame.getGame());
+        assertTrue( specificGameEqual(aSpecificGame, specificGame) );
     }
     @Test public void testFindInvalidSpecificGame() {
         //Arrange
@@ -120,8 +140,10 @@ public class PurchaseGameServiceTests {
         //Assert
         assertNotNull(order);
         assertEquals(aOrder.getPurchaseDate(), order.getPurchaseDate());
-        assertEquals(aOrder.getCart(), order.getCart());
-        assertEquals(aOrder.getOrderCustomer(), order.getOrderCustomer());
+        assertEquals(aOrder.getCart().getId(), order.getCart().getId());
+        assertEquals(aOrder.getOrderCustomer().getCardNum(), order.getOrderCustomer().getCardNum());
+        assertEquals(aOrder.getOrderCustomer().getCardExpiryDate(), order.getOrderCustomer().getCardExpiryDate());
+        assertEquals(aOrder.getOrderCustomer().getBillingAddress(), order.getOrderCustomer().getBillingAddress());
     }
     @Test
     public void testFindInvalidOrder() {
@@ -139,20 +161,91 @@ public class PurchaseGameServiceTests {
     @Test
     public void testAddValidSpecificGameToCart() {
         //Arrange
+        int cartId = 420;
+        int specificGameId = 123;
+
+        Cart aCart = new Cart();
+        SpecificGame aSpecificGame = exampleSpecificGame();
+
+        when(cartRepository.findCartById(cartId)).thenReturn(aCart);
+        when(specificGameRepository.findSpecificGameById(specificGameId)).thenReturn(aSpecificGame);
+        when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
+
         //Act
+        Cart cart = purchaseGameService.addSpecificGameToCart(specificGameId, cartId);
+
         //Assert
+        assertNotNull(aCart);
+        assertEquals(1, cart.getSpecificGame().size());
+        assertEquals(aCart.getId(), cart.getId());
+        assertTrue( specificGameEqual( aCart.getSpecificGame(0) , cart.getSpecificGame(0)) );
     }
     @Test
     public void testAddInvalidSpecificGameToCart() {
-        //Arrange
+        int cartId = 420;
+        int specificGameId = 123;
+
+        Cart aCart = new Cart();
+
+        when(cartRepository.findCartById(cartId)).thenReturn(aCart);
+        when(specificGameRepository.findSpecificGameById(specificGameId)).thenReturn(null);
+        when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
+
         //Act
         //Assert
+        Exception e = assertThrows(Exception.class, () -> purchaseGameService.addSpecificGameToCart(specificGameId, cartId));
+        assertEquals("There are no specific game with the ID: " + specificGameId + ".", e.getMessage());
     }
     @Test
-    public void testAddSpecificToInvalidCart() {
-        //Arrange
+    public void testAddInvalidSpecificGameIdToCart() {
+        int cartId = 420;
+        int specificGameId = -1;
+
+        Cart aCart = new Cart();
+        SpecificGame aSpecificGame = exampleSpecificGame();
+
+        when(cartRepository.findCartById(cartId)).thenReturn(aCart);
+        when(specificGameRepository.findSpecificGameById(specificGameId)).thenReturn(aSpecificGame);
+        when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
+
         //Act
         //Assert
+        Exception e = assertThrows(Exception.class, () -> purchaseGameService.addSpecificGameToCart(specificGameId, cartId));
+        assertEquals("SpecificGame ID is invalid.", e.getMessage());
+    }
+    @Test
+    public void testAddSpecificGameToInvalidCart() {
+        int cartId = 420;
+        int specificGameId = 123;
+
+        SpecificGame aSpecificGame = exampleSpecificGame();
+
+        when(cartRepository.findCartById(cartId)).thenReturn(null);
+        when(specificGameRepository.findSpecificGameById(specificGameId)).thenReturn(aSpecificGame);
+        when(cartRepository.save(any(Cart.class))).thenReturn(null);
+
+        //Act
+        //Assert
+        Exception e = assertThrows(Exception.class, () -> purchaseGameService.addSpecificGameToCart(specificGameId, cartId));
+        assertEquals("There are no cart with the ID: " + cartId + ".", e.getMessage());
+    }
+
+    @Test
+    public void testAddSpecificGameToInvalidCartId() {
+        int cartId = -1;
+        int specificGameId = 123;
+
+        Cart aCart = new Cart();
+        SpecificGame aSpecificGame = exampleSpecificGame();
+
+        when(cartRepository.findCartById(cartId)).thenReturn(aCart);
+        when(specificGameRepository.findSpecificGameById(specificGameId)).thenReturn(aSpecificGame);
+        when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
+
+        //Act
+        //Assert
+        Exception e = assertThrows(Exception.class, () -> purchaseGameService.addSpecificGameToCart(specificGameId, cartId));
+        assertEquals("Cart ID is invalid.", e.getMessage());
     }
 
     //remove specific game from cart

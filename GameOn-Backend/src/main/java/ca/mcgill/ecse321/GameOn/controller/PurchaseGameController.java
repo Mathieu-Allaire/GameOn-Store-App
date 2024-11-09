@@ -8,11 +8,9 @@ import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Order;
 import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.model.SpecificGame;
-import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
 import ca.mcgill.ecse321.GameOn.service.AccountService;
 import ca.mcgill.ecse321.GameOn.service.PurchaseGameService;
 
-import java.beans.Customizer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,11 +30,9 @@ public class PurchaseGameController {
     @Autowired
     private AccountService accountService;
     
-    @GetMapping("/carts/{email}")
-    public CartResponseDto findCartByEmail(@PathVariable String email){
-        Person person = accountService.findCustomerByEmail(email);
-        Customer customer = (Customer) person.getRole(0);
-        Cart cart = customer.getCart();
+    @GetMapping("/carts/{id}")
+    public CartResponseDto findCartById(@PathVariable int id){
+        Cart cart = purchaseGameService.findCartByID(id);
         return new CartResponseDto(cart);
     }
 
@@ -53,11 +49,8 @@ public class PurchaseGameController {
     }
 
     @PostMapping("/add_to_cart/{id}")
-    public void addSpecificGameToCart(@RequestBody SpecificGame specificGame, @PathVariable String email) {
-        Person person = accountService.findCustomerByEmail(email);
-        Customer customer = (Customer) person.getRole(0);
-        Cart cart = customer.getCart();
-        purchaseGameService.addSpecificGameToCart(specificGame, cart.getId());
+    public void addSpecificGameToCart(@RequestBody CartResponseDto cart, @PathVariable int id) {
+        purchaseGameService.addSpecificGameToCart(id, cart.getId());
     }
 
     @PostMapping("/remove_from_cart/{id}")
@@ -68,7 +61,7 @@ public class PurchaseGameController {
         purchaseGameService.removeSpecificGameFromCart(specificGame, cart.getId());
     }
 
-    @PostMapping("/remove_all_games_from_cart/{id}")
+    @PostMapping("/remove_all_games_from_cart/{email}")
     public void removeAllGamesFromCart(@PathVariable String email){
         Person person = accountService.findCustomerByEmail(email);
         Customer customer = (Customer) person.getRole(0);
