@@ -119,16 +119,17 @@ public class PurchaseGameService {
      * @throws IllegalArgumentException if inputs are invalid
      */
     @Transactional
-    public void removeSpecificGameFromCart(SpecificGame specificGame, int id) {
-        if (id < 0) {
-            throw new IllegalArgumentException("ID is invalid.");
+    public void removeSpecificGameFromCart(int specificGameId, int cartId) {
+        if (cartId < 0) {
+            throw new IllegalArgumentException("Cart ID is invalid.");
         }
-        Cart cart = findCartByID(id);
-        if (specificGame == null) {
-            throw new IllegalArgumentException("Specific Game cannot be null.");
+        if (specificGameId < 0) {
+            throw new IllegalArgumentException("Specific Game ID is invalid.");
         }
+        Cart cart = findCartByID(cartId);
+        SpecificGame specificGame = findSpecificGameById(specificGameId);
         if (cart == null) {
-            throw new IllegalArgumentException("There are no cart with the ID: " + id + ".");
+            throw new IllegalArgumentException("There are no cart with the ID: " + cartId + ".");
         }
         if (!cart.removeSpecificGame(specificGame)) {
             throw new IllegalArgumentException("This game is not in the cart.");
@@ -145,13 +146,17 @@ public class PurchaseGameService {
     @Transactional
     public void removeAllGamesFromCart(int id) {
         if (id < 0) {
-            throw new IllegalArgumentException("ID is invalid.");
+            throw new IllegalArgumentException("Cart ID is invalid.");
         }
         Cart cart = findCartByID(id);
         if (cart == null) {
             throw new IllegalArgumentException("Cart cannot be null.");
         }
         
+        if (cart.getSpecificGames().isEmpty()) {
+            throw new IllegalArgumentException("Cart is empty.");
+        }
+
         cart.removeAllGamesFromCart();
         cartRepository.save(cart);
     }
