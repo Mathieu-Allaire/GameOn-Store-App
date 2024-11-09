@@ -36,7 +36,7 @@ public class PurchaseGameService {
         }
         Cart cart = cartRepository.findCartById(id);
         if (cart == null) {
-            throw new IllegalArgumentException("There are no cards with the ID: " + id + ".");
+            throw new IllegalArgumentException("There are no cart with the ID: " + id + ".");
         }
         return cart;
     }
