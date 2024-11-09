@@ -1,27 +1,29 @@
 package ca.mcgill.ecse321.GameOn.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ca.mcgill.ecse321.GameOn.model.Cart;
+import ca.mcgill.ecse321.GameOn.model.SpecificGame;
 
 
 public class CartResponseDto {
 
-    private int id;
+    private List<String> specificGameNames;
 
     @SuppressWarnings("unused")
     private CartResponseDto() {
     }
 
-    public CartResponseDto(Cart model) {
-        this.id = model.getId();
+    public CartResponseDto(Cart aCart) {
+        this.specificGameNames = new ArrayList<>();
+        for (SpecificGame specificGame : aCart.getSpecificGames()) {
+            specificGameNames.add(specificGame.getGame().getName());
+        }
     }
 
-    public int getId() {
-        return id;
-    }
-   
 
-    public void setId(int id) {
-        this.id = id;
+    public List<String> getSpecificGameNames() {
+        return specificGameNames;
     }
-  
 }
