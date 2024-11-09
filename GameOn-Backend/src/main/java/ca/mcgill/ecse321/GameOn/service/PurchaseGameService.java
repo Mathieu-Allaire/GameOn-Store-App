@@ -77,7 +77,7 @@ public class PurchaseGameService {
 
     /**
      * Method to add Specific Game to cart
-     * @param specifcGame
+     * @param specificGame
      * @param id
      * @throws IllegalArgumentException if inputs are invalid
      */
@@ -99,7 +99,7 @@ public class PurchaseGameService {
 
     /**
      * Method to remove a Specific Game from the cart
-     * @param specifcGame
+     * @param specificGame
      * @param id
      * @throws IllegalArgumentException if inputs are invalid
      */
@@ -156,7 +156,6 @@ public class PurchaseGameService {
         Date aPurchaseDate = new Date(millis);
         Customer aCustomer = cart.getCustomer();
 
-        Order order = new Order(aPurchaseDate, cart, aCustomer);
-        return order;
+        return new Order(aPurchaseDate, cart, aCustomer);
     }
 }
