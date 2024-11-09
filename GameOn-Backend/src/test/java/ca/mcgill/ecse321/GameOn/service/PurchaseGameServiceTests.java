@@ -176,7 +176,7 @@ public class PurchaseGameServiceTests {
 
         //Assert
         assertNotNull(aCart);
-        assertEquals(1, cart.getSpecificGame().size());
+        assertEquals(1, cart.getSpecificGames().size());
         assertEquals(aCart.getId(), cart.getId());
         assertTrue( specificGameEqual( aCart.getSpecificGame(0) , cart.getSpecificGame(0)) );
     }

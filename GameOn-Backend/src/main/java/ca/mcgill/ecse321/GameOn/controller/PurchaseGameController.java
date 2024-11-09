@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 /**
- * 
- * @author Joseph Rouhana Feghaly, Joël Boyer
+ * this class allows us to control the purchase of games
+ * @author Luis Jarquin, Neeshal Imrit, Joseph Rouhana Feghaly, Joël Boyer
  */
 @RestController
 public class PurchaseGameController {

@@ -4,9 +4,11 @@ import ca.mcgill.ecse321.GameOn.model.Cart;
 import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Order;
 import ca.mcgill.ecse321.GameOn.model.SpecificGame;
+import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.repository.CartRepository;
 import ca.mcgill.ecse321.GameOn.repository.OrderRepository;
 import ca.mcgill.ecse321.GameOn.repository.SpecificGameRepository;
+import ca.mcgill.ecse321.GameOn.repository.GameRepository;
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ public class PurchaseGameService {
     private SpecificGameRepository specificGameRepository;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private GameRepository gameRepository;
 
     /**
      * Method to retrieve Cart by ID
@@ -91,15 +95,20 @@ public class PurchaseGameService {
         }
         Cart cart = findCartByID(cartId);
         SpecificGame specificGame = findSpecificGameById(specificGameId);
-
+        
         if (specificGame == null) {
             throw new IllegalArgumentException("There are no specific game with the ID: " + specificGameId + ".");
-        }    
+        }
+
+        Game game = specificGame.getGame();
+        if (game.getQuantity() == 0) {
+            throw new IllegalArgumentException("This game is out of stock.");
+        }
+
         if (cart == null) {
             throw new IllegalArgumentException("There are no cart with the ID: " + cartId + ".");
         }
         cart.addSpecificGame(specificGame);
-
         return cartRepository.save(cart);
     }
 
@@ -124,7 +133,8 @@ public class PurchaseGameService {
         if (!cart.removeSpecificGame(specificGame)) {
             throw new IllegalArgumentException("This game is not in the cart.");
         }
-        
+        cart.removeSpecificGame(specificGame);
+        cartRepository.save(cart);
     }
 
      /**
@@ -143,6 +153,7 @@ public class PurchaseGameService {
         }
         
         cart.removeAllGamesFromCart();
+        cartRepository.save(cart);
     }
     /**
      * Method to create an order from a cart after a transaction
@@ -161,7 +172,16 @@ public class PurchaseGameService {
         long millis = System.currentTimeMillis();
         Date aPurchaseDate = new Date(millis);
         Customer aCustomer = cart.getCustomer();
+        for (SpecificGame specificGame : cart.getSpecificGames()) {
+            Game game = specificGame.getGame();
+            game.setQuantity(game.getQuantity() - 1);
+            gameRepository.save(game);
+        }
 
-        return new Order(aPurchaseDate, cart, aCustomer);
+        Order order = new Order(aPurchaseDate, cart, aCustomer);
+        order = orderRepository.save(order);
+        cart.removeAllGamesFromCart();
+        cartRepository.save(cart);
+        return order;
     }
 }
