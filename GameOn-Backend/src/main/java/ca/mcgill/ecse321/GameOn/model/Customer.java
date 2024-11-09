@@ -223,17 +223,20 @@ public class Customer extends Role
     return wasAdded;
   }
 
-  public boolean removeCustomerWish(WishlistLink aCustomerWish)
-  {
+  public boolean removeCustomerWish(WishlistLink aCustomerWish) {
     boolean wasRemoved = false;
-    //Unable to remove aCustomerWish, as it must always have a CustomerWish
-    if (!this.equals(aCustomerWish.getCustomerWish()))
-    {
-      CustomerWish.remove(aCustomerWish);
-      wasRemoved = true;
+    
+
+    // Check if the CustomerWish list contains the wish
+    if (this.CustomerWish != null) {
+        // Removing the wish from the list
+        wasRemoved = this.CustomerWish.remove(aCustomerWish);
     }
+
     return wasRemoved;
-  }
+}
+
+
   /* Code from template association_AddIndexControlFunctions */
   public boolean addCustomerWishAt(WishlistLink aCustomerWish, int index)
   {  

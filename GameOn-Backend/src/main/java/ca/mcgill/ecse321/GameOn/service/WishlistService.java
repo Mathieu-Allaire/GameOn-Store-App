@@ -42,31 +42,49 @@ public class WishlistService {
      */
     @Transactional
     public WishlistLink addGameToWishlist(String customerEmail, String gameName) {
-        if (customerEmail == null) {
-            throw new IllegalArgumentException("Customer email cannot be null");
+        if (customerEmail == null || customerEmail.trim().length() == 0 || customerEmail.contains(" ") || customerEmail.contains("@") == false || customerEmail.contains(".") == false) {
+            throw new IllegalArgumentException("Email is invalid");
         }
         if (gameName == null) {
             throw new IllegalArgumentException("Game name cannot be null");
         }
 
-        WishlistLink existingWishlistLink = findWishlistLink(customerEmail, gameName);
-        if (existingWishlistLink != null){
-            return existingWishlistLink;
-        } else {
-            Person aPerson = personRepository.findPersonByEmail(customerEmail);
-            if (aPerson == null) {
-                throw new IllegalArgumentException("Person not found");
-            }
-            if (!(aPerson.getRole(0).getClass() != Customer.class)) {
-                throw new IllegalArgumentException("Person is not a customer");
-            }
-            Long aCustomerId = aPerson.getRole(0).getId();
-            Customer aCustomer = customerRepository.findCustomerById(aCustomerId.intValue());
-            Game game = gameRepository.findGameByName(gameName);
-            WishlistLink wishlistLink = new WishlistLink(new WishlistLink.Key(game,aCustomer));
-            wishlistLinkRepository.save(wishlistLink);
-            return wishlistLink;
+        Person customer = personRepository.findPersonByEmail(customerEmail);
+
+        //No person with that email
+        if (customer == null) {
+            throw new IllegalArgumentException("Customer not found");
         }
+        //The person found with that email is not a customer
+        if(personRepository.findPersonByEmail(customerEmail).getRole(0).getClass() != Customer.class){
+            throw new IllegalArgumentException("No customer with this email");
+        }
+
+        Game game = gameRepository.findGameByName(gameName);
+
+        //Verify that the game exists
+            if(game == null ){
+                throw new IllegalArgumentException("The game does not exist");
+            }
+
+        Customer customerRole = (Customer) customer.getRole(0);
+        WishlistLink wishlistLink = wishlistLinkRepository.findWishlistLinkByKey(new WishlistLink.Key(game, customerRole));
+        //Verify that the customer does not already have the game in the wishlist
+        if( wishlistLink != null){
+            throw new IllegalArgumentException("The Game is already at the customer wishlist");
+        }
+
+        WishlistLink wishlist = new WishlistLink(game, customerRole);
+        wishlistLinkRepository.save(wishlist);
+        customerRole.addCustomerWish(wishlist);
+        customerRepository.save(customerRole);
+
+        //Long aCustomerId = aPerson.getRole(0).getId();
+        //Customer aCustomer = customerRepository.findCustomerById(aCustomerId.intValue()); //this is the customer role associated to the person's email
+       // WishlistLink wishlistLink = new WishlistLink(new WishlistLink.Key(game,aCustomer));
+        //wishlistLinkRepository.save(wishlistLink);
+        return wishlist;
+        
     }
 
     /**
@@ -77,7 +95,7 @@ public class WishlistService {
      * @throws IllegalArgumentException if the customer or game is null
      */
     @Transactional
-    public void removeGameFromWishlist(String customerEmail, String gameName) {
+    public Boolean removeGameFromWishlist(String customerEmail, String gameName) {
         if (customerEmail == null) {
             throw new IllegalArgumentException("Customer email cannot be null");
         }
@@ -85,12 +103,33 @@ public class WishlistService {
             throw new IllegalArgumentException("Game name cannot be null");
         }
 
-        WishlistLink wishlistLink = findWishlistLink(customerEmail, gameName);
-        if (wishlistLink == null) {
-            throw new IllegalArgumentException("Wishlist link not found");
+        Person customer = personRepository.findPersonByEmail(customerEmail);
+
+        //No person with that email
+        if (customer == null) {
+            throw new IllegalArgumentException("Customer not found");
         }
-    
+        //The person found with that email is not a customer
+        if(personRepository.findPersonByEmail(customerEmail).getRole(0).getClass() != Customer.class){
+            throw new IllegalArgumentException("No customer with this email");
+        }
+
+        Game game = gameRepository.findGameByName(gameName);
+
+        //Verify that the game exists
+        if(game == null ){
+            throw new IllegalArgumentException("The game does not exist");
+        }
+
+        Customer customerRole = (Customer) customer.getRole(0);
+        WishlistLink wishlistLink = wishlistLinkRepository.findWishlistLinkByKey(new WishlistLink.Key(game, customerRole));
+
+        if (wishlistLink == null) {
+            throw new IllegalArgumentException("The Game is not in the customer's wishlist");
+        }
+        Boolean deleted = customerRole.removeCustomerWish(wishlistLink);
         wishlistLinkRepository.delete(wishlistLink);
+        return deleted;
     }
 
     /**
@@ -113,7 +152,7 @@ public class WishlistService {
         if (aPerson == null) {
             throw new IllegalArgumentException("Person not found");
         }
-        if (!(aPerson.getRole(0).getClass() != Customer.class)) {
+        if ((aPerson.getRole(0).getClass() != Customer.class)) {
             throw new IllegalArgumentException("Person is not a customer");
         }
 
@@ -122,11 +161,12 @@ public class WishlistService {
         if (game == null) {
             throw new IllegalArgumentException("Game not found");
         }
-        Long aCustomerId = aPerson.getRole(0).getId();
-        Customer aCustomer = customerRepository.findCustomerById(aCustomerId.intValue());
-        WishlistLink wishlistLink = wishlistLinkRepository.findWishlistLinkByKey(new WishlistLink.Key(game, aCustomer));
+        //Long aCustomerId = aPerson.getRole(0).getId();
+        //Customer aCustomer = customerRepository.findCustomerById(aCustomerId.intValue());
+        Customer customerRole = (Customer) aPerson.getRole(0);
+        WishlistLink wishlistLink = wishlistLinkRepository.findWishlistLinkByKey(new WishlistLink.Key(game, customerRole));
         if (wishlistLink == null) {
-            throw new IllegalArgumentException("Wishlist link not found");
+            throw new IllegalArgumentException("The game is not in the wishlist of the client");
         }
         return wishlistLink;
     }
@@ -169,15 +209,20 @@ public class WishlistService {
         if (!(aPerson.getRole(0).getClass() != Customer.class)) {
             throw new IllegalArgumentException("Person is not a customer");
         }
-        Long aCustomerId = aPerson.getRole(0).getId();
-        Customer aCustomer = customerRepository.findCustomerById(aCustomerId.intValue());
-        Iterable<WishlistLink> wishlistsCustomer = aCustomer.getCustomerWish();
+        //pas necessaire
+        Long aCustomerId = aPerson.getRole(0).getId(); 
+
+        //Garde juste ca
+        Customer aCustomer = customerRepository.findCustomerById(aCustomerId.intValue()); // Why not Customer customerRole = (Customer) aPerson.getRole(0)
+        Iterable<WishlistLink> wishlistsCustomer = aCustomer.getCustomerWish(); // Why not return this aCustomer.getCustomerWish()
+        
+        //Pas necessaire
         List<Game> games = new ArrayList<>();
         // Get all games from wishlist
         for (WishlistLink wishlistLink : wishlistsCustomer) {
             games.add(wishlistLink.getKey().getWishlistGames());
         }
 
-        return games;
+        return games;// return le aCustomer.getCustomerWish()
     }
 }
