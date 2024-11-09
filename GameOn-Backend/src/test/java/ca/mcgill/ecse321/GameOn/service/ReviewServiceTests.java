@@ -75,7 +75,8 @@ public class ReviewServiceTests {
     private static final int INVALID_STARS = 6;
     private static final int INVALID_LIKES = -1;
     private static final int INVALID_DISLIKES = -1;
-    private static final String INVALID_GAME_NAME = "wrongGame";
+    private static final String INVALID_GAME_NAME_EMPTY = "";
+    private static final String INVALID_GAME_NAME_WRONG = "wrongGame";
 
 
 
@@ -83,6 +84,7 @@ public class ReviewServiceTests {
      * Tests retrieving all reviews for a valid game.
      *
      * @return The list of reviews associated with the specified game.
+     * @throws IllegalArgumentException if the game does not exist.
      * @author Mathieu Allaire
      */
     @Test
@@ -97,10 +99,9 @@ public class ReviewServiceTests {
         List<Review> reviews = new ArrayList<>();
         reviews.add(review);
 
-        for (Review review1 : reviews) {
-            game.addReview(review1);
+        for (Review reviewInList : reviews) {
+            game.addReview(reviewInList);
         }
-
 
         when(gameRepoMock.findGameByName(VALID_GAME_NAME)).thenReturn(game);
 
@@ -116,25 +117,48 @@ public class ReviewServiceTests {
     /**
      * Tests error handling when trying to retrieve reviews for an invalid game.
      *
-     * @return An exception indicating that the game does not exist.
+     * @throws An exception indicating that the game does not exist.
      * @author Mathieu Allaire
      */
     @Test
     public void testGetAllReviewsForInvalidGame() {
         // Arrange
-        when(gameRepoMock.findGameByName(INVALID_GAME_NAME)).thenReturn(null);
+
+        when(gameRepoMock.findGameByName(INVALID_GAME_NAME_WRONG)).thenReturn(null);
 
         // Assert
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            reviewService.getAllReviewsforGame(INVALID_GAME_NAME);
+            reviewService.getAllReviewsforGame(INVALID_GAME_NAME_WRONG);
         });
         assertEquals("Game does not exist", ex.getMessage());
     }
 
     /**
+     * Tests error handling when trying to retrieve reviews for an invalid name game.
+     *
+     * @throwns An exception indicating that the name of the game is invalid.
+     * @author Mathieu Allaire
+     */
+    @Test
+    public void testGetAllReviewsForInvalidNameofGame() {
+        // Arrange
+
+        when(gameRepoMock.findGameByName(INVALID_GAME_NAME_EMPTY)).thenReturn(null);
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            reviewService.getAllReviewsforGame(INVALID_GAME_NAME_EMPTY);
+        });
+        assertEquals("The name is invalid", ex.getMessage());
+    }
+
+
+
+    /**
      * Tests posting a valid review with all required fields.
      *
      * @return The newly created review with the specified details.
+     * @throws IllegalArgumentException if the review data is invalid.
      * @author Mathieu Allaire
      */
     @Test
@@ -143,6 +167,8 @@ public class ReviewServiceTests {
         Cart cart = new Cart();
         Customer customer = new Customer(VALID_CARD_NUM,VALID_CARD_DATE,VALID_BILLING_ADDRESS,cart);
         Manager manager = new Manager();
+
+        // Whenever we save gameRepositoy.save(game) -> it will return game
         when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
         // Act
@@ -161,7 +187,7 @@ public class ReviewServiceTests {
     /**
      * Tests posting a review with an empty description, expecting an exception.
      *
-     * @return An exception indicating that the description is empty.
+     * @throws An exception indicating that the description is empty.
      * @author Mathieu Allaire
      */
     @Test
@@ -171,11 +197,126 @@ public class ReviewServiceTests {
         Customer customer = new Customer(VALID_CARD_NUM,VALID_CARD_DATE,VALID_BILLING_ADDRESS,cart);
         Manager manager = new Manager();
 
+        when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+
         // Assert
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             reviewService.postReview(INVALID_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, customer, manager);
         });
         assertEquals("The review has an empty description", ex.getMessage());
+    }
+
+
+    /**
+     * Tests posting a review with an invalid number of stars, expecting an exception.
+     *
+     * @throws An exception indicating that the number of stars is invalid.
+     * @author Mathieu Allaire
+     */
+    @Test
+    public void testPostInvalidReviewWithInvalidStars() {
+        // Arrange
+        Cart cart = new Cart();
+        Customer customer = new Customer(VALID_CARD_NUM,VALID_CARD_DATE,VALID_BILLING_ADDRESS,cart);
+        Manager manager = new Manager();
+
+        when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            reviewService.postReview(VALID_REVIEW_DESCRIPTION, INVALID_STARS, VALID_LIKES, VALID_DISLIKES, customer, manager);
+        });
+        assertEquals("The number of stars must be between 0 and 5", ex.getMessage());
+
+    }
+
+    /**
+     * Tests posting a review with an invalid number of likes, expecting an exception.
+     *
+     * @throws An exception indicating that the number of likes must be non-negative.
+     * @author Mathieu Allaire
+     */
+    @Test
+    public void testPostInvalidReviewWithInvalidLikes() {
+        // Arrange
+        Cart cart = new Cart();
+        Customer customer = new Customer(VALID_CARD_NUM,VALID_CARD_DATE,VALID_BILLING_ADDRESS,cart);
+        Manager manager = new Manager();
+
+        when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, INVALID_LIKES, VALID_DISLIKES, customer, manager);
+        });
+        assertEquals("The number of likes must be non-negative", ex.getMessage());
+    }
+
+    /**
+     * Tests posting a review with an invalid number of dislikes, expecting an exception.
+     *
+     * @throws An exception indicating that the number of dislikes must be non-negative.
+     * @author Mathieu Allaire
+     */
+    @Test
+    public void testPostInvalidReviewWithInvalidDislikes() {
+        // Arrange
+        Cart cart = new Cart();
+        Customer customer = new Customer(VALID_CARD_NUM,VALID_CARD_DATE,VALID_BILLING_ADDRESS,cart);
+        Manager manager = new Manager();
+
+        when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, INVALID_DISLIKES, customer, manager);
+        });
+        assertEquals("The number of dislikes must be non-negative", ex.getMessage());
+    }
+
+    /**
+     * Tests posting a review with an invalid author, expecting an exception.
+     *
+     * @throws An exception indicating that the author exist.
+     * @author Mathieu Allaire
+     */
+    @Test
+    public void testPostInvalidReviewWithInvalidAuthor() {
+        // Arrange
+        Cart cart = new Cart();
+        Customer customer = null;
+        Manager manager = new Manager();
+
+        when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, customer, manager);
+        });
+        assertEquals("The author is invalid", ex.getMessage());
+    }
+
+
+    /**
+     * Tests posting a review with an invalid manager, expecting an exception.
+     *
+     * @throws An exception indicating that the manager must exist.
+     * @author Mathieu Allaire
+     */
+    @Test
+    public void testPostInvalidReviewWithInvalidManager() {
+        // Arrange
+        Cart cart = new Cart();
+        Customer customer = new Customer(VALID_CARD_NUM,VALID_CARD_DATE,VALID_BILLING_ADDRESS,cart);
+        Manager manager = null;
+
+        when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, customer, manager);
+        });
+        assertEquals("The manager is invalid", ex.getMessage());
     }
 
     /**
@@ -236,6 +377,7 @@ public class ReviewServiceTests {
 
         review.setId(VALID_REVIEW_ID);
         review.setLikes(VALID_LIKES);
+
         when(reviewRepoMock.findReviewById(VALID_REVIEW_ID)).thenReturn(review);
         when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
@@ -254,16 +396,8 @@ public class ReviewServiceTests {
      */
     @Test
     public void testLikeNonExistentReview() {
-        // Arrange
-        Cart cart = new Cart();
-        Customer customer = new Customer(VALID_CARD_NUM,VALID_CARD_DATE,VALID_BILLING_ADDRESS,cart);
-        Manager manager = new Manager();
-        Review review = new Review(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, customer, manager);
-
-        review.setId(VALID_REVIEW_ID);
         when(reviewRepoMock.findReviewById(VALID_REVIEW_ID)).thenReturn(null);
 
-        // Assert
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             reviewService.likeReview(VALID_REVIEW_ID);
         });
@@ -284,6 +418,7 @@ public class ReviewServiceTests {
         Manager manager = new Manager();
         Review review = new Review(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, customer, manager);
         review.setId(VALID_REVIEW_ID);
+
         when(reviewRepoMock.findReviewById(VALID_REVIEW_ID)).thenReturn(review);
         when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
@@ -316,5 +451,17 @@ public class ReviewServiceTests {
             reviewService.addReply(VALID_REVIEW_ID, INVALID_DESCRIPTION);
         });
         assertEquals("The reply has an empty description", ex.getMessage());
+    }
+
+    @Test
+    public void testAddReplyWithInvalidId() {
+
+        when(reviewRepoMock.findReviewById(VALID_REVIEW_ID)).thenReturn(null);
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            reviewService.addReply(VALID_REVIEW_ID, VALID_REPLY);
+        });
+        assertEquals("There is no review with ID " + VALID_REVIEW_ID + ".", ex.getMessage());
     }
 }

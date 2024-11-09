@@ -32,7 +32,7 @@ public class ReviewService {
      * @author Mathieu Allaire
      */
     public List<Review> getAllReviewsforGame(String gameName){
-        if (gameName == null || gameName.trim().length() == 0) {
+        if (gameName == null || gameName.trim().isEmpty()) {
             throw new IllegalArgumentException("The name is invalid");
         }
         Game game = gameRepo.findGameByName(gameName);
@@ -57,7 +57,7 @@ public class ReviewService {
      * @author Mathieu Allaire
      */
     public Review postReview(String aDescription, int aStars, int aLikes, int aDislikes, Customer aReviewAuthor, Manager aManager) {
-        if (aDescription == null || aDescription.length() == 0) {
+        if (aDescription == null || aDescription.trim().isEmpty()) {
             throw new IllegalArgumentException("The review has an empty description");
         }
         if (aStars < 0 || aStars > 5) {
@@ -90,6 +90,9 @@ public class ReviewService {
      * @author Mathieu Allaire
      */
     public Review findReviewById(int id) {
+        if (id < 0) {
+            throw new IllegalArgumentException("The review ID must be non-negative.");
+        }
         Review existingReview = reviewRepo.findReviewById(id);
         if (existingReview == null) {
             throw new IllegalArgumentException("There is no review with ID " + id + ".");
@@ -107,6 +110,9 @@ public class ReviewService {
      */
     @Transactional
     public Review likeReview(int id) {
+        if (id < 0) {
+            throw new IllegalArgumentException("The review ID must be non-negative.");
+        }
         Review review = findReviewById(id);
         if (review == null) {
             throw new IllegalArgumentException("There is no review with ID " + id + ".");
@@ -127,7 +133,10 @@ public class ReviewService {
      */
     @Transactional
     public Review addReply(int id, String description) {
-        if (description == null || description.length() == 0) {
+        if (id < 0) {
+            throw new IllegalArgumentException("The review ID must be non-negative.");
+        }
+        if (description == null || description.trim().length() == 0) {
             throw new IllegalArgumentException("The reply has an empty description");
         }
         Review review = findReviewById(id);
