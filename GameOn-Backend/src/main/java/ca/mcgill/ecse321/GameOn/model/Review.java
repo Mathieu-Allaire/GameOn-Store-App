@@ -42,6 +42,7 @@ public class Review
     likes = aLikes;
     dislikes = aDislikes;
     reply = null;
+
     boolean didAddReviewAuthor = setReviewAuthor(aReviewAuthor);
     if (!didAddReviewAuthor)
     {

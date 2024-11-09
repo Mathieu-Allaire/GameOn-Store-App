@@ -11,17 +11,37 @@ import ca.mcgill.ecse321.GameOn.exception.reviewException;
 
 import ca.mcgill.ecse321.GameOn.repository.ReviewRepository;
 import ca.mcgill.ecse321.GameOn.model.Review;
-
+import ca.mcgill.ecse321.GameOn.model.Game;
 
 @Service
 public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepo;
+    private GameRepository gameRepo;
 
-    public
     /**
      * Posts a new review with the specified details and saves it to the repository.
      * Validates input parameters to ensure the review is properly structured.
+     *
+     * @param gameName      The game for which all reviews will be returned.
+     * @return The list of reviews for the game specified.
+     * @throws IllegalArgumentException if any parameters are invalid, or if the game does not exist.
+     * @author Mathieu Allaire
+     */
+    public List<Review> getAllReviewsforGame(String gameName){
+        if (gameName == null || gameName.trim().length() == 0) {
+            throw new IllegalArgumentException("The name is invalid");
+        }
+        Game game = gameRepository.findGameByName(aName);
+
+        if (game == null) {
+            throw new IllegalArgumentException("Game does not exist");
+        }
+        return game.getReviews();
+
+    }
+    /**
+     * Posts a new review with the specified details and saves it to the repository.
      *
      * @param aDescription  A description of the review.
      * @param aStars        The rating given in the review, between 0 and 5 stars.
