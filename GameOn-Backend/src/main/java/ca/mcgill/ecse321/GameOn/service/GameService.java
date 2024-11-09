@@ -263,17 +263,12 @@ public class GameService {
      * @return int quantity
      */
     @Transactional
-    public int getGameQuantity(GameRequest aGameRequest){
-        if (aGameRequest == null) {
+    public int getGameQuantity(Game aGame){
+        if (aGame == null) {
             throw new IllegalArgumentException("Game is invalid");
         }
 
-        Game game = gameRepository.findGameByName(aGameRequest.getRequestedGame().getName());
-
-        if (game == null) {
-            throw new IllegalArgumentException("Game does not exist");
-        }
-        return game.getQuantity();
+        return aGame.getQuantity();
     }
 
     /**
@@ -286,6 +281,10 @@ public class GameService {
     public Game updateGameQuantity(String aGame, int aQuantity){
         if (aGame == null) {
             throw new IllegalArgumentException("Game is invalid");
+        }
+
+        if (aQuantity <= 0) {
+            throw new IllegalArgumentException("Quantity is invalid");
         }
 
         Game game = gameRepository.findGameByName(aGame);
@@ -332,6 +331,10 @@ public class GameService {
     public Game updateGamePrice(String aGame, int aPrice){
         if (aGame == null) {
             throw new IllegalArgumentException("Game is invalid");
+        }
+
+        if (aPrice <= 0) {
+            throw new IllegalArgumentException("Price is invalid");
         }
 
         Game game = gameRepository.findGameByName(aGame);
