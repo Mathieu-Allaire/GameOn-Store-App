@@ -152,7 +152,7 @@ public class WishlistService {
         if (aPerson == null) {
             throw new IllegalArgumentException("Person not found");
         }
-        if (!(aPerson.getRole(0).getClass() != Customer.class)) {
+        if ((aPerson.getRole(0).getClass() != Customer.class)) {
             throw new IllegalArgumentException("Person is not a customer");
         }
 
@@ -166,7 +166,7 @@ public class WishlistService {
         Customer customerRole = (Customer) aPerson.getRole(0);
         WishlistLink wishlistLink = wishlistLinkRepository.findWishlistLinkByKey(new WishlistLink.Key(game, customerRole));
         if (wishlistLink == null) {
-            throw new IllegalArgumentException("Wishlist link not found");
+            throw new IllegalArgumentException("The game is not in the wishlist of the client");
         }
         return wishlistLink;
     }
@@ -209,15 +209,20 @@ public class WishlistService {
         if (!(aPerson.getRole(0).getClass() != Customer.class)) {
             throw new IllegalArgumentException("Person is not a customer");
         }
-        Long aCustomerId = aPerson.getRole(0).getId();
-        Customer aCustomer = customerRepository.findCustomerById(aCustomerId.intValue());
-        Iterable<WishlistLink> wishlistsCustomer = aCustomer.getCustomerWish();
+        //pas necessaire
+        Long aCustomerId = aPerson.getRole(0).getId(); 
+
+        //Garde juste ca
+        Customer aCustomer = customerRepository.findCustomerById(aCustomerId.intValue()); // Why not Customer customerRole = (Customer) aPerson.getRole(0)
+        Iterable<WishlistLink> wishlistsCustomer = aCustomer.getCustomerWish(); // Why not return this aCustomer.getCustomerWish()
+        
+        //Pas necessaire
         List<Game> games = new ArrayList<>();
         // Get all games from wishlist
         for (WishlistLink wishlistLink : wishlistsCustomer) {
             games.add(wishlistLink.getKey().getWishlistGames());
         }
 
-        return games;
+        return games;// return le aCustomer.getCustomerWish()
     }
 }
