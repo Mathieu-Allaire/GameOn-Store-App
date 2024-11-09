@@ -24,13 +24,13 @@ public class CustomerRequestDto {
     @NotBlank(message = "BillingAddress is required.")
     private String billingAddress;
 
-    public CustomerRequestDto(String email, String name, String password, Integer cardNum, Date cardExpiracyDate, String billingAdrress ){
+    public CustomerRequestDto(String email, String name, String password, Integer cardNum, Date cardExpiracyDate, String billingAddress ){
         this.email = email;
         this.name = name;
         this.password = password;
         this.cardNum = cardNum;
         this.aCardExpiracyDate = cardExpiracyDate;
-        this.billingAddress = billingAdrress;
+        this.billingAddress = billingAddress;
     }
 
     public String getEmail() {

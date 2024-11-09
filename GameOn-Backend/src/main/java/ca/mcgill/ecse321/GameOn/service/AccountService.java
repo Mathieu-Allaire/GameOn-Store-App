@@ -88,26 +88,15 @@ public class AccountService {
                 asciiEncryptedPassword += ",";
             }
         }
-        // TODO: remove this comment
-        // This is how we decrypt the password
-        // String reverseDecryptedPassword = "";
-        // String[] asciiEncryptedPasswordArray = asciiEncryptedPassword.split(",");
-        // for (int i = 0; i < asciiEncryptedPasswordArray.length; i++) {
-        //     reverseDecryptedPassword += (char) (Integer.parseInt(asciiEncryptedPasswordArray[i]) / 2);
-        // }
-
-        // String decryptedPassword = "";
-        // for (int i = reverseDecryptedPassword.length() - 1; i >= 0; i--) {
-        //     decryptedPassword += reverseDecryptedPassword.charAt(i);
-        // }
 
         Cart cart = new Cart();
         cartRepository.save(cart);
         Customer customer = new Customer(aCardNum, aCardExpiryDate, BillingAddress,cart);
         customerRepository.save(customer);
         Person person = new Person(aEmail, aName, asciiEncryptedPassword, customer);
+        personRepository.save(person);
     
-        return personRepository.save(person);
+        return person;
 
     }
 
