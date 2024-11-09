@@ -81,33 +81,35 @@ public class PurchaseGameService {
 
     /**
      * Method to add Specific Game to cart
-     * @param specificGameId
+     * @param aGameName
      * @param cartId
      * @throws IllegalArgumentException if inputs are invalid
      */
     @Transactional
-    public Cart addSpecificGameToCart(int specificGameId, int cartId) {
+    public Cart addGameToCart(String aGameName, int cartId) {
         if (cartId < 0) {
             throw new IllegalArgumentException("Cart ID is invalid.");
         }
-        if (specificGameId < 0) {
-            throw new IllegalArgumentException("SpecificGame ID is invalid.");
-        }
-        Cart cart = findCartByID(cartId);
-        SpecificGame specificGame = findSpecificGameById(specificGameId);
-        
-        if (specificGame == null) {
-            throw new IllegalArgumentException("There are no specific game with the ID: " + specificGameId + ".");
+        if (aGameName == null || aGameName.trim().length() == 0) {
+            throw new IllegalArgumentException("SpecificGame ID cannot be empty.");
         }
 
-        Game game = specificGame.getGame();
+        Cart cart = findCartByID(cartId);
+        if (cart == null) {
+            throw new IllegalArgumentException("There are no cart with the ID: " + cartId + ".");
+        }
+
+        Game game = gameRepository.findGameByName(aGameName);
+        if (game == null) {
+            throw new IllegalArgumentException("There are no game with the ID: " + aGameName + ".");
+        }
         if (game.getQuantity() == 0) {
             throw new IllegalArgumentException("This game is out of stock.");
         }
 
-        if (cart == null) {
-            throw new IllegalArgumentException("There are no cart with the ID: " + cartId + ".");
-        }
+        SpecificGame specificGame = new SpecificGame(game);
+        specificGame = specificGameRepository.save(specificGame);
+
         cart.addSpecificGame(specificGame);
         return cartRepository.save(cart);
     }
