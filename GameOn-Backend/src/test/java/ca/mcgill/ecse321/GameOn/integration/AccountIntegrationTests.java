@@ -82,16 +82,10 @@ public class AccountIntegrationTests {
         CustomerRequestDto bob = new CustomerRequestDto(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
 
         //ACT
+        ResponseEntity<EmployeeResponseDto> response = client.postForEntity("/customer", bob, EmployeeResponseDto.class);
         
-        try {
-            ResponseEntity<EmployeeResponseDto> response = client.postForEntity("/customer", bob, EmployeeResponseDto.class);
-            //ASSERT
-            assertNotNull(response);
-            assertEquals(HttpStatus.CREATED, response.getStatusCode());
-         } catch (Exception e) {
-            System.err.println("Error occurred: " + e.getMessage());
-         
-         }
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
         
         
     }
