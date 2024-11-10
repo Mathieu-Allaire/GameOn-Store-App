@@ -87,7 +87,7 @@ public class Cart
     return aSpecificGame;
   }
 
-  public List<SpecificGame> getSpecificGame()
+  public List<SpecificGame> getSpecificGames()
   {
     List<SpecificGame> newSpecificGame = Collections.unmodifiableList(specificGame);
     return newSpecificGame;

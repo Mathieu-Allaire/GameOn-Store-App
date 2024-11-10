@@ -4,20 +4,49 @@ import ca.mcgill.ecse321.GameOn.model.SpecificGame;
 
 public class SpecificGameResponseDto {
 
-    private int id;
+    private String name;
+    private int quantity;
+    private String description;
+    private int price;
+    private String picture;
+    private String Category;
+
 
     @SuppressWarnings("unused")
     private SpecificGameResponseDto() {
     }
 
-    public SpecificGameResponseDto(SpecificGame model) {
-        this.id = model.getId();
+    public SpecificGameResponseDto(SpecificGame aSpecificGame) {
+        this.name = aSpecificGame.getGame().getName();
+        this.quantity = aSpecificGame.getGame().getQuantity();
+        this.description = aSpecificGame.getGame().getDescription();
+        this.price = aSpecificGame.getGame().getPrice();
+        this.picture = aSpecificGame.getGame().getPicture();
+        this.Category = aSpecificGame.getGame().getCategory().getName();
     }
 
-    public int getId() {
-        return id;
+    public String getName() {
+        return name;
     }
-    public void setId(int id) {
-        this.id = id;
+
+    public int getQuantity() {
+        return quantity;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public String getCategory() {
+        return Category;
+    }
+
 }

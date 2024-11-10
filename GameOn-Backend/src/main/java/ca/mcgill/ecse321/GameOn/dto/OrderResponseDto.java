@@ -1,20 +1,29 @@
 package ca.mcgill.ecse321.GameOn.dto;
 
 import ca.mcgill.ecse321.GameOn.model.Order;
+import ca.mcgill.ecse321.GameOn.model.SpecificGame;
+
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderResponseDto {
 
     private int id;
     private Date purchaseDate;
+    private List<String> specificGameNames;
 
     @SuppressWarnings("unused")
     private OrderResponseDto() {
     }
 
-    public OrderResponseDto(Order model) {
-        this.id = model.getId();
-        this.purchaseDate = model.getPurchaseDate();
+    public OrderResponseDto(Order aOrder) {
+        this.specificGameNames = new ArrayList<>();
+        for (SpecificGame specificGame : aOrder.getOrderGames()) {
+            specificGameNames.add(specificGame.getGame().getName());
+        }
+        this.id = aOrder.getId();
+        this.purchaseDate = aOrder.getPurchaseDate();
     }
 
     public int getId() {
@@ -24,9 +33,6 @@ public class OrderResponseDto {
         return purchaseDate;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
     public void setPurchaseDate(Date purchaseDate) {
         this.purchaseDate = purchaseDate;
     }

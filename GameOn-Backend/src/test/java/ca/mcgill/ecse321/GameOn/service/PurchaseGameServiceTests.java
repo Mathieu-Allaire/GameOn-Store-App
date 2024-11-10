@@ -6,9 +6,11 @@ import ca.mcgill.ecse321.GameOn.model.*;
 import ca.mcgill.ecse321.GameOn.repository.CartRepository;
 import ca.mcgill.ecse321.GameOn.repository.OrderRepository;
 import ca.mcgill.ecse321.GameOn.repository.SpecificGameRepository;
+import ca.mcgill.ecse321.GameOn.repository.GameRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 
@@ -28,6 +30,8 @@ public class PurchaseGameServiceTests {
     private SpecificGameRepository specificGameRepository;
     @Mock
     private OrderRepository orderRepository;
+    @Mock
+    private GameRepository gameRepository;
 
 
     @InjectMocks
@@ -47,6 +51,17 @@ public class PurchaseGameServiceTests {
         Game aGame = new Game(aPicture, aName, aDescription, aPrice, aQuantity, aCategory);
 
         return new SpecificGame(aGame);
+    }
+
+    private Game exampleGame() {
+        String aPicture = "url";
+        String aName = "exGame";
+        String aDescription = "fun in 321";
+        int aPrice = 60;
+        int aQuantity = 100;
+        Category aCategory = new Category("Open World");
+
+        return new Game(aPicture, aName, aDescription, aPrice, aQuantity, aCategory);
     }
 
     private boolean specificGameEqual(SpecificGame specificGame1, SpecificGame specificGame2) {
@@ -161,72 +176,50 @@ public class PurchaseGameServiceTests {
     @Test
     public void testAddValidSpecificGameToCart() {
         //Arrange
-        int cartId = 420;
-        int specificGameId = 123;
-
         Cart aCart = new Cart();
-        SpecificGame aSpecificGame = exampleSpecificGame();
+        Game aGame = exampleGame();
 
-        when(cartRepository.findCartById(cartId)).thenReturn(aCart);
-        when(specificGameRepository.findSpecificGameById(specificGameId)).thenReturn(aSpecificGame);
+        SpecificGame aSpecificGame = new SpecificGame(aGame);
+
+        when(specificGameRepository.save(any(SpecificGame.class))).thenReturn(aSpecificGame);
         when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
+        when(gameRepository.findGameByName(aGame.getName())).thenReturn(aGame);
+        when(cartRepository.findCartById(aCart.getId())).thenReturn(aCart);
 
         //Act
-        Cart cart = purchaseGameService.addSpecificGameToCart(specificGameId, cartId);
+        Cart cart = purchaseGameService.addGameToCart(aGame.getName(), aCart.getId());
 
         //Assert
         assertNotNull(aCart);
-        assertEquals(1, cart.getSpecificGame().size());
+        assertEquals(1, cart.getSpecificGames().size());
         assertEquals(aCart.getId(), cart.getId());
         assertTrue( specificGameEqual( aCart.getSpecificGame(0) , cart.getSpecificGame(0)) );
     }
     @Test
-    public void testAddInvalidSpecificGameToCart() {
-        int cartId = 420;
-        int specificGameId = 123;
-
+    public void testAddInvalidGameNameToCart() {
+        //Arrange
         Cart aCart = new Cart();
+        String invalidGameName = "";
 
-        when(cartRepository.findCartById(cartId)).thenReturn(aCart);
-        when(specificGameRepository.findSpecificGameById(specificGameId)).thenReturn(null);
         when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
 
         //Act
         //Assert
-        Exception e = assertThrows(Exception.class, () -> purchaseGameService.addSpecificGameToCart(specificGameId, cartId));
-        assertEquals("There are no specific game with the ID: " + specificGameId + ".", e.getMessage());
-    }
-    @Test
-    public void testAddInvalidSpecificGameIdToCart() {
-        int cartId = 420;
-        int specificGameId = -1;
-
-        Cart aCart = new Cart();
-        SpecificGame aSpecificGame = exampleSpecificGame();
-
-        when(cartRepository.findCartById(cartId)).thenReturn(aCart);
-        when(specificGameRepository.findSpecificGameById(specificGameId)).thenReturn(aSpecificGame);
-        when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
-
-        //Act
-        //Assert
-        Exception e = assertThrows(Exception.class, () -> purchaseGameService.addSpecificGameToCart(specificGameId, cartId));
-        assertEquals("SpecificGame ID is invalid.", e.getMessage());
+        Exception e = assertThrows(Exception.class, () -> purchaseGameService.addGameToCart(invalidGameName, aCart.getId()));
+        assertEquals("Name cannot be empty.", e.getMessage());
     }
     @Test
     public void testAddSpecificGameToInvalidCart() {
         int cartId = 420;
-        int specificGameId = 123;
 
-        SpecificGame aSpecificGame = exampleSpecificGame();
+        Cart aCart = new Cart();
+        Game aGame = exampleGame();
 
-        when(cartRepository.findCartById(cartId)).thenReturn(null);
-        when(specificGameRepository.findSpecificGameById(specificGameId)).thenReturn(aSpecificGame);
-        when(cartRepository.save(any(Cart.class))).thenReturn(null);
+        when(cartRepository.findCartById(aCart.getId())).thenReturn(aCart);
 
         //Act
         //Assert
-        Exception e = assertThrows(Exception.class, () -> purchaseGameService.addSpecificGameToCart(specificGameId, cartId));
+        Exception e = assertThrows(Exception.class, () -> purchaseGameService.addGameToCart(aGame.getName(), cartId));
         assertEquals("There are no cart with the ID: " + cartId + ".", e.getMessage());
     }
 
@@ -236,6 +229,7 @@ public class PurchaseGameServiceTests {
         int specificGameId = 123;
 
         Cart aCart = new Cart();
+        Game aGame = exampleGame();
         SpecificGame aSpecificGame = exampleSpecificGame();
 
         when(cartRepository.findCartById(cartId)).thenReturn(aCart);
@@ -244,61 +238,179 @@ public class PurchaseGameServiceTests {
 
         //Act
         //Assert
-        Exception e = assertThrows(Exception.class, () -> purchaseGameService.addSpecificGameToCart(specificGameId, cartId));
+        Exception e = assertThrows(Exception.class, () -> purchaseGameService.addGameToCart(aGame.getName(), cartId));
         assertEquals("Cart ID is invalid.", e.getMessage());
     }
 
     //remove specific game from cart
     @Test
-    public void testRemoveValidSpecificGameFromCart() {
+    public void testRemoveValidGameFromCart() {
         //Arrange
+        Cart aCart = new Cart();
+        SpecificGame aSpecificGame = exampleSpecificGame();
+        Game aGame = exampleGame();
+
+        when(cartRepository.findCartById(aCart.getId())).thenReturn(aCart);
+        when(specificGameRepository.findSpecificGameById(aSpecificGame.getId())).thenReturn(aSpecificGame);
+        when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
+        when(gameRepository.findGameByName(aGame.getName())).thenReturn(aGame);
+        when(specificGameRepository.save(any(SpecificGame.class))).thenReturn(aSpecificGame);
+
         //Act
+        purchaseGameService.addGameToCart(aGame.getName(), aCart.getId());
+
         //Assert
+        assertEquals(1, aCart.getSpecificGames().size());
+
+        //Act
+        purchaseGameService.removeSpecificGameFromCart(aCart.getSpecificGame(0).getId(), aCart.getId());
+
+        //Assert
+        assertEquals(0, aCart.getSpecificGames().size());
     }
+
     @Test
     public void testRemoveInvalidSpecificGameFromCart() {
         //Arrange
+        Cart aCart = new Cart();
+        SpecificGame aSpecificGame = exampleSpecificGame();
+        int invalidSpecificGameId = -1;
+        Game aGame = exampleGame();
+
+        when(specificGameRepository.findSpecificGameById(aSpecificGame.getId())).thenReturn(aSpecificGame);
+        when(cartRepository.findCartById(aCart.getId())).thenReturn(aCart);
+        when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
+        when(gameRepository.findGameByName(aGame.getName())).thenReturn(aGame);
+
+        //Act
+        purchaseGameService.addGameToCart(aGame.getName(), aCart.getId());
+
+        //Assert
+        assertEquals(1, aCart.getSpecificGames().size());
+
         //Act
         //Assert
+        Exception e = assertThrows(Exception.class, () -> purchaseGameService.removeSpecificGameFromCart(invalidSpecificGameId, aCart.getId()));
+
+        assertEquals("Specific Game ID is invalid.", e.getMessage());
     }
     @Test
     public void testRemoveSpecificFromInvalidCart() {
         //Arrange
+        Cart aCart = new Cart();
+        SpecificGame aSpecificGame = exampleSpecificGame();
+        int invalidCartId = -1;
+        Game aGame = exampleGame();
+
+        when(specificGameRepository.findSpecificGameById(aSpecificGame.getId())).thenReturn(aSpecificGame);
+        when(cartRepository.findCartById(aCart.getId())).thenReturn(aCart);
+        when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
+        when(gameRepository.findGameByName(aGame.getName())).thenReturn(aGame);
+
+        //Act
+        purchaseGameService.addGameToCart(aGame.getName(), aCart.getId());
+
+        //Assert
+        assertEquals(1, aCart.getSpecificGames().size());
+
         //Act
         //Assert
+        Exception e = assertThrows(Exception.class, () -> purchaseGameService.removeSpecificGameFromCart(aSpecificGame.getId(), invalidCartId));
+
+        assertEquals("Cart ID is invalid.", e.getMessage());
     }
 
     //remove all games from cart
     @Test
     public void testRemoveAllGamesFromCart() {
         //Arrange
+        Cart aCart = new Cart();
+        Game aGame = exampleGame();
+        Game aGame2 = exampleGame();
+        aCart.addSpecificGame(new SpecificGame(aGame));
+        aCart.addSpecificGame(new SpecificGame(aGame2));
+
+        when(cartRepository.findCartById(aCart.getId())).thenReturn(aCart);
+        when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
+
         //Act
+        purchaseGameService.removeAllGamesFromCart(aCart.getId());
+
         //Assert
+        assertEquals(0, aCart.getSpecificGames().size());
     }
     @Test
     public void testRemoveAllGamesFromEmptyCart() {
         //Arrange
+        Cart aCart = new Cart();
+
+        when(cartRepository.findCartById(aCart.getId())).thenReturn(aCart);
+        when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
+
         //Act
         //Assert
+        Exception e = assertThrows(Exception.class, () -> purchaseGameService.removeAllGamesFromCart(aCart.getId()));
+        assertEquals("Cart is empty.", e.getMessage());
     }
     @Test
     public void testRemoveAllGamesFromInvalidCart() {
         //Arrange
+        Cart aCart = new Cart();
+        int invalidCartId = -1;
+
+        when(cartRepository.findCartById(aCart.getId())).thenReturn(aCart);
+        when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
+
         //Act
         //Assert
+        Exception e = assertThrows(Exception.class, () -> purchaseGameService.removeAllGamesFromCart(invalidCartId));
+        assertEquals("Cart ID is invalid.", e.getMessage());
     }
 
     //create order from cart
     @Test
     public void testCreateOrderFromCart() {
         //Arrange
+        Cart aCart = new Cart();
+        Date aDate = java.sql.Date.valueOf("2025-03-03");
+        Customer aCustomer = new Customer(12342134, aDate, "1234 Waterloo Street", aCart);
+        aCart.setCustomer(aCustomer);
+        Game aGame = exampleGame();
+        Game aGame2 = exampleGame();
+
+        SpecificGame aSpecificGame = new SpecificGame(aGame);
+        SpecificGame aSpecificGame2 = new SpecificGame(aGame2);
+
+        aCart.addSpecificGame(aSpecificGame);
+        aCart.addSpecificGame(aSpecificGame2);
+
+        when(cartRepository.findCartById(aCart.getId())).thenReturn(aCart);
+        when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
+        when(orderRepository.save(any(Order.class))).thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+
         //Act
+        Order order = purchaseGameService.createOrderFromCart(aCart.getId());
+
         //Assert
+        assertNotNull(order);
+        assertEquals(aCart.getId(), order.getCart().getId());
+        assertEquals(aCustomer.getCardNum(), order.getOrderCustomer().getCardNum());
+        assertEquals(aCustomer.getCardExpiryDate(), order.getOrderCustomer().getCardExpiryDate());
+        assertEquals(aCustomer.getBillingAddress(), order.getOrderCustomer().getBillingAddress());
+        assertEquals(aCart.getSpecificGames().size(), order.getCart().getSpecificGames().size());
     }
     @Test
     public void testCreateOrderFromInvalidCart() {
         //Arrange
+        Cart aCart = new Cart();
+        int invalidCartId = -1;
+
+        when(cartRepository.findCartById(aCart.getId())).thenReturn(aCart);
+        when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
+
         //Act
         //Assert
+        Exception e = assertThrows(Exception.class, () -> purchaseGameService.createOrderFromCart(invalidCartId));
+        assertEquals("ID is invalid.", e.getMessage());
     }
 }
