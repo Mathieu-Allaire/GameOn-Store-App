@@ -93,6 +93,8 @@ public class AccountService {
         cartRepository.save(cart);
         Customer customer = new Customer(aCardNum, aCardExpiryDate, BillingAddress,cart);
         customerRepository.save(customer);
+        cart.setCustomer(customer);
+        cartRepository.save(cart);
         Person person = new Person(aEmail, aName, asciiEncryptedPassword, customer);
         personRepository.save(person);
     

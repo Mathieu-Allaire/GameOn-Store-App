@@ -76,7 +76,7 @@ public class AccountIntegrationTests {
         
 	}
     @Test
-	@Order(1)
+	@Order(2)
     public void testCreateValidCustomer(){
         //Create the wanted customerRequest
         CustomerRequestDto bob = new CustomerRequestDto(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
@@ -89,6 +89,23 @@ public class AccountIntegrationTests {
 		assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(VALID_NAME, response.getBody().getName());
     }
+
+    @Test
+	@Order(1)
+    public void testCreateValidEmployee(){
+        //Create the wanted customerRequest
+        EmployeeRequestDto bob = new EmployeeRequestDto(VALID_EMAIL, VALID_NAME);
+
+        //ACT
+        ResponseEntity<EmployeeResponseDto> response = client.postForEntity("/employee", bob, EmployeeResponseDto.class);
+
+        //ASSERT
+        assertNotNull(response);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(VALID_NAME, response.getBody().getName());
+    }
+
+    
 
 
     
