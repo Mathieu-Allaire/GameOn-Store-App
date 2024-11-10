@@ -15,10 +15,11 @@ import ca.mcgill.ecse321.GameOn.dto.CustomerRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.CustomerResponseDto;
 import ca.mcgill.ecse321.GameOn.dto.EmployeeRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.EmployeeResponseDto;
+import ca.mcgill.ecse321.GameOn.dto.GameCreateDto;
+import ca.mcgill.ecse321.GameOn.dto.GameResponseDTO;
 import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Employee;
-
-
+import ca.mcgill.ecse321.GameOn.model.Game;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 
@@ -69,12 +70,18 @@ public class AccountController {
      * @return The created customer 
      */
     @PostMapping("/customer")
-    public ResponseEntity<?> createCustomer(@Valid @RequestBody CustomerRequestDto customer){
+    public ResponseEntity<?> createCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto) {
         try {
-            //int cardNumber = Integer.parseInt(customer.getCardNumber());
-            //Date expiryDate = Date.valueOf(customer.getExpiracyDate());
-            Person createdCustomer = accountService.createCustomer(customer.getEmail(), customer.getName(), customer.getPassword(), customer.getCardNumber(), customer.getExpiracyDate(), customer.getBillingAddress());
-            return new ResponseEntity<>(new CustomerResponseDto(createdCustomer), HttpStatus.CREATED);
+            Person customer = accountService.createCustomer(
+                customerRequestDto.getEmail(),
+                customerRequestDto.getName(),
+                customerRequestDto.getPassword(),
+                customerRequestDto.getCardNumber(),
+                customerRequestDto.getExpiracyDate(),
+                customerRequestDto.getBillingAddress()
+            );
+            CustomerResponseDto response = new CustomerResponseDto(customer);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
         }
