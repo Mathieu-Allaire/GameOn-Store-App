@@ -204,6 +204,7 @@ public class AccountService {
         }
     }
 
+    /* Log in will be implemented later
     public boolean logIn(String email, String password){
 
         if (email == null || email.trim().length() == 0 || email.contains(" ") || email.contains("@") == false || email.contains(".") == false) {
@@ -244,6 +245,7 @@ public class AccountService {
         }
 
         return false;
-    }
+    }*/
+
 
 }

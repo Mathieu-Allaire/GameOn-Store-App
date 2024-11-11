@@ -105,6 +105,35 @@ public class GameServiceTests {
     }
 
     @Test
+    public void testDeleteCategoryWithInvalidName(){
+        // Arrange
+        when(categoryMockRepo.findCategoryByName(INVALID_CATEGORY_NAME)).thenReturn(null);
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.deleteCategory(INVALID_CATEGORY_NAME);
+        });
+
+        assertEquals(ex.getMessage(), "Name is invalid");
+    }
+
+    @Test
+    public void testDeleteInvalidCategory(){
+        // Arrange
+        Category invalidCategory = null;
+        when(categoryMockRepo.findCategoryByName(VALID_CATEGORY_NAME)).thenReturn(invalidCategory);
+        doNothing().when(categoryMockRepo).delete(any(Category.class));
+        doNothing().when(gameMockRepo).delete(any(Game.class));
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.deleteCategory(VALID_CATEGORY_NAME);
+        });
+
+        assertEquals("Category does not exist", ex.getMessage());
+    }
+
+    @Test
     public void testGetAllCategories(){
         // Arrange
         when(categoryMockRepo.findAll()).thenReturn(null);
@@ -136,7 +165,7 @@ public class GameServiceTests {
     }
 
     @Test
-    public void testCreateInvalidGame(){
+    public void testCreateGameInvalidName(){
         // Arrange
         when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
@@ -147,6 +176,85 @@ public class GameServiceTests {
 
         assertEquals(ex.getMessage(), "Name is invalid");
 
+    }
+
+    @Test
+    public void testCreateGameInvalidPicture(){
+        // Arrange
+        when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.createGame("", VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+        });
+
+        assertEquals(ex.getMessage(), "Picture is invalid");
+    }
+
+    @Test
+    public void testCreateGameInvalidDescription(){
+        // Arrange
+        when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.createGame(VALID_URL, VALID_GAME_NAME, "", VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+        });
+
+        assertEquals(ex.getMessage(), "Description is invalid");
+    }
+
+    @Test
+    public void testCreateGameInvalidPrice(){
+        // Arrange
+        when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.createGame(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, -1, VALID_QUANTITY, VALID_CATEGORY);
+        });
+
+        assertEquals(ex.getMessage(), "Price is invalid");
+    }
+
+    @Test
+    public void testCreateGameInvalidQuantity(){
+        // Arrange
+        when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.createGame(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, -1, VALID_CATEGORY);
+        });
+
+        assertEquals(ex.getMessage(), "Quantity is invalid");
+    }
+
+    @Test
+    public void testCreateGameInvalidCategory(){
+        // Arrange
+        when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.createGame(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, null);
+        });
+
+        assertEquals(ex.getMessage(), "Category is invalid");
+    }
+
+    @Test
+    public void testCreateGameAlreadyExists(){
+        // Arrange
+        Game game = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+        when(gameMockRepo.findGameByName(VALID_GAME_NAME)).thenReturn(game);
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.createGame(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+        });
+
+        assertEquals(ex.getMessage(), "Game already exists");
     }
 
     @Test
@@ -173,6 +281,18 @@ public class GameServiceTests {
         });
 
         assertEquals(ex.getMessage(), "Name is invalid");
+    }
+
+    @Test void testDeleteGameDoesNotExist(){
+        // Arrange
+        when(gameMockRepo.findGameByName(VALID_GAME_NAME)).thenReturn(null);
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.deleteGame(VALID_GAME_NAME);
+        });
+
+        assertEquals(ex.getMessage(), "Game does not exist");
     }
 
     @Test
@@ -207,6 +327,32 @@ public class GameServiceTests {
     }
 
     @Test
+    public void testFindGameInvalidName(){
+        // Arrange
+        when(gameMockRepo.findGameByName(INVALID_GAME_NAME)).thenReturn(null);
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.findGameByName(INVALID_GAME_NAME);
+        });
+
+        assertEquals(ex.getMessage(), "Name is invalid");
+    }
+
+    @Test
+    public void testFindGameDoesNotExist(){
+        // Arrange
+        when(gameMockRepo.findGameByName(VALID_GAME_NAME)).thenReturn(null);
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.findGameByName(VALID_GAME_NAME);
+        });
+
+        assertEquals(ex.getMessage(), "Game does not exist");
+    }
+
+    @Test
     public void testGetGamesInCategory(){
         // Arrange
         Category category = new Category(VALID_CATEGORY_NAME);
@@ -224,6 +370,32 @@ public class GameServiceTests {
         assertEquals(2, category.getGames().size());
         assertEquals(game1, category.getGames().get(0));
         assertEquals(game2, category.getGames().get(1));
+    }
+
+    @Test
+    public void testGetGamesInInvalidCategoryName(){
+        // Arrange
+        when(categoryMockRepo.findCategoryByName(INVALID_CATEGORY_NAME)).thenReturn(null);
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.getGamesInCategory(INVALID_CATEGORY_NAME);
+        });
+
+        assertEquals(ex.getMessage(), "Name is invalid");
+    }
+
+    @Test
+    public void testGetGamesInCategoryDoesNotExist(){
+        // Arrange
+        when(categoryMockRepo.findCategoryByName(VALID_CATEGORY_NAME)).thenReturn(null);
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.getGamesInCategory(VALID_CATEGORY_NAME);
+        });
+
+        assertEquals(ex.getMessage(), "Category does not exist");
     }
 
     @Test
@@ -279,6 +451,34 @@ public class GameServiceTests {
         });
 
         assertEquals(ex.getMessage(), "Request creator is invalid");
+    }
+
+    @Test
+    public void testCreateGameRequestInvalidGame(){
+        // Arrange
+        Employee employee = new Employee(true);
+        Game game = null;
+
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.createGameRequest(employee, game, RequestType.Create);
+        });
+
+        assertEquals(ex.getMessage(), "Requested game is invalid");
+    }
+
+    @Test
+    public void testCreateGameRequestInvalidRequestType(){
+        // Arrange
+        Employee employee = new Employee(true);
+        Game game = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+        
+        // Assert
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.createGameRequest(employee, game, null);
+        });
+
+        assertEquals(ex.getMessage(), "Request type is invalid");
     }
 
     @Test
