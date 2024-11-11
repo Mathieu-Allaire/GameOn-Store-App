@@ -185,7 +185,7 @@ public class GameServiceTests {
 
         // Assert
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            service.createGame("", VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+            service.createGame("", VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY_NAME);
         });
 
         assertEquals(ex.getMessage(), "Picture is invalid");
@@ -198,7 +198,7 @@ public class GameServiceTests {
 
         // Assert
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            service.createGame(VALID_URL, VALID_GAME_NAME, "", VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+            service.createGame(VALID_URL, VALID_GAME_NAME, "", VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY_NAME);
         });
 
         assertEquals(ex.getMessage(), "Description is invalid");
@@ -211,7 +211,7 @@ public class GameServiceTests {
 
         // Assert
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            service.createGame(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, -1, VALID_QUANTITY, VALID_CATEGORY);
+            service.createGame(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, -1, VALID_QUANTITY, VALID_CATEGORY_NAME);
         });
 
         assertEquals(ex.getMessage(), "Price is invalid");
@@ -224,7 +224,7 @@ public class GameServiceTests {
 
         // Assert
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            service.createGame(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, -1, VALID_CATEGORY);
+            service.createGame(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, -1, VALID_CATEGORY_NAME);
         });
 
         assertEquals(ex.getMessage(), "Quantity is invalid");
@@ -251,7 +251,7 @@ public class GameServiceTests {
 
         // Assert
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            service.createGame(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+            service.createGame(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY_NAME);
         });
 
         assertEquals(ex.getMessage(), "Game already exists");
