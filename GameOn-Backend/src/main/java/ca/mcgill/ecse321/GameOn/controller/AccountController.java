@@ -66,9 +66,9 @@ public class AccountController {
     @PostMapping("/customer")
     public ResponseEntity<?> createCustomer(@Valid @RequestBody CustomerRequestDto customer){
         try {
-            int cardNumber = Integer.parseInt(customer.getCardNumber());
-            Date expiryDate = Date.valueOf(customer.getExpiracyDate());
-            Person createdCustomer = accountService.createCustomer(customer.getEmail(), customer.getName(), customer.getPassword(), cardNumber, expiryDate, customer.getBillingAddress());
+            //int cardNumber = Integer.parseInt(customer.getCardNumber());
+           // Date expiryDate = Date.valueOf(customer.getExpiracyDate());
+            Person createdCustomer = accountService.createCustomer(customer.getEmail(), customer.getName(), customer.getPassword(), customer.getCardNumber(), customer.getExpiracyDate(), customer.getBillingAddress());
             return new ResponseEntity<>(new CustomerResponseDto(createdCustomer), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);

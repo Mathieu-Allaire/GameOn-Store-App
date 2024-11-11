@@ -69,22 +69,6 @@ public class Game
   // INTERFACE
   //------------------------
 
-  public boolean setPicture(String aPicture)
-  {
-    boolean wasSet = false;
-    picture = aPicture;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setDescription(String aDescription)
-  {
-    boolean wasSet = false;
-    description = aDescription;
-    wasSet = true;
-    return wasSet;
-  }
-
   public boolean setPrice(int aPrice)
   {
     boolean wasSet = false;
@@ -138,10 +122,6 @@ public class Game
   public GameStatus getGameStatus()
   {
     return gameStatus;
-  }
-
-  public void updateIsInStock() {
-    isInStock = this.getQuantity() > 0;
   }
 
   public boolean setUnavailable()
