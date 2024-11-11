@@ -298,38 +298,7 @@ public class Game
     }
     return wasRemoved;
   }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addWishlistlinkAt(WishlistLink aWishlistlink, int index)
-  {  
-    boolean wasAdded = false;
-    if(addWishlistlink(aWishlistlink))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfWishlistlink()) { index = numberOfWishlistlink() - 1; }
-      wishlistlink.remove(aWishlistlink);
-      wishlistlink.add(index, aWishlistlink);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveWishlistlinkAt(WishlistLink aWishlistlink, int index)
-  {
-    boolean wasAdded = false;
-    if(wishlistlink.contains(aWishlistlink))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfWishlistlink()) { index = numberOfWishlistlink() - 1; }
-      wishlistlink.remove(aWishlistlink);
-      wishlistlink.add(index, aWishlistlink);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addWishlistlinkAt(aWishlistlink, index);
-    }
-    return wasAdded;
-  }
+ 
   /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfReviews()
   {
