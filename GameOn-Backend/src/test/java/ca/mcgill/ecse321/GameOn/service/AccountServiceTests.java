@@ -31,6 +31,12 @@ import ca.mcgill.ecse321.GameOn.repository.EmployeeRepository;
 import ca.mcgill.ecse321.GameOn.model.Cart;
 import ca.mcgill.ecse321.GameOn.repository.CartRepository;
 
+/**
+ * This are the tests for the AccountService, which uses Customer and Employees classes
+ *
+ * @author Camilo Berdugo
+ */
+
 @SpringBootTest
 @MockitoSettings(strictness = Strictness.STRICT_STUBS)
 public class AccountServiceTests {
