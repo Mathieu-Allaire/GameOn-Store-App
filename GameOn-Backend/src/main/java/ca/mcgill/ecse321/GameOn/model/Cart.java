@@ -47,20 +47,9 @@ public class Cart
   //------------------------
 
   
-
-  public boolean setId(int aId)
-  {
-    boolean wasSet = false;
-    id = aId;
-    wasSet = true;
-    return wasSet;
+  public void setCustomer(Customer aCustomer) {
+      customer = aCustomer;
   }
-
-
-  
- public void setCustomer(Customer aCustomer) {
-    customer = aCustomer;
- }
 
   public Customer getCustomer() {return customer;}
 
@@ -75,11 +64,6 @@ public class Cart
     return this.order;
   }
 
-  public boolean hasOrder()
-  {
-    boolean has = order != null;
-    return has;
-  }
   /* Code from template association_GetMany */
   public SpecificGame getSpecificGame(int index)
   {
@@ -105,11 +89,6 @@ public class Cart
     return has;
   }
 
-  public int indexOfSpecificGame(SpecificGame aSpecificGame)
-  {
-    int index = specificGame.indexOf(aSpecificGame);
-    return index;
-  }
   /* Code from template association_SetOptionalOneToOne */
   public boolean setOrder(Order aNewOrder)
   {
@@ -137,11 +116,7 @@ public class Cart
     wasSet = true;
     return wasSet;
   }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfSpecificGame()
-  {
-    return 0;
-  }
+
   /* Code from template association_AddUnidirectionalMany */
   public boolean addSpecificGame(SpecificGame aSpecificGame)
   {
@@ -162,41 +137,9 @@ public class Cart
     }
     return wasRemoved;
   }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addSpecificGameAt(SpecificGame aSpecificGame, int index)
-  {  
-    boolean wasAdded = false;
-    if(addSpecificGame(aSpecificGame))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfSpecificGame()) { index = numberOfSpecificGame() - 1; }
-      specificGame.remove(aSpecificGame);
-      specificGame.add(index, aSpecificGame);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
 
   public void removeAllGamesFromCart() {
     specificGame.clear();
-  }
-
-  public boolean addOrMoveSpecificGameAt(SpecificGame aSpecificGame, int index)
-  {
-    boolean wasAdded = false;
-    if(specificGame.contains(aSpecificGame))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfSpecificGame()) { index = numberOfSpecificGame() - 1; }
-      specificGame.remove(aSpecificGame);
-      specificGame.add(index, aSpecificGame);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addSpecificGameAt(aSpecificGame, index);
-    }
-    return wasAdded;
   }
 
 }

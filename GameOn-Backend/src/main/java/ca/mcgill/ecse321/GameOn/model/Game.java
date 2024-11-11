@@ -148,10 +148,6 @@ public class Game
     return gameStatus;
   }
 
-  public void updateIsInStock() {
-    isInStock = this.getQuantity() > 0;
-  }
-
   public boolean setUnavailable()
   {
     boolean wasEventProcessed = false;
@@ -233,30 +229,6 @@ public class Game
     return newWishlistlink;
   }
 
-  public int numberOfWishlistlink()
-  {
-    int number = wishlistlink.size();
-    return number;
-  }
-
-  public boolean hasWishlistlink()
-  {
-    boolean has = wishlistlink.size() > 0;
-    return has;
-  }
-
-  public int indexOfWishlistlink(WishlistLink aWishlistlink)
-  {
-    int index = wishlistlink.indexOf(aWishlistlink);
-    return index;
-  }
-  /* Code from template association_GetMany */
-  public Review getReview(int index)
-  {
-    Review aReview = reviews.get(index);
-    return aReview;
-  }
-
   public List<Review> getReviews()
   {
     List<Review> newReviews = Collections.unmodifiableList(reviews);
@@ -267,12 +239,6 @@ public class Game
   {
     int number = reviews.size();
     return number;
-  }
-
-  public boolean hasReviews()
-  {
-    boolean has = reviews.size() > 0;
-    return has;
   }
 
   public int indexOfReview(Review aReview)
