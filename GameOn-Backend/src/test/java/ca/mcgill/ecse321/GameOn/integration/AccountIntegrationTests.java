@@ -54,18 +54,18 @@ public class AccountIntegrationTests {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    //Atributes for person
+    //Attributes fot customer
     private static final String VALID_EMAIL = "bob@gmail.com"; // no spaces,contain @ and . 
     private static final String VALID_NAME = "Bob"; // at least one letter
     private static final String VALID_PASSWORD = "bob123456789"; // bigger than 8 characters
-
-    //Attributes fot customer
     private static final int VALID_CARD_NUM = 123; // larger than 0
     private static final Date VALID_DATE = Date.valueOf("2025-09-02"); // needs to be a date after today's date
     private static final String VALID_BILLING_ADDRESS = "23 frjjrfngr"; // at least one character
 
     //Attributes for employee
     private static final Boolean VALID_IS_EMPLOYED = true;
+    private static final String VALID_EMAIL_EMPLOYEE = "james@gmail.com"; // no spaces,contain @ and . 
+    private static final String VALID_NAME_EMPLOYEE = "James"; // at least one letter
 
     @AfterAll
     public void clearDatabase() {
@@ -89,6 +89,64 @@ public class AccountIntegrationTests {
         assertEquals(VALID_EMAIL, response.getBody().getEmail());
         assertEquals(VALID_NAME, response.getBody().getName());
    
+    }
+
+    @Test
+    @Order(2)
+    public void testReadValidCustomer(){
+        // Arrange
+        String url = "/customer/" + VALID_EMAIL;
+
+        // Act
+        ResponseEntity<CustomerResponseDto> response = client.getForEntity(url, CustomerResponseDto.class);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        CustomerResponseDto person = response.getBody();
+        assertNotNull(person);
+        assertEquals(VALID_NAME, person.getName());
+        assertEquals(VALID_EMAIL, person.getEmail());
+
+    }
+
+    
+    @Test
+    @Order(3)
+    public void testCreateValidEmployee(){
+        //Create the wanted customerRequest
+        EmployeeRequestDto james = new EmployeeRequestDto(VALID_EMAIL_EMPLOYEE, VALID_NAME_EMPLOYEE);
+        //ACT
+        ResponseEntity<EmployeeResponseDto> response = client.postForEntity("/employee", james, EmployeeResponseDto.class);
+        
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        EmployeeResponseDto person = response.getBody();
+        assertNotNull(person);
+        assertEquals(VALID_EMAIL_EMPLOYEE, person.getEmail());
+        assertEquals(VALID_NAME_EMPLOYEE, person.getName());
+        assertEquals(VALID_IS_EMPLOYED, person.getIsEmployed());
+   
+    }
+
+    @Test
+    @Order(4)
+    public void testReadValidEmployee(){
+        // Arrange
+        String url = "/employee/" + VALID_EMAIL_EMPLOYEE;
+
+        // Act
+        ResponseEntity<EmployeeResponseDto> response = client.getForEntity(url, EmployeeResponseDto.class);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        EmployeeResponseDto person = response.getBody();
+        assertNotNull(person);
+        assertEquals(VALID_NAME_EMPLOYEE, person.getName());
+        assertEquals(VALID_EMAIL_EMPLOYEE, person.getEmail());
+        assertEquals(VALID_IS_EMPLOYED, person.getIsEmployed());
+
     }
 
     
