@@ -64,11 +64,6 @@ public class Cart
     return this.order;
   }
 
-  public boolean hasOrder()
-  {
-    boolean has = order != null;
-    return has;
-  }
   /* Code from template association_GetMany */
   public SpecificGame getSpecificGame(int index)
   {
@@ -121,11 +116,7 @@ public class Cart
     wasSet = true;
     return wasSet;
   }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfSpecificGame()
-  {
-    return 0;
-  }
+
   /* Code from template association_AddUnidirectionalMany */
   public boolean addSpecificGame(SpecificGame aSpecificGame)
   {
