@@ -77,14 +77,6 @@ public class Game
     return wasSet;
   }
 
-  public boolean setName(String aName)
-  {
-    boolean wasSet = false;
-    name = aName;
-    wasSet = true;
-    return wasSet;
-  }
-
   public boolean setDescription(String aDescription)
   {
     boolean wasSet = false;
@@ -223,11 +215,6 @@ public class Game
     return has;
   }
 
-  public int indexOfWishlistlink(WishlistLink aWishlistlink)
-  {
-    int index = wishlistlink.indexOf(aWishlistlink);
-    return index;
-  }
   /* Code from template association_GetMany */
   public Review getReview(int index)
   {
