@@ -324,34 +324,6 @@ public class Customer extends Role
     return wasAdded;
   }
 
-  public boolean addOrMoveCustomerOrderAt(Order aCustomerOrder, int index)
-  {
-    boolean wasAdded = false;
-    if(customerOrder.contains(aCustomerOrder))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfCustomerOrder()) { index = numberOfCustomerOrder() - 1; }
-      customerOrder.remove(aCustomerOrder);
-      customerOrder.add(index, aCustomerOrder);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addCustomerOrderAt(aCustomerOrder, index);
-    }
-    return wasAdded;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfCustomerReview()
-  {
-    return 0;
-  }
-  /* Code from template association_AddManyToOne */
-  public Review addCustomerReview(String aDescription, int aStars, int aLikes, int aDislikes, Manager aManager)
-  {
-    return new Review(aDescription, aStars, aLikes, aDislikes, this, aManager);
-  }
-
   public boolean addCustomerReview(Review aCustomerReview)
   {
     boolean wasAdded = false;
@@ -360,59 +332,10 @@ public class Customer extends Role
     boolean isNewReviewAuthor = existingReviewAuthor != null && !this.equals(existingReviewAuthor);
     if (isNewReviewAuthor)
     {
-      aCustomerReview.setReviewAuthor(this);
-    }
-    else
-    {
       customerReview.add(aCustomerReview);
     }
     wasAdded = true;
     return wasAdded;
   }
-
-  public boolean removeCustomerReview(Review aCustomerReview)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aCustomerReview, as it must always have a reviewAuthor
-    if (!this.equals(aCustomerReview.getReviewAuthor()))
-    {
-      customerReview.remove(aCustomerReview);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addCustomerReviewAt(Review aCustomerReview, int index)
-  {  
-    boolean wasAdded = false;
-    if(addCustomerReview(aCustomerReview))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfCustomerReview()) { index = numberOfCustomerReview() - 1; }
-      customerReview.remove(aCustomerReview);
-      customerReview.add(index, aCustomerReview);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveCustomerReviewAt(Review aCustomerReview, int index)
-  {
-    boolean wasAdded = false;
-    if(customerReview.contains(aCustomerReview))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfCustomerReview()) { index = numberOfCustomerReview() - 1; }
-      customerReview.remove(aCustomerReview);
-      customerReview.add(index, aCustomerReview);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addCustomerReviewAt(aCustomerReview, index);
-    }
-    return wasAdded;
-  }
-
 
 }

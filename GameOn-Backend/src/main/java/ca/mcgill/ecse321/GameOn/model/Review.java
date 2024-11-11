@@ -156,12 +156,7 @@ public class Review
       return wasSet;
     }
 
-    Customer existingReviewAuthor = reviewAuthor;
     reviewAuthor = aReviewAuthor;
-    if (existingReviewAuthor != null && !existingReviewAuthor.equals(aReviewAuthor))
-    {
-      existingReviewAuthor.removeCustomerReview(this);
-    }
     reviewAuthor.addCustomerReview(this);
     wasSet = true;
     return wasSet;
@@ -178,28 +173,4 @@ public class Review
     return wasSet;
   }
 
-  public void delete()
-  {
-    Customer placeholderReviewAuthor = reviewAuthor;
-    this.reviewAuthor = null;
-    if(placeholderReviewAuthor != null)
-    {
-      placeholderReviewAuthor.removeCustomerReview(this);
-    }
-    manager = null;
-  }
-
-
-  public String toString()
-  {
-    return super.toString() + "["+
-            "id" + ":" + getId()+ "," +
-            "stars" + ":" + getStars()+ "," +
-            "likes" + ":" + getLikes()+ "," +
-            "dislikes" + ":" + getDislikes()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "description" + "=" + (getDescription() != null ? !getDescription().equals(this)  ? getDescription().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "reviewAuthor = "+(getReviewAuthor()!=null?Integer.toHexString(System.identityHashCode(getReviewAuthor())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "manager = "+(getManager()!=null?Integer.toHexString(System.identityHashCode(getManager())):"null") +
-            "  " + "reply" + "=" + (getReply() != null ? !getReply().equals(this)  ? getReply().toString().replaceAll("  ","    ") : "this" : "null");
-          }
 }
