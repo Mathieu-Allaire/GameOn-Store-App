@@ -65,21 +65,7 @@ public class WishlistController {
         }
     }
 
-    /*
-     * Remove all game from customer wishlist
-     * 
-     * @param customer email
-     * @Author Neeshal Imrit
-     */
-    @DeleteMapping("/wishlist-remove-all/{customerEmail}")
-    public ResponseEntity<?> removeAllGameFromWishlist(@PathVariable String customerEmail) {
-        try {
-            wishlistService.removeAllGamesFromWishlist(customerEmail);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
-        }
-    }
+    
 
     /*
      * Get all games from a customer's wishlist

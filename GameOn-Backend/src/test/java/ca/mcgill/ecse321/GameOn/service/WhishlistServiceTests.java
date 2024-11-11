@@ -10,7 +10,8 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Date;
 
-
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -115,29 +116,24 @@ public class WhishlistServiceTests {
         assertEquals(customerRole.getCustomerWish().size(), 1);
         
     }
-
+    @SuppressWarnings("null")
+    @Test
     public void testInvalidCustomerAddGame(){
-        //Create a customer
-        Cart cart = new Cart();
-        Employee employeeRole = new Employee(true) ;
-        Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, employeeRole);
-        String encryptedPassword = bob.getEncryptedPassword(VALID_PASSWORD);
-        bob.setPassword(encryptedPassword); // the password save into the system is encrypted
-
-        //Create a game
-        Game game = new Game(VALID_PICTURE, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
         
-        when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
-
+        //Case where there is no customer with that email
+        when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(null);
+        
         try {
             //Act 
         WishlistLink createdWishlist = wishlistService.addGameToWishlist(VALID_EMAIL, VALID_GAME_NAME);
         } catch (Exception e) {
-        assertEquals("No customer with this email", e.getMessage());
+        assertEquals("Customer not found", e.getMessage());
         }
         
     }
 
+    @SuppressWarnings("null")
+    @Test
     public void testAlreadyExistingAddGame(){
          //Create a customer
          Cart cart = new Cart();
@@ -150,12 +146,9 @@ public class WhishlistServiceTests {
         Game game = new Game(VALID_PICTURE, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
 
         WishlistLink existingWishlist = new WishlistLink(game, customerRole);
-        
+        when(wishlistLinkRepository.findWishlistLinkByKey(new WishlistLink.Key(game, customerRole))).thenReturn(existingWishlist);
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
         when(gameRepository.findGameByName(VALID_GAME_NAME)).thenReturn(game);
-        when(wishlistLinkRepository.save(any(WishlistLink.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
-        when(customerRepository.save(any(Customer.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
-        when(wishlistLinkRepository.findWishlistLinkByKey(new WishlistLink.Key(game, customerRole))).thenReturn(existingWishlist);
 
         try {
         //Act 
@@ -165,6 +158,89 @@ public class WhishlistServiceTests {
         }
         
     }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testAddGameInvalidGame(){
+         //Create a customer
+         Cart cart = new Cart();
+         Customer customerRole = new Customer(VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS, cart);
+         Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, customerRole);
+         String encryptedPassword = bob.getEncryptedPassword(VALID_PASSWORD);
+         bob.setPassword(encryptedPassword); // the password save into the system is encrypted
+
+        when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
+        when(gameRepository.findGameByName(VALID_GAME_NAME)).thenReturn(null);
+
+        try {
+        //Act 
+        WishlistLink createdWishlist = wishlistService.addGameToWishlist(VALID_EMAIL, VALID_GAME_NAME);
+        } catch (Exception e) {
+        assertEquals("The game does not exist", e.getMessage());
+        }
+        
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testAddGameNull(){
+        try {
+        //Act 
+        WishlistLink createdWishlist = wishlistService.addGameToWishlist(VALID_EMAIL, null);
+        } catch (Exception e) {
+        assertEquals("Game name cannot be null", e.getMessage());
+        }
+        
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testAddGameEmailNull(){
+        try {
+        //Act 
+        WishlistLink createdWishlist = wishlistService.addGameToWishlist(null, VALID_GAME_NAME);
+        } catch (Exception e) {
+        assertEquals("Email is invalid", e.getMessage());
+        }
+        
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testAddGameEmailSpaces(){
+        try {
+        //Act 
+        WishlistLink createdWishlist = wishlistService.addGameToWishlist("camilo@mcgill.co  m", VALID_GAME_NAME);
+        } catch (Exception e) {
+        assertEquals("Email is invalid", e.getMessage());
+        }
+        
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testAddGameEmailNoPoint(){
+        try {
+        //Act 
+        WishlistLink createdWishlist = wishlistService.addGameToWishlist("camilo@mcgillcom", VALID_GAME_NAME);
+        } catch (Exception e) {
+        assertEquals("Email is invalid", e.getMessage());
+        }
+        
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testAddGameEmailEmpty(){
+        try {
+        //Act 
+        WishlistLink createdWishlist = wishlistService.addGameToWishlist("", VALID_GAME_NAME);
+        } catch (Exception e) {
+        assertEquals("Email is invalid", e.getMessage());
+        }
+        
+    }
+
 
     @SuppressWarnings("null")
     @Test
@@ -238,6 +314,48 @@ public class WhishlistServiceTests {
 
     @SuppressWarnings("null")
     @Test
+    public void testInvalidRemoveGameWishListEmailNull(){
+        try {
+            //Act 
+        //Case when the email is null
+        Boolean deleted = wishlistService.removeGameFromWishlist(null, VALID_GAME_NAME);
+            } catch (Exception e) {
+            assertEquals("Customer email cannot be null", e.getMessage());
+            }
+        
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testInvalidRemoveGameWishListGameNameNull(){
+        try {
+            //Act 
+        //Case when the email is null
+        Boolean deleted = wishlistService.removeGameFromWishlist(VALID_EMAIL, null);
+            } catch (Exception e) {
+            assertEquals("Game name cannot be null", e.getMessage());
+            }
+        
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testInvalidRemoveGameWishListNotFoundCustomer(){
+        try {
+            //Act 
+        //Case when the email is null
+        Boolean deleted = wishlistService.removeGameFromWishlist(VALID_EMAIL, VALID_GAME_NAME);
+        when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(null);
+            } catch (Exception e) {
+            assertEquals("Customer not found", e.getMessage());
+            }
+        
+    }
+
+
+
+    @SuppressWarnings("null")
+    @Test
     public void testFindWishList(){
        //Create a game
        Game game = new Game(VALID_PICTURE, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
@@ -275,6 +393,7 @@ public class WhishlistServiceTests {
         assertEquals(createdWishlist.getWishlistGames().getPrice(), VALID_PRICE);
         assertEquals(createdWishlist.getWishlistGames().getQuantity(), VALID_QUANTITY);
         assertEquals(createdWishlist.getWishlistGames().getCategory().getName(), "WAR");
+        
     }
 
     @SuppressWarnings("null")
@@ -306,6 +425,85 @@ public class WhishlistServiceTests {
             assertEquals("The game is not in the wishlist of the client", e.getMessage());
             }
     
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testInvalidFindWishListEmailNull(){
+        try {
+
+            //Act 
+            //Case when email is null
+            WishlistLink createdWishlist = wishlistService.findWishlistLink(null, VALID_GAME_NAME);
+            } catch (Exception e) {
+            assertEquals("Customer email cannot be null", e.getMessage());
+            }
+    
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testInvalidFindWishListGameNameNull(){
+        try {
+
+            //Act 
+            //Case when gameName is null
+            WishlistLink createdWishlist = wishlistService.findWishlistLink(VALID_EMAIL, null);
+            } catch (Exception e) {
+            assertEquals("Game name cannot be null", e.getMessage());
+            }
+    
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testInvalidFindWishListNoPersonFound(){
+        try {
+            //Act 
+            //Case when person is not found with the given email
+            when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(null);
+            WishlistLink createdWishlist = wishlistService.findWishlistLink(VALID_EMAIL, VALID_GAME_NAME);
+            } catch (Exception e) {
+            assertEquals("Person not found", e.getMessage());
+            }
+    
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void TestGetAllGamesFromWishListLink(){
+       //Create a game
+       Game game = new Game(VALID_PICTURE, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+       Game secondGame = new Game(VALID_PICTURE, "Game2", VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+
+       //Create a cart and customer
+       Cart cart = new Cart();
+       Customer customerRole = new Customer(VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS, cart);
+
+       //Create Wishlist
+       WishlistLink existingWishlist = new WishlistLink(game, customerRole);
+       WishlistLink secondExistingWishlist = new WishlistLink(secondGame, customerRole);
+
+       //Create a customer
+       customerRole.addCustomerWish(existingWishlist);
+       customerRole.addCustomerWish(secondExistingWishlist);
+       //In this case Bob has 2 games in his wishlist
+       Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, customerRole);
+       String encryptedPassword = bob.getEncryptedPassword(VALID_PASSWORD);
+       bob.setPassword(encryptedPassword); // the password save into the system is encrypted
+        
+        when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
+        
+        //Act 
+        List<Game> gamesWishList = wishlistService.getAllGamesFromWishlist(VALID_EMAIL);
+
+        //Assert
+        //Verify the customer
+        assertNotNull(gamesWishList);
+        assertEquals(gamesWishList.size(), 2);
+        assertEquals(gamesWishList.get(0).getName(), VALID_GAME_NAME);
+        assertEquals(gamesWishList.get(1).getName(), "Game2");
+        
     }
 
 
