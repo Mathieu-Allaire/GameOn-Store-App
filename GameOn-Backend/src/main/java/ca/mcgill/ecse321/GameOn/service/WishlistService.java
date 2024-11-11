@@ -171,25 +171,7 @@ public class WishlistService {
         return wishlistLink;
     }
 
-    /**
-     * Remove all games from the wishlist of a customer.
-     * 
-     * @param customerEmail the email of the customer
-     * @throws IllegalArgumentException if the customer is null
-     */
-    @Transactional
-    public void removeAllGamesFromWishlist(String customerEmail) {
-        if (customerEmail == null) {
-            throw new IllegalArgumentException("Customer email cannot be null");
-        }
-        for (WishlistLink wishlistLink : wishlistLinkRepository.findAll()) {
-            Person aPerson = personRepository.findPersonByEmail(customerEmail);
-            Customer customer = customerRepository.findCustomerById(aPerson.getRole(0).getId().intValue());
-            if (wishlistLink.getKey().getCustomer().equals(customer)) {
-                wishlistLinkRepository.delete(wishlistLink);
-            }
-        }
-    }
+   
 
     /**
      * Retrieve the wishlist of a customer.
@@ -206,23 +188,19 @@ public class WishlistService {
         if (aPerson == null) {
             throw new IllegalArgumentException("Person not found");
         }
-        if (!(aPerson.getRole(0).getClass() != Customer.class)) {
+        if ((aPerson.getRole(0).getClass() != Customer.class)) {
             throw new IllegalArgumentException("Person is not a customer");
         }
-        //pas necessaire
-        Long aCustomerId = aPerson.getRole(0).getId(); 
-
-        //Garde juste ca
-        Customer aCustomer = customerRepository.findCustomerById(aCustomerId.intValue()); // Why not Customer customerRole = (Customer) aPerson.getRole(0)
-        Iterable<WishlistLink> wishlistsCustomer = aCustomer.getCustomerWish(); // Why not return this aCustomer.getCustomerWish()
+      
+        Customer customerRole = (Customer) aPerson.getRole(0);
+        List<WishlistLink> wishlistsCustomer = customerRole.getCustomerWish(); 
         
-        //Pas necessaire
         List<Game> games = new ArrayList<>();
         // Get all games from wishlist
         for (WishlistLink wishlistLink : wishlistsCustomer) {
-            games.add(wishlistLink.getKey().getWishlistGames());
+            games.add(wishlistLink.getWishlistGames()); //this will add the game associated to the wishlistlink into the List of games
         }
 
-        return games;// return le aCustomer.getCustomerWish()
+        return games;
     }
 }
