@@ -87,13 +87,7 @@ public class GameRequest
     {
       return wasSet;
     }
-
-    Employee existingRequestCreator = requestCreator;
     requestCreator = aRequestCreator;
-    if (existingRequestCreator != null && !existingRequestCreator.equals(aRequestCreator))
-    {
-      existingRequestCreator.removeGameRequest(this);
-    }
     requestCreator.addGameRequest(this);
     wasSet = true;
     return wasSet;
@@ -108,24 +102,5 @@ public class GameRequest
       wasSet = true;
     }
     return wasSet;
-  }
-  public void delete()
-  {
-    Employee placeholderRequestCreator = requestCreator;
-    this.requestCreator = null;
-    if(placeholderRequestCreator != null)
-    {
-      placeholderRequestCreator.removeGameRequest(this);
-    }
-    resquestedGame = null;
-  }
-
-
-  public String toString()
-  {
-    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "requestType" + "=" + (getRequestType() != null ? !getRequestType().equals(this)  ? getRequestType().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "requestCreator = "+(getRequestCreator()!=null?Integer.toHexString(System.identityHashCode(getRequestCreator())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "resquestedGame = "+(getRequestedGame()!=null?Integer.toHexString(System.identityHashCode(getRequestedGame())):"null") + System.getProperties().getProperty("line.separator");
   }
 }
