@@ -87,9 +87,8 @@ public class AccountIntegrationTests {
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(VALID_EMAIL, response.getBody().getEmail());
-        
-        
-        
+        assertEquals(VALID_NAME, response.getBody().getName());
+   
     }
 
     
