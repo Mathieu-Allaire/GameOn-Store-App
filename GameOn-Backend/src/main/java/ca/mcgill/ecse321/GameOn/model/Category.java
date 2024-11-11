@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 
-// line 70 "GameOn.ump"
 
+// line 70 "GameOn.ump"
+@JsonIgnoreProperties({"games"}) 
 @Entity
 public class Category
 {

@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.GameOn.service.AccountService;
@@ -15,11 +15,7 @@ import ca.mcgill.ecse321.GameOn.dto.CustomerRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.CustomerResponseDto;
 import ca.mcgill.ecse321.GameOn.dto.EmployeeRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.EmployeeResponseDto;
-import ca.mcgill.ecse321.GameOn.model.Customer;
-import ca.mcgill.ecse321.GameOn.model.Employee;
 
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 
 import java.sql.Date;
@@ -48,7 +44,6 @@ public class AccountController {
 
     /**
      * Return the Employee with the given email.
-     *
      * @param email The primary key of the Employee to find.
      * @return The employee with the given email.
      */

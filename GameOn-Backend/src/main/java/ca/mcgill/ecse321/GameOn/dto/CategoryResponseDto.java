@@ -4,16 +4,14 @@ import ca.mcgill.ecse321.GameOn.model.Category;
 public class CategoryResponseDto {
     private String name;
 
-    public CategoryResponseDto(Category category) {
-        this.name = category.getName();
+    protected CategoryResponseDto() {
     }
 
-    @SuppressWarnings("unused")
-    private CategoryResponseDto() {
+    public CategoryResponseDto(Category category) {
+        this.name = category.getName();
     }
 
     public String getName() {
         return name;
     }
-    
 }

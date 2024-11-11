@@ -120,9 +120,10 @@ public class GameServiceTests {
     public void testCreateValidGame(){
         // Arrange
         when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
-
+        Category category = new Category(VALID_CATEGORY_NAME);
+        when(categoryMockRepo.findCategoryByName(VALID_CATEGORY_NAME)).thenReturn(category);
         // Act
-        Game game = service.createGame(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+        Game game = service.createGame(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY_NAME);
     
         // Assert
         assertNotNull(game);
@@ -131,7 +132,7 @@ public class GameServiceTests {
         assertEquals(VALID_DESCRIPTION, game.getDescription());
         assertEquals(VALID_PRICE, game.getPrice());
         assertEquals(VALID_QUANTITY, game.getQuantity());
-        assertEquals(VALID_CATEGORY, game.getCategory());
+        assertEquals(VALID_CATEGORY_NAME, game.getCategory().getName());
     }
 
     @Test
@@ -141,7 +142,7 @@ public class GameServiceTests {
 
         // Assert
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            service.createGame(VALID_URL, INVALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+            service.createGame(VALID_URL, INVALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY_NAME);
         });
 
         assertEquals(ex.getMessage(), "Name is invalid");
@@ -242,6 +243,28 @@ public class GameServiceTests {
         assertEquals(employee, gameRequest.getRequestCreator());
         assertEquals(game, gameRequest.getRequestedGame());
         assertEquals(RequestType.Create, gameRequest.getRequestType());
+    }
+
+    @Test
+    public void testCreateGame(){
+        // String aPicture, String aName, String aDescription, int aPrice, int aQuantity, String aCategory
+        // Arrange
+        Category category = new Category(VALID_CATEGORY_NAME);
+        when(categoryMockRepo.findCategoryByName(VALID_CATEGORY_NAME)).thenReturn(category);
+        // Game game = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+        when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+
+        // Act
+        Game createdGame = service.createGame(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY_NAME);
+        
+        // Assert
+        assertNotNull(createdGame);
+        assertEquals(VALID_URL, createdGame.getPicture());
+        assertEquals(VALID_GAME_NAME, createdGame.getName());
+        assertEquals(VALID_DESCRIPTION, createdGame.getDescription());
+        assertEquals(VALID_PRICE, createdGame.getPrice());
+        assertEquals(VALID_QUANTITY, createdGame.getQuantity());
+        assertEquals(VALID_CATEGORY_NAME, createdGame.getCategory().getName());
     }
 
     @Test

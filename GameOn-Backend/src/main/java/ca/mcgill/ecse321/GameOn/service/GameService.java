@@ -38,8 +38,12 @@ public class GameService {
      */
     @Transactional
     public Category createCategory(String aName){
-        if (aName == null || aName.trim().length() == 0) {
+        if (aName.trim().length() == 0 || aName == null) {
             throw new IllegalArgumentException("Name is invalid");
+        }
+        Category aCategory = categoryRepository.findCategoryByName(aName);
+        if (aCategory != null) {
+            throw new IllegalArgumentException("Category already exists");
         }
         Category category = new Category(aName);
         categoryRepository.save(category);
@@ -82,6 +86,28 @@ public class GameService {
     }
 
     /**
+     * Method to get a specific category.
+     * 
+     * @param aCategoryName
+     * @return Category
+     * @throws IllegalArgumentException if name is invalid
+     */
+    @Transactional
+    public Category findCategoryByName(String aCategoryName){
+        if (aCategoryName == null || aCategoryName.trim().length() == 0) {
+            throw new IllegalArgumentException("Name is invalid");
+        }
+
+        Category category = categoryRepository.findCategoryByName(aCategoryName);
+
+        if (category == null) {
+            throw new IllegalArgumentException("Category does not exist");
+        }
+
+        return category;
+    }
+
+    /**
      * Method add a game.
      * When a game is created, the game status is set to unavaible. 
      * The logic is that the manager should approve the game request before the game is available.
@@ -96,7 +122,7 @@ public class GameService {
      * @throws IllegalArgumentException if parameters are invalid or game already exists.
      */
     @Transactional
-    public Game createGame(String aPicture, String aName, String aDescription, int aPrice, int aQuantity, Category aCategory){
+    public Game createGame(String aPicture, String aName, String aDescription, int aPrice, int aQuantity, String aCategory){
         if (aPicture == null || aPicture.trim().length() == 0) {
             throw new IllegalArgumentException("Picture is invalid");
         }
@@ -120,7 +146,17 @@ public class GameService {
             throw new IllegalArgumentException("Game already exists");
         }
 
-        Game game = new Game(aPicture, aName, aDescription, aPrice, aQuantity, aCategory);
+        Category category = categoryRepository.findCategoryByName(aCategory);
+
+        if (category == null) {
+            throw new IllegalArgumentException("Category does not exist");
+        }
+
+        if (gameRepository.findGameByName(aName) != null) {
+            throw new IllegalArgumentException("Game already exists");
+        }
+
+        Game game = new Game(aPicture, aName, aDescription, aPrice, aQuantity, category);
         gameRepository.save(game);
 
         return game;
