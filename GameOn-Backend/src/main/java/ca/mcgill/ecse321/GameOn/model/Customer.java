@@ -414,32 +414,5 @@ public class Customer extends Role
     return wasAdded;
   }
 
-  public void delete()
-  {
-    for(int i=CustomerWish.size(); i > 0; i--)
-    {
-      WishlistLink aCustomerWish = CustomerWish.get(i - 1);
-      aCustomerWish.delete();
-    }
-    for(int i=customerOrder.size(); i > 0; i--)
-    {
-      Order aCustomerOrder = customerOrder.get(i - 1);
-      aCustomerOrder.delete();
-    }
-    for(int i=customerReview.size(); i > 0; i--)
-    {
-      Review aCustomerReview = customerReview.get(i - 1);
-      aCustomerReview.delete();
-    }
-    super.delete();
-  }
 
-
-  public String toString()
-  {
-    return super.toString() + "["+
-            "cardNum" + ":" + getCardNum()+ "," +
-            "billingAddress" + ":" + getBillingAddress()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "cardExpiryDate" + "=" + (getCardExpiryDate() != null ? !getCardExpiryDate().equals(this)  ? getCardExpiryDate().toString().replaceAll("  ","    ") : "this" : "null");
-  }
 }

@@ -199,23 +199,4 @@ public class Cart
     return wasAdded;
   }
 
-  public void delete()
-  {
-    Order existingOrder = order;
-    order = null;
-    if (existingOrder != null)
-    {
-      existingOrder.delete();
-    }
-    specificGame.clear();
-  }
-
-
-  public String toString()
-  {
-    return super.toString() + "["+
-            "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "dateAdded" + "="  + System.getProperties().getProperty("line.separator") +
-            "  " + "order = "+(getOrder()!=null?Integer.toHexString(System.identityHashCode(getOrder())):"null");
-  }
 }
