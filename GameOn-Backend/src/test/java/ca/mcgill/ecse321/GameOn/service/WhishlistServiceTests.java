@@ -7,9 +7,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
 import java.sql.Date;
-
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -60,7 +63,7 @@ public class WhishlistServiceTests {
     private static final Date VALID_DATE = Date.valueOf("2025-09-02"); // needs to be a date after today's date
     private static final String VALID_BILLING_ADDRESS = "23 frjjrfngr"; // at least one character
 
-    //Attributes game
+    //Attributes game1
     private static final String VALID_GAME_NAME = "COD";
     private static final String VALID_PICTURE = "url=fwbyuevefiuefueb";
     private static final String VALID_DESCRIPTION = "Gun game";
@@ -68,7 +71,13 @@ public class WhishlistServiceTests {
     private static final Integer VALID_QUANTITY = 12;
     private static final Category VALID_CATEGORY = new Category("WAR");
 
-
+    //Attributes game2
+    private static final String VALID_GAME_NAME2 = "FIFA";
+    private static final String VALID_PICTURE2 = "url=fwbyuevefiuefueb";
+    private static final String VALID_DESCRIPTION2 = "Soccer game";
+    private static final Integer VALID_PRICE2 = 69;
+    private static final Integer VALID_QUANTITY2 = 10;
+    private static final Category VALID_CATEGORY2 = new Category("SPORTS");
 
     @SuppressWarnings("null")
     @Test
@@ -162,6 +171,36 @@ public class WhishlistServiceTests {
 
     @SuppressWarnings("null")
     @Test
+    public void testGetAllWishList(){
+         //Create a customer
+         Cart cart = new Cart();
+         Customer customerRole = new Customer(VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS, cart);
+         Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, customerRole);
+         String encryptedPassword = bob.getEncryptedPassword(VALID_PASSWORD);
+         bob.setPassword(encryptedPassword); // the password save into the system is encrypted
+         
+         //Create a game
+         Game game = new Game(VALID_PICTURE, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+         
+         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
+         when(gameRepository.findGameByName(VALID_GAME_NAME)).thenReturn(game);
+         when(wishlistLinkRepository.save(any(WishlistLink.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+         when(customerRepository.save(any(Customer.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+         when(wishlistLinkRepository.findWishlistLinkByKey(new WishlistLink.Key(game, customerRole))).thenReturn(null);
+         
+         //Act 
+         WishlistLink createdWishlist = wishlistService.addGameToWishlist(VALID_EMAIL, VALID_GAME_NAME);
+        //Act 
+        List<Game> allGames = wishlistService.getAllGamesFromWishlist(VALID_EMAIL);
+
+        //Assert
+        //Verify the customer
+        assertNotNull(allGames);
+    }
+
+
+    @SuppressWarnings("null")
+    @Test
     public void testRemoveGameWishList(){
         //Create a game
         Game game = new Game(VALID_PICTURE, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
@@ -194,6 +233,45 @@ public class WhishlistServiceTests {
         assertEquals(customerRole.getCustomerWish().size(), 0);
         
     }
+    /** FOR CAMILO 
+    @SuppressWarnings("null")
+    @Test
+    public void testRemoveAllGamesFromWishList(){
+                //Create a game
+                Game game = new Game(VALID_PICTURE, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+
+                //Create a cart and customer
+                Cart cart = new Cart();
+                Customer customerRole = new Customer(VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS, cart);
+        
+                //Create Wishlist
+                WishlistLink existingWishlist = new WishlistLink(game, customerRole);
+        
+                //Create a customer
+                customerRole.addCustomerWish(existingWishlist); // the customer has 1 game in his wishlist
+                Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, customerRole);
+                String encryptedPassword = bob.getEncryptedPassword(VALID_PASSWORD);
+                bob.setPassword(encryptedPassword); // the password save into the system is encrypted
+        
+        
+                when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
+                when(gameRepository.findGameByName(VALID_GAME_NAME)).thenReturn(game);
+                when(wishlistLinkRepository.findWishlistLinkByKey(new WishlistLink.Key(game, customerRole))).thenReturn(existingWishlist);
+                List<WishlistLink> existingWishlistList = new ArrayList<>();
+                existingWishlistList.add(existingWishlist);
+                Iterable<WishlistLink> existingWishlistIterator = existingWishlistList;
+                lenient().when(wishlistLinkRepository.findAll()).thenReturn(existingWishlistIterator);
+                //Act 
+                Boolean deleted = wishlistService.removeAllGamesFromWishlist(VALID_EMAIL);
+        
+                //Assert
+                //Verify that the game was removed from the wishlist
+                assertEquals(deleted, true);
+                verify(wishlistLinkRepository, times(1)).delete(existingWishlist);
+                assertEquals(customerRole.getCustomerWish().size(), 0);
+
+    }
+                */
 
     @SuppressWarnings("null")
     @Test
