@@ -108,19 +108,4 @@ public class Employee extends Staff
     wasAdded = true;
     return wasAdded;
   }
-
-  public boolean removeGameRequest(GameRequest aGameRequest)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aGameRequest, as it must always have a requestCreator
-    if (!this.equals(aGameRequest.getRequestCreator()))
-    {
-      gameRequest.remove(aGameRequest);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-
-
-
 }
