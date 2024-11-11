@@ -74,23 +74,7 @@ public class Category
     int number = games.size();
     return number;
   }
-
-  public boolean hasGames()
-  {
-    boolean has = games.size() > 0;
-    return has;
-  }
-
-  public int indexOfGame(Game aGame)
-  {
-    int index = games.indexOf(aGame);
-    return index;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfGames()
-  {
-    return 0;
-  }
+  
   /* Code from template association_AddManyToOne */
   public Game addGame(String aPicture, String aName, String aDescription, int aPrice, int aQuantity)
   {
@@ -126,52 +110,5 @@ public class Category
     }
     return wasRemoved;
   }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addGameAt(Game aGame, int index)
-  {  
-    boolean wasAdded = false;
-    if(addGame(aGame))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfGames()) { index = numberOfGames() - 1; }
-      games.remove(aGame);
-      games.add(index, aGame);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
 
-  public boolean addOrMoveGameAt(Game aGame, int index)
-  {
-    boolean wasAdded = false;
-    if(games.contains(aGame))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfGames()) { index = numberOfGames() - 1; }
-      games.remove(aGame);
-      games.add(index, aGame);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addGameAt(aGame, index);
-    }
-    return wasAdded;
-  }
-
-  public void delete()
-  {
-    for(int i=games.size(); i > 0; i--)
-    {
-      Game aGame = games.get(i - 1);
-      aGame.delete();
-    }
-  }
-
-
-  public String toString()
-  {
-    return super.toString() + "["+
-            "name" + ":" + getName() +"]";
-  }
 }

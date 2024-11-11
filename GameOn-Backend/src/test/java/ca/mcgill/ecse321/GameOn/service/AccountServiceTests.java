@@ -57,6 +57,11 @@ public class AccountServiceTests {
     private static final Date VALID_DATE = Date.valueOf("2025-09-02"); // needs to be a date after today's date
     private static final String VALID_BILLING_ADDRESS = "23 frjjrfngr"; // at least one character
 
+    private static final int INVALID_CARD_NUM = 0; 
+    private static final Date INVALID_DATE = Date.valueOf("2001-09-02"); 
+    private static final String INVALID_BILLING_ADDRESS = ""; 
+
+
     //For creating employees, we only need the name and email, the password and isEmployed is automatically created for them 
     
 
@@ -142,6 +147,7 @@ public class AccountServiceTests {
         assertEquals(customerRole.getCardNum(), wantedCustomerRole.getCardNum());  // customerRole is bob's role
         assertEquals(customerRole.getCardExpiryDate(), wantedCustomerRole.getCardExpiryDate()); 
         assertEquals(customerRole.getBillingAddress(), wantedCustomerRole.getBillingAddress()); 
+        assertEquals(customerRole.getCart().getId(), wantedCustomerRole.getCart().getId()); 
     }
 
     @SuppressWarnings("null")
@@ -149,7 +155,10 @@ public class AccountServiceTests {
     public void testReadCustomerByEmailNotFound(){
         //Arrange 
         Cart cart = new Cart();
-        Customer customerRole = new Customer(VALID_CARD_NUM, VALID_DATE, INVALID_EMAIL, cart);
+        Customer customerRole = new Customer(INVALID_CARD_NUM, INVALID_DATE, INVALID_BILLING_ADDRESS, cart);
+        customerRole.setBillingAddress(VALID_BILLING_ADDRESS);
+        customerRole.setCardNum(VALID_CARD_NUM);
+        customerRole.setCardExpiryDate(VALID_DATE);
         Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, customerRole);
         String encryptedPassword = bob.getEncryptedPassword(VALID_PASSWORD);
         bob.setPassword(encryptedPassword); // this simulates the create customer

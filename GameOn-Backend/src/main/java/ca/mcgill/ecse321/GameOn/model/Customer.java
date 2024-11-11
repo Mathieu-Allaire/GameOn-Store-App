@@ -57,23 +57,17 @@ public class Customer extends Role
   // INTERFACE
   //------------------------
 
-  public boolean setCardNum(int aCardNum)
+  public void setCardNum(int aCardNum)
   {
-    boolean wasSet = false;
     cardNum = aCardNum;
-    wasSet = true;
-    return wasSet;
   }
 
-  public boolean setCardExpiryDate(Date aCardExpiryDate)
+  public void setCardExpiryDate(Date aCardExpiryDate)
   {
-    boolean wasSet = false;
     cardExpiryDate = aCardExpiryDate;
-    wasSet = true;
-    return wasSet;
   }
 
-  public boolean hasCart(){return cart != null;}
+  
 
   public boolean setBillingAddress(String aBillingAddress)
   {
@@ -98,11 +92,6 @@ public class Customer extends Role
     return billingAddress;
   }
   /* Code from template association_GetMany */
-  public WishlistLink getCustomerWish(int index)
-  {
-    WishlistLink aCustomerWish = CustomerWish.get(index);
-    return aCustomerWish;
-  }
 
   public List<WishlistLink> getCustomerWish()
   {
@@ -110,17 +99,6 @@ public class Customer extends Role
     return newCustomerWish;
   }
 
-  public int numberOfCustomerWish()
-  {
-    int number = CustomerWish.size();
-    return number;
-  }
-
-  public boolean hasCustomerWish()
-  {
-    boolean has = CustomerWish.size() > 0;
-    return has;
-  }
   public Cart getCart(){
     return cart;
   }
@@ -129,17 +107,9 @@ public class Customer extends Role
     cart = aCart;
   }
 
-  public int indexOfCustomerWish(WishlistLink aCustomerWish)
-  {
-    int index = CustomerWish.indexOf(aCustomerWish);
-    return index;
-  }
+  
   /* Code from template association_GetMany */
-  public Order getCustomerOrder(int index)
-  {
-    Order aCustomerOrder = customerOrder.get(index);
-    return aCustomerOrder;
-  }
+  
 
   public List<Order> getCustomerOrder()
   {
@@ -147,29 +117,9 @@ public class Customer extends Role
     return newCustomerOrder;
   }
 
-  public int numberOfCustomerOrder()
-  {
-    int number = customerOrder.size();
-    return number;
-  }
 
-  public boolean hasCustomerOrder()
-  {
-    boolean has = customerOrder.size() > 0;
-    return has;
-  }
-
-  public int indexOfCustomerOrder(Order aCustomerOrder)
-  {
-    int index = customerOrder.indexOf(aCustomerOrder);
-    return index;
-  }
   /* Code from template association_GetMany */
-  public Review getCustomerReview(int index)
-  {
-    Review aCustomerReview = customerReview.get(index);
-    return aCustomerReview;
-  }
+  
 
   public List<Review> getCustomerReview()
   {
@@ -183,22 +133,9 @@ public class Customer extends Role
     return number;
   }
 
-  public boolean hasCustomerReview()
-  {
-    boolean has = customerReview.size() > 0;
-    return has;
-  }
-
-  public int indexOfCustomerReview(Review aCustomerReview)
-  {
-    int index = customerReview.indexOf(aCustomerReview);
-    return index;
-  }
+  
   /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfCustomerWish()
-  {
-    return 0;
-  }
+ 
   /* Code from template association_AddManyToOne */
   public WishlistLink addCustomerWish(Game aWishlistGames)
   {
@@ -236,44 +173,7 @@ public class Customer extends Role
     return wasRemoved;
 }
 
-
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addCustomerWishAt(WishlistLink aCustomerWish, int index)
-  {  
-    boolean wasAdded = false;
-    if(addCustomerWish(aCustomerWish))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfCustomerWish()) { index = numberOfCustomerWish() - 1; }
-      CustomerWish.remove(aCustomerWish);
-      CustomerWish.add(index, aCustomerWish);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveCustomerWishAt(WishlistLink aCustomerWish, int index)
-  {
-    boolean wasAdded = false;
-    if(CustomerWish.contains(aCustomerWish))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfCustomerWish()) { index = numberOfCustomerWish() - 1; }
-      CustomerWish.remove(aCustomerWish);
-      CustomerWish.add(index, aCustomerWish);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addCustomerWishAt(aCustomerWish, index);
-    }
-    return wasAdded;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfCustomerOrder()
-  {
-    return 0;
-  }
+  
   /* Code from template association_AddManyToOne */
   public Order addCustomerOrder(int aId, Date aPurchaseDate, Cart aCart)
   {
@@ -309,20 +209,13 @@ public class Customer extends Role
     }
     return wasRemoved;
   }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addCustomerOrderAt(Order aCustomerOrder, int index)
-  {  
-    boolean wasAdded = false;
-    if(addCustomerOrder(aCustomerOrder))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfCustomerOrder()) { index = numberOfCustomerOrder() - 1; }
-      customerOrder.remove(aCustomerOrder);
-      customerOrder.add(index, aCustomerOrder);
-      wasAdded = true;
-    }
-    return wasAdded;
+  
+  /* Code from template association_AddManyToOne */
+  public Review addCustomerReview(String aDescription, int aStars, int aLikes, int aDislikes, Manager aManager)
+  {
+    return new Review(aDescription, aStars, aLikes, aDislikes, this, aManager);
   }
+  /* Code from template association_AddIndexControlFunctions */
 
   public boolean addCustomerReview(Review aCustomerReview)
   {
