@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -59,6 +60,8 @@ public class PersonTests {
         // Create Person
         Person aPerson = new Person(aEmail, aName, aPassword, aCustomer);
         aPerson = personRepo.save(aPerson);
+        Boolean hasRole = aPerson.hasRoles();
+        int numOfRoles = aPerson.numberOfRoles();
 
         // Act
         Person personDB = personRepo.findPersonByEmail(aEmail);
@@ -69,6 +72,8 @@ public class PersonTests {
 
         // Assert
         assertNotNull(personDB);
+        assertEquals(1,numOfRoles);
+        assertTrue (hasRole);
         assertEquals(email, aEmail);
         assertEquals(personDB.getName(), aPerson.getName());
         assertEquals(personDB.getEmail(), aPerson.getEmail());
