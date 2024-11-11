@@ -2,10 +2,8 @@ package ca.mcgill.ecse321.GameOn.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -20,21 +18,14 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import ca.mcgill.ecse321.GameOn.model.Person;
+
 import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
-import ca.mcgill.ecse321.GameOn.repository.WishlistLinkRepository;
-import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.repository.CustomerRepository;
-
-
-import ca.mcgill.ecse321.GameOn.model.Employee;
 import ca.mcgill.ecse321.GameOn.repository.EmployeeRepository;
 import ca.mcgill.ecse321.GameOn.dto.EmployeeRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.EmployeeResponseDto;
-
 import ca.mcgill.ecse321.GameOn.dto.CustomerRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.CustomerResponseDto;
-import ca.mcgill.ecse321.GameOn.model.Cart;
 import ca.mcgill.ecse321.GameOn.repository.CartRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -86,8 +77,10 @@ public class AccountIntegrationTests {
         
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(VALID_EMAIL, response.getBody().getEmail());
-        assertEquals(VALID_NAME, response.getBody().getName());
+        CustomerResponseDto person = response.getBody();
+        assertNotNull(person);
+        assertEquals(VALID_NAME, person.getName());
+        assertEquals(VALID_EMAIL, person.getEmail());
    
     }
 
