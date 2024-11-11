@@ -82,10 +82,12 @@ public class AccountIntegrationTests {
         CustomerRequestDto bob = new CustomerRequestDto(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
 
         //ACT
-        ResponseEntity<EmployeeResponseDto> response = client.postForEntity("/customer", bob, EmployeeResponseDto.class);
+        ResponseEntity<CustomerResponseDto> response = client.postForEntity("/customer", bob, CustomerResponseDto.class);
         
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(VALID_EMAIL, response.getBody().getEmail());
+        
         
         
     }
