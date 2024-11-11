@@ -9,9 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.Date;
+import java.util.List;
+
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.GameOn.model.Order;
+import ca.mcgill.ecse321.GameOn.model.SpecificGame;
 import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Cart;
 
@@ -58,12 +61,15 @@ public class OrderTests {
         
         int id = aOrder.getId();
 
+        List<SpecificGame> orderGames = aOrder.getOrderGames();
+
         // Act
         Order result = orderRepo.findOrderById(id);
 
         // Assert
         assertNotNull(result);
         assertEquals(result.getId(), aOrder.getId());
+        assertNotNull(orderGames);
         assertEquals(result.getOrderCustomer().getBillingAddress(), aOrder.getOrderCustomer().getBillingAddress());
         assertEquals(result.getOrderCustomer().getCardExpiryDate(), aOrder.getOrderCustomer().getCardExpiryDate());
         assertEquals(result.getOrderCustomer().getCardNum(), aOrder.getOrderCustomer().getCardNum());

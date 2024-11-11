@@ -215,6 +215,7 @@ public class Customer extends Role
   {
     return new Review(aDescription, aStars, aLikes, aDislikes, this, aManager);
   }
+  /* Code from template association_AddIndexControlFunctions */
 
   public boolean addCustomerReview(Review aCustomerReview)
   {
@@ -224,29 +225,10 @@ public class Customer extends Role
     boolean isNewReviewAuthor = existingReviewAuthor != null && !this.equals(existingReviewAuthor);
     if (isNewReviewAuthor)
     {
-      aCustomerReview.setReviewAuthor(this);
-    }
-    else
-    {
       customerReview.add(aCustomerReview);
     }
     wasAdded = true;
     return wasAdded;
   }
-
-  public boolean removeCustomerReview(Review aCustomerReview)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aCustomerReview, as it must always have a reviewAuthor
-    if (!this.equals(aCustomerReview.getReviewAuthor()))
-    {
-      customerReview.remove(aCustomerReview);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  
-  
 
 }
