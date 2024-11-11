@@ -69,22 +69,6 @@ public class Game
   // INTERFACE
   //------------------------
 
-  public boolean setPicture(String aPicture)
-  {
-    boolean wasSet = false;
-    picture = aPicture;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setDescription(String aDescription)
-  {
-    boolean wasSet = false;
-    description = aDescription;
-    wasSet = true;
-    return wasSet;
-  }
-
   public boolean setPrice(int aPrice)
   {
     boolean wasSet = false;
@@ -132,10 +116,6 @@ public class Game
   public GameStatus getGameStatus()
   {
     return gameStatus;
-  }
-
-  public void updateIsInStock() {
-    isInStock = this.getQuantity() > 0;
   }
 
   public boolean setUnavailable()
@@ -191,22 +171,10 @@ public class Game
     return newWishlistlink;
   }
 
-  public boolean hasWishlistlink()
-  {
-    boolean has = wishlistlink.size() > 0;
-    return has;
-  }
-
   public List<Review> getReviews()
   {
     List<Review> newReviews = Collections.unmodifiableList(reviews);
     return newReviews;
-  }
-
-  public boolean hasReviews()
-  {
-    boolean has = reviews.size() > 0;
-    return has;
   }
 
   /* Code from template association_SetOneToMany */
