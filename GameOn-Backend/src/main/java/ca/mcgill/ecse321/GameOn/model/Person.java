@@ -68,24 +68,6 @@ public class Person
 
   }
 
-  public boolean setEmail(String aEmail)
-  {
-    boolean wasSet = false;
-    email = aEmail;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setName(String aName)
-  {
-    boolean wasSet = false;
-    name = aName;
-    wasSet = true;
-    return wasSet;
-  }
-
-  
-
   public boolean setPassword(String aPassword)
   {
     boolean wasSet = false;
@@ -118,12 +100,6 @@ public class Person
     return aRole;
   }
 
-  public List<Role> getRoles()
-  {
-    List<Role> newRoles = Collections.unmodifiableList(roles);
-    return newRoles;
-  }
-
   public int numberOfRoles()
   {
     int number = roles.size();
@@ -136,51 +112,6 @@ public class Person
     return has;
   }
 
-  public int indexOfRole(Role aRole)
-  {
-    int index = roles.indexOf(aRole);
-    return index;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfRoles()
-  {
-    return 1;
-  }
-  /* Code from template association_MaximumNumberOfMethod */
-  public static int maximumNumberOfRoles()
-  {
-    return 3;
-  }
-  /* Code from template association_AddUnidirectionalMN */
-  public boolean addRole(Role aRole)
-  {
-    boolean wasAdded = false;
-    if (roles.contains(aRole)) { return false; }
-    if (numberOfRoles() < maximumNumberOfRoles())
-    {
-      roles.add(aRole);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean removeRole(Role aRole)
-  {
-    boolean wasRemoved = false;
-    if (!roles.contains(aRole))
-    {
-      return wasRemoved;
-    }
-
-    if (numberOfRoles() <= minimumNumberOfRoles())
-    {
-      return wasRemoved;
-    }
-
-    roles.remove(aRole);
-    wasRemoved = true;
-    return wasRemoved;
-  }
   /* Code from template association_SetUnidirectionalMN */
   public boolean setRoles(Role... newRoles)
   {
@@ -195,7 +126,7 @@ public class Person
       verifiedRoles.add(aRole);
     }
 
-    if (verifiedRoles.size() != newRoles.length || verifiedRoles.size() < minimumNumberOfRoles() || verifiedRoles.size() > maximumNumberOfRoles())
+    if (verifiedRoles.size() != newRoles.length)
     {
       return wasSet;
     }
@@ -204,51 +135,5 @@ public class Person
     roles.addAll(verifiedRoles);
     wasSet = true;
     return wasSet;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addRoleAt(Role aRole, int index)
-  {  
-    boolean wasAdded = false;
-    if(addRole(aRole))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfRoles()) { index = numberOfRoles() - 1; }
-      roles.remove(aRole);
-      roles.add(index, aRole);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveRoleAt(Role aRole, int index)
-  {
-    boolean wasAdded = false;
-    if(roles.contains(aRole))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfRoles()) { index = numberOfRoles() - 1; }
-      roles.remove(aRole);
-      roles.add(index, aRole);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addRoleAt(aRole, index);
-    }
-    return wasAdded;
-  }
-
-  public void delete()
-  {
-    roles.clear();
-  }
-
-
-  public String toString()
-  {
-    return super.toString() + "["+
-            "email" + ":" + getEmail()+ "," +
-            "name" + ":" + getName()+ "," +
-            "password" + ":" + getPassword()+ "]";
   }
 }

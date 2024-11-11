@@ -21,6 +21,11 @@ import ca.mcgill.ecse321.GameOn.repository.EmployeeRepository;
 import ca.mcgill.ecse321.GameOn.GameOnApplication;
 
 import jakarta.transaction.Transactional;
+/**
+ * This is the Service for the customer and employee clasess
+ *
+ * @author Camilo Berdugo and Luis Jarquin
+ */
 
 @Service
 public class AccountService {

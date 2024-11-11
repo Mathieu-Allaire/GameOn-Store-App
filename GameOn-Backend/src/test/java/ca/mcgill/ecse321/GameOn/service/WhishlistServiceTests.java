@@ -35,6 +35,12 @@ import jakarta.persistence.criteria.CriteriaBuilder.In;
 import ca.mcgill.ecse321.GameOn.model.WishlistLink;
 import ca.mcgill.ecse321.GameOn.model.Category;
 
+/**
+ * This are the tests for the WishListLink
+ *
+ * @author Camilo Berdugo
+ */
+
 
 @SpringBootTest
 @MockitoSettings(strictness = Strictness.STRICT_STUBS)
