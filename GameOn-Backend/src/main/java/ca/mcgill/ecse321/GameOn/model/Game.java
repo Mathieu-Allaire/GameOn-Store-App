@@ -276,7 +276,6 @@ public class Game
     }
     return wasRemoved;
   }
-
   /* Code from template association_AddUnidirectionalMany */
   public boolean addReview(Review aReview)
   {
