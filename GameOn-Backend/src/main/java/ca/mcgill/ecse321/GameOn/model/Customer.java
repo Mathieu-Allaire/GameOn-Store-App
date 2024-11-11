@@ -249,4 +249,26 @@ public class Customer extends Role
   
   
 
+<<<<<<< HEAD
+=======
+  public boolean addOrMoveCustomerReviewAt(Review aCustomerReview, int index)
+  {
+    boolean wasAdded = false;
+    if(customerReview.contains(aCustomerReview))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCustomerReview()) { index = numberOfCustomerReview() - 1; }
+      customerReview.remove(aCustomerReview);
+      customerReview.add(index, aCustomerReview);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addCustomerReviewAt(aCustomerReview, index);
+    }
+    return wasAdded;
+  }
+
+
+>>>>>>> 7f55578a95306da9af5e2ae70657d7bc587c02c7
 }
