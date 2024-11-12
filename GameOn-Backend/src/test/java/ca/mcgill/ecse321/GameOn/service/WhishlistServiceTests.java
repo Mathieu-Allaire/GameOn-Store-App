@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.GameOn.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -10,7 +9,6 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Date;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,13 +16,12 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
+
 
 import ca.mcgill.ecse321.GameOn.model.Cart;
 import ca.mcgill.ecse321.GameOn.model.Customer;
-import ca.mcgill.ecse321.GameOn.model.Employee;
 import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.repository.CartRepository;
@@ -32,7 +29,6 @@ import ca.mcgill.ecse321.GameOn.repository.CustomerRepository;
 import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
 import ca.mcgill.ecse321.GameOn.repository.GameRepository;
 import ca.mcgill.ecse321.GameOn.repository.WishlistLinkRepository;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import ca.mcgill.ecse321.GameOn.model.WishlistLink;
 import ca.mcgill.ecse321.GameOn.model.Category;
 
