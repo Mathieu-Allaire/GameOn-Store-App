@@ -84,7 +84,7 @@ public class PurchaseGameController {
      * @param email, the email of the customer, specifcGame, the game to add to cart
      * @return Response Entity containing an error message or the cartResponseDto
      */
-    @PostMapping("/add_to_cart/{id}")
+    @PostMapping("/add_to_cart/{email}")
     public ResponseEntity<?> addSpecificGameToCart(@RequestBody SpecificGame specificGame, @PathVariable String email) {
         try{
             Person person = accountService.findCustomerByEmail(email);
@@ -102,7 +102,7 @@ public class PurchaseGameController {
      * @param email, the email of the customer, specifcGame, the game to add to cart
      * @return Response Entity containing an error message or the cartResponseDto
      */
-    @PostMapping("/remove_from_cart/{id}")
+    @PostMapping("/remove_from_cart/{email}")
     public ResponseEntity<?> removeSpecificGameFromCart(@RequestBody SpecificGame specificGame, @PathVariable String email){
         try{
             Person person = accountService.findCustomerByEmail(email);
@@ -120,7 +120,7 @@ public class PurchaseGameController {
      * @param email, the email of the customer
      * @return Response Entity containing an error message or the cartResponseDto
      */
-    @PostMapping("/remove_all_games_from_cart/{id}")
+    @PostMapping("/remove_all_games_from_cart/{email}")
     public ResponseEntity<?> removeAllGamesFromCart(@PathVariable String email){
         try {
             Person person = accountService.findCustomerByEmail(email);
@@ -138,7 +138,7 @@ public class PurchaseGameController {
      * @param email, the email of the customer
      * @return Response Entity containing an error message or the cartResponseDto
      */
-    @PostMapping("/cart_to_order_for_purchase/{id}")
+    @PostMapping("/cart_to_order_for_purchase/{email}")
     public ResponseEntity<?> cartToOrderForPurchase(@PathVariable String email){
         try{
             Person person = accountService.findCustomerByEmail(email);
