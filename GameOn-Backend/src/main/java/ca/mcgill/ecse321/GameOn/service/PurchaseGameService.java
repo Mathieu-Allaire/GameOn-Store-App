@@ -157,6 +157,7 @@ public class PurchaseGameService {
         Customer aCustomer = cart.getCustomer();
 
         Order order = new Order(aPurchaseDate, cart, aCustomer);
+        this.removeAllGamesFromCart(id);
         return order;
     }
 }

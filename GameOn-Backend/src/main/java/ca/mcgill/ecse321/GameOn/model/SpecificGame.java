@@ -3,7 +3,7 @@
 
 
 package ca.mcgill.ecse321.GameOn.model;
-import org.hibernate.jpa.SpecHints;
+
 
 // line 55 "GameOn.ump"
 import jakarta.persistence.*;
