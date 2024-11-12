@@ -1,5 +1,4 @@
 package ca.mcgill.ecse321.GameOn.dto;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 
@@ -10,9 +9,9 @@ public class GameCreateDto {
     private String name;
     @NotBlank(message = "The description must not be empty")
     private String description;
-    @Min(value = 0, message = "The price must be positive")
+    // Validation done in the service layer
     private int price;
-    @Min(value = 0, message = "The price must be positive")
+    // Validation done in the service layer
     private int quantity;
     @NotBlank(message = "The category must not be empty")
     private String category;

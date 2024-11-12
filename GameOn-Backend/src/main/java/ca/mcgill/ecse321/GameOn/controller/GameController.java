@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ca.mcgill.ecse321.GameOn.dto.GameResponseDTO;
 import ca.mcgill.ecse321.GameOn.dto.GameCreateDto;
@@ -63,9 +64,7 @@ public class GameController {
             GameResponseDTO response = new GameResponseDTO(game);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
-            return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(Collections.singletonMap("error", e.getMessage()));
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -152,30 +151,36 @@ public class GameController {
      * @return the game response DTO
      * @Author Neeshal Imrit
      */
-    @PostMapping("/games/{name}/price/{price}")
-    public ResponseEntity<?> updateGamePrice(@PathVariable String name, @PathVariable int price){
+    @PostMapping("/games/updatePrice")
+    public ResponseEntity<?> updateGamePrice(@RequestParam String name, @RequestParam int price){
         try{
             Game game = gameService.updateGamePrice(name, price);
             GameResponseDTO response = new GameResponseDTO(game);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
+            if (e.getMessage().equalsIgnoreCase("Game does not exist")) {
+                return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
     /**
      * Update the quantity of a game
-     * @param quantity the new quantity of the game
      * @param name the name of the game to update
+     * @param quantity the new quantity of the game
      * @return the game response DTO
      */
-    @PostMapping("/games/{name}/quantity/{quantity}")
-    public ResponseEntity<?> updateGameQuantity(@PathVariable String name, @PathVariable int quantity){
+    @PostMapping("/games/updateQuantity")
+    public ResponseEntity<?> updateGameQuantity(@RequestParam String name, @RequestParam int quantity){
         try{
             Game game = gameService.updateGameQuantity(name, quantity);
             GameResponseDTO response = new GameResponseDTO(game);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
+            if (e.getMessage().equalsIgnoreCase("Game does not exist")) {
+                return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
         }
     }

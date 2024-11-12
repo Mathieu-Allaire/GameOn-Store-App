@@ -123,20 +123,11 @@ public class GameService {
      */
     @Transactional
     public Game createGame(String aPicture, String aName, String aDescription, int aPrice, int aQuantity, String aCategory){
-        if (aPicture == null || aPicture.trim().length() == 0) {
-            throw new IllegalArgumentException("Picture is invalid");
-        }
-        if (aName == null || aName.trim().length() == 0) {
-            throw new IllegalArgumentException("Name is invalid");
-        }
-        if (aDescription == null || aDescription.trim().length() == 0) {
-            throw new IllegalArgumentException("Description is invalid");
-        }
         if (aPrice <= 0) {
-            throw new IllegalArgumentException("Price is invalid");
+            throw new IllegalArgumentException("Price must be greater than 0");
         }
         if (aQuantity <= 0) {
-            throw new IllegalArgumentException("Quantity is invalid");
+            throw new IllegalArgumentException("Quantity must be greater than 0");
         }
         if (aCategory == null) {
             throw new IllegalArgumentException("Category is invalid");
@@ -150,10 +141,6 @@ public class GameService {
 
         if (category == null) {
             throw new IllegalArgumentException("Category does not exist");
-        }
-
-        if (gameRepository.findGameByName(aName) != null) {
-            throw new IllegalArgumentException("Game already exists");
         }
 
         Game game = new Game(aPicture, aName, aDescription, aPrice, aQuantity, category);
@@ -320,7 +307,7 @@ public class GameService {
         }
 
         if (aQuantity <= 0) {
-            throw new IllegalArgumentException("Quantity is invalid");
+            throw new IllegalArgumentException("Quantity must be greater than 0");
         }
 
         Game game = gameRepository.findGameByName(aGame);
@@ -370,7 +357,7 @@ public class GameService {
         }
 
         if (aPrice <= 0) {
-            throw new IllegalArgumentException("Price is invalid");
+            throw new IllegalArgumentException("Price must be greater than 0");
         }
 
         Game game = gameRepository.findGameByName(aGame);
