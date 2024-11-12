@@ -24,6 +24,7 @@ import ca.mcgill.ecse321.GameOn.repository.GameRepository;
 import ca.mcgill.ecse321.GameOn.repository.CategoryRepository;
 import ca.mcgill.ecse321.GameOn.model.Category;
 
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -42,10 +43,6 @@ public class GameIntegrationTests {
     private static final int GAME_PRICE = 10;
     private static final int GAME_QUANTITY = 10;
     private static final String CATEGORY_NAME = "Test Category";
-
-
-    
-    private Category aCategory;
 
     @AfterAll
     public void clearDatabase() {
@@ -385,11 +382,4 @@ public class GameIntegrationTests {
         assertEquals(1, response.getBody().length);
         assertEquals(CATEGORY_NAME, response.getBody()[0].getName());
     }
-
-
-
-
-
-  
-    
 }

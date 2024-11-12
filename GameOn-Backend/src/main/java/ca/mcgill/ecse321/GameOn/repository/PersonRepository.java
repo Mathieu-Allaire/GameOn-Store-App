@@ -11,4 +11,7 @@ public interface PersonRepository extends CrudRepository<Person, String> {
 
     @Query("SELECT p.email FROM Person p JOIN p.roles r WHERE r.id = :roleId")
     String findPersonEmailByRoleId(@Param("roleId") int roleId);
+
+    @Query("SELECT r.id FROM Person p JOIN p.roles r WHERE p.email = :email")
+    Integer findRoleIdsByPersonEmail(@Param("email") String email);
 }

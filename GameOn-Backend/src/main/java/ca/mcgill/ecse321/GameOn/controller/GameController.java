@@ -25,6 +25,7 @@ import ca.mcgill.ecse321.GameOn.dto.CategoryRequestDto;
 import ca.mcgill.ecse321.GameOn.model.Category;
 import ca.mcgill.ecse321.GameOn.model.GameRequest;
 import ca.mcgill.ecse321.GameOn.dto.GameRequestResponseDto;
+import ca.mcgill.ecse321.GameOn.dto.GameReqRequestDto;
 
 import jakarta.validation.Valid;
 
@@ -254,15 +255,16 @@ public class GameController {
 
     /**
      * Create a game request
-     * @param gameRequestResponseDto the game request response DTO
-     * @return game request response DTO
+     * @param GameReqRequestDto the game request response DTO
+     * @return response entity with the game request response DTO
      */
-    public ResponseEntity<?> createGameRequest(@Valid @RequestBody GameRequestResponseDto gameRequestResponseDto){
+    @PostMapping("/games/request")
+    public ResponseEntity<?> createGameRequest(@Valid @RequestBody GameReqRequestDto gameReqRequestDto){
         try{
             GameRequest gameRequest = gameService.createGameRequest(
-                gameRequestResponseDto.getARequestCreator(),
-                gameRequestResponseDto.getARequestedGame(),
-                gameRequestResponseDto.getARequestType()
+                gameReqRequestDto.getaEmployee(),
+                gameReqRequestDto.getrequestedGameName(),
+                gameReqRequestDto.getrequestType()
             );
             GameRequestResponseDto response = new GameRequestResponseDto(gameRequest);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -275,6 +277,7 @@ public class GameController {
      * Approve a game request
      * @param gameRequest the name of the game request to approve
      */
+    /* 
     @PostMapping("/games/request/{name}/approve")
     public ResponseEntity<?> approveGameRequest(@Valid @RequestBody GameRequestResponseDto gameRequest){
         try{
@@ -284,4 +287,5 @@ public class GameController {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
         }
     }
+        */
 }

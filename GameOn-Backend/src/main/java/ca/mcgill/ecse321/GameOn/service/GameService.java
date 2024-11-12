@@ -7,10 +7,13 @@ import jakarta.transaction.Transactional;
 import ca.mcgill.ecse321.GameOn.repository.CategoryRepository;
 import ca.mcgill.ecse321.GameOn.repository.GameRepository;
 import ca.mcgill.ecse321.GameOn.repository.GameRequestRepository;
+import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
+import ca.mcgill.ecse321.GameOn.repository.EmployeeRepository;
 import ca.mcgill.ecse321.GameOn.model.Category;
 import ca.mcgill.ecse321.GameOn.model.Employee;
 import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.model.GameRequest;
+import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.model.RequestType;
 import ca.mcgill.ecse321.GameOn.model.Game.GameStatus;
 
@@ -30,6 +33,10 @@ public class GameService {
     private GameRepository gameRepository;
     @Autowired
     private GameRequestRepository gameRequestRepository;
+    @Autowired
+    private PersonRepository personRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     /**
      * Method to create new category
@@ -123,6 +130,17 @@ public class GameService {
      */
     @Transactional
     public Game createGame(String aPicture, String aName, String aDescription, int aPrice, int aQuantity, String aCategory){
+        
+        if (aPicture == null || aPicture.trim().length() == 0) {
+            throw new IllegalArgumentException("Picture is invalid");
+        }
+        if (aName == null || aName.trim().length() == 0) {
+            throw new IllegalArgumentException("Name is invalid");
+        }
+        if (aDescription == null || aDescription.trim().length() == 0) {
+            throw new IllegalArgumentException("Description is invalid");
+        }
+        
         if (aPrice <= 0) {
             throw new IllegalArgumentException("Price must be greater than 0");
         }
@@ -231,18 +249,40 @@ public class GameService {
      * @param aRequestType
      */
     @Transactional
-    public GameRequest createGameRequest(Employee aRequestCreator, Game aRequestedGame, RequestType aRequestType){
-        if (aRequestCreator == null) {
+    public GameRequest createGameRequest(String aRequestCreatorEmail, String aRequestedGameName, String aRequestType){
+        if (aRequestCreatorEmail == null || aRequestCreatorEmail.trim().length() == 0) {
             throw new IllegalArgumentException("Request creator is invalid");
-        }
-        if (aRequestedGame == null) {
-            throw new IllegalArgumentException("Requested game is invalid");
         }
         if (aRequestType == null) {
             throw new IllegalArgumentException("Request type is invalid");
         }
+        if (aRequestedGameName == null || aRequestedGameName.trim().length() == 0) {
+            throw new IllegalArgumentException("Requested game is invalid");
+        }
 
-        GameRequest gameRequest = new GameRequest(aRequestType, aRequestCreator, aRequestedGame);
+        if (!aRequestType.equals("Create") && !aRequestType.equals("Archive")) {
+            throw new IllegalArgumentException("Request type is invalid");
+        }
+
+        Game requestedGame = gameRepository.findGameByName(aRequestedGameName);
+
+        if (requestedGame == null) {
+            throw new IllegalArgumentException("Game does not exist");
+        }
+
+        Integer aRequestCreatorID = personRepository.findRoleIdsByPersonEmail(aRequestCreatorEmail);
+
+        if (aRequestCreatorID == null) {
+            throw new IllegalArgumentException("Request creator does not exist");
+        }
+
+        Employee aEmployee = employeeRepository.findEmployeeById(aRequestCreatorID);
+
+        if (aEmployee == null) {
+            throw new IllegalArgumentException("Request creator is not an employee");
+        }
+
+        GameRequest gameRequest = new GameRequest(RequestType.valueOf(aRequestType), aEmployee, requestedGame);
         gameRequestRepository.save(gameRequest);
 
         return gameRequest;
