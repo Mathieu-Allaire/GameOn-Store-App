@@ -142,6 +142,26 @@ public class AccountIntegrationTests {
 
     }
 
+    @Test
+    @Order(5)
+    public void testDeactivateValidEmployee(){
+        // Arrange
+        String urlDeactivate = "/employee/deactivate/" + VALID_EMAIL_EMPLOYEE;
+        client.put(urlDeactivate, null);
+
+        String url = "/employee/" + VALID_EMAIL_EMPLOYEE;
+        ResponseEntity<EmployeeResponseDto> response = client.getForEntity(url, EmployeeResponseDto.class);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        EmployeeResponseDto person = response.getBody();
+        assertNotNull(person);
+        assertEquals(!(VALID_IS_EMPLOYED), person.getIsEmployed()); // Check if not employed
+        
+
+    }
+
     
 
     
