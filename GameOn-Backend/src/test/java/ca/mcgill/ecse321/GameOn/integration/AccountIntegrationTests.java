@@ -162,11 +162,38 @@ public class AccountIntegrationTests {
 
     }
 
+    @Test
+    @Order(6)
+    public void testCreateInvalidCustomer(){
+        //Create a customer with an already created email
+        CustomerRequestDto rob = new CustomerRequestDto(VALID_EMAIL, "rob", VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
+
+        //ACT
+        ResponseEntity<?> response = client.postForEntity("/customer", rob, String.class);
+        
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(response.getBody(), "Email is already taken");
     
+    }
+
+    @Test
+    @Order(7)
+    public void testReadInvalidCustomer(){
+        // Read a customer who does not exist
+        String url = "/customer/" + "camilo@mail.ca";
+
+        // Act
+        ResponseEntity<?> response = client.getForEntity(url, String.class);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(response.getBody(), "Customer not found");
+
+    }
 
     
-
-
     
 }
 
