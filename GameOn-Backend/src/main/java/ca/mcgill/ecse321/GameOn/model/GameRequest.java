@@ -23,7 +23,7 @@ public class GameRequest
   @ManyToOne
   private Employee requestCreator;
 
-    @OneToOne // GameRequest --> Game
+  @OneToOne // GameRequest --> Game
   private Game resquestedGame;
 
   //------------------------

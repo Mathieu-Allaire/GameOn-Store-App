@@ -24,7 +24,8 @@ public class Employee extends Staff
   private EmployeeStatus employeeStatus;
 
   //Employee Associations
-    @OneToMany // Employee --> GameRequest
+    //@OneToMany // Employee --> GameRequest
+  @OneToMany(mappedBy = "requestCreator", cascade = CascadeType.REMOVE, orphanRemoval = true)
   private List<GameRequest> gameRequest;
 
   //------------------------
