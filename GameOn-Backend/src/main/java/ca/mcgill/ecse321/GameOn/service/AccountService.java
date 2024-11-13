@@ -39,36 +39,37 @@ public class AccountService {
     private CartRepository cartRepository;
 
     /**
-     * 
+     * This method will create a Person with role of customer
      * @param aEmail
      * @param aName
      * @param aPassword
      * @param aCardNum
      * @param aCardExpiryDate
      * @param BillingAddress
+     * @throws IllegalArgumentException if the parameters are incorrect
      */
     @Transactional
     public Person createCustomer(String aEmail, String aName, String aPassword, int aCardNum, Date aCardExpiryDate, String BillingAddress){
         if (aEmail == null || aEmail.trim().length() == 0 || aEmail.contains(" ") || !aEmail.contains("@") || !aEmail.contains(".")) {
             throw new IllegalArgumentException("Email is invalid");
         }
-
+        //email cannot be null  
         if (personRepository.findPersonByEmail(aEmail) != null) {
             throw new IllegalArgumentException("Email is already taken");
         }
-
+        //verifies name
         if (aName == null || aName.trim().length() == 0) {
             throw new IllegalArgumentException("Name is invalid");
         }
-
+        //verifies password
         if (aPassword == null || aPassword.trim().length() == 0 || aPassword.length() < 8) {
             throw new IllegalArgumentException("Password is invalid");
         }
-
+        //verifies card number
         if (aCardNum < 0) {
             throw new IllegalArgumentException("Card number is invalid");
         }
-
+        //verifies date
         Date currentDate = Date.valueOf(LocalDate.now());
         if (aCardExpiryDate == null || aCardExpiryDate.before(currentDate)) {
             throw new IllegalArgumentException("Card expiry date is invalid");
@@ -93,18 +94,7 @@ public class AccountService {
                 asciiEncryptedPassword += ",";
             }
         }
-        // TODO: remove this comment
-        // This is how we decrypt the password
-        // String reverseDecryptedPassword = "";
-        // String[] asciiEncryptedPasswordArray = asciiEncryptedPassword.split(",");
-        // for (int i = 0; i < asciiEncryptedPasswordArray.length; i++) {
-        //     reverseDecryptedPassword += (char) (Integer.parseInt(asciiEncryptedPasswordArray[i]) / 2);
-        // }
-
-        // String decryptedPassword = "";
-        // for (int i = reverseDecryptedPassword.length() - 1; i >= 0; i--) {
-        //     decryptedPassword += reverseDecryptedPassword.charAt(i);
-        // }
+    
 
         Cart cart = new Cart();
         cartRepository.save(cart);
@@ -117,26 +107,34 @@ public class AccountService {
     }
 
     /**
-     * 
+     * This method will find a Person with role customer
      * @param email
+     * @throws IllegalArgumentException if the email is incorrect, the customer is not found or the person found is not a customer
      */
     public Person findCustomerByEmail(String email){
+        //Verify email
         if (email == null || email.trim().length() == 0 || email.contains(" ") || email.contains("@") == false || email.contains(".") == false) {
             throw new IllegalArgumentException("Email is invalid");
         }
-        
+        //search customer
         Person customer = personRepository.findPersonByEmail(email);
         if (customer == null) {
             throw new IllegalArgumentException("Customer not found");
         }
-
+        //if the person is not a customer
         if(personRepository.findPersonByEmail(email).getRole(0).getClass() != Customer.class){
             throw new IllegalArgumentException("No customer with this email");
         }
 
         return customer;
     }
-
+    /**
+     * This method will create a person with role of an Employee
+     * @param aEmail
+     * @param aName
+     * @throws IllegalArgumentException if the email or name are inccorect or if the employee email already exists in the system
+     */
+    @Transactional
     public Person createEmployee(String aEmail, String aName){
         //Make sure we got a correct email 
         if (aEmail == null || aEmail.trim().length() == 0 || aEmail.contains(" ") || aEmail.contains("@") == false || aEmail.contains(".") == false) {
@@ -163,7 +161,11 @@ public class AccountService {
 
         return employee;
     }
-
+    /**
+     * This method will find a Person with role employee
+     * @param email
+     * @throws IllegalArgumentException if the email is incorrect, the employee is not found or the person found is not a employee
+     */
     public Person findEmployeeByEmail(String email){
         if (email == null || email.trim().length() == 0 || email.contains(" ") || email.contains("@") == false || email.contains(".") == false) {
             throw new IllegalArgumentException("Email is invalid");
@@ -181,7 +183,11 @@ public class AccountService {
         return employee;
 
     }
-
+    /**
+     * This method will deactivate an employee
+     * @param email
+     * @throws IllegalArgumentException if the email is incorrect, the employee is not found or the person found is not a employee
+     */
     public boolean deactivateEmployee(String email){
         try{
             if (email == null || email.trim().length() == 0 || email.contains(" ") || email.contains("@") == false || email.contains(".") == false) {
@@ -209,7 +215,7 @@ public class AccountService {
         }
     }
 
-    /* Log in will be implemented later
+    /* Log in will be implemented later!
     public boolean logIn(String email, String password){
 
         if (email == null || email.trim().length() == 0 || email.contains(" ") || email.contains("@") == false || email.contains(".") == false) {

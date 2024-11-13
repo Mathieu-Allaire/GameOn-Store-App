@@ -113,7 +113,7 @@ public class AccountServiceTests {
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidCustomerEmptyEmail(){
-        //Try creating a customer with invalid email
+        //Try creating a customer with empty email
         try {
             Person customer = accountService.createCustomer("", VALID_NAME, VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
         } catch (Exception e) {
@@ -124,7 +124,7 @@ public class AccountServiceTests {
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidCustomerContainSpacesEmail(){
-        //Try creating a customer with invalid email
+        //Try creating a customer with invalid email (has spaces)
         try {
             Person customer = accountService.createCustomer("casui@   feefnief.com", VALID_NAME, VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
         } catch (Exception e) {
@@ -135,7 +135,7 @@ public class AccountServiceTests {
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidCustomerEmailIsNull(){
-        //Try creating a customer with invalid email
+        //Try creating a customer with null email
         try {
             Person customer = accountService.createCustomer(null, VALID_NAME, VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
         } catch (Exception e) {
@@ -146,7 +146,7 @@ public class AccountServiceTests {
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidCustomerEmailnoPoint(){
-        //Try creating a customer with invalid email
+        //Try creating a customer with invalid email (has no point)
         try {
             Person customer = accountService.createCustomer("camilo@mcgillcom", VALID_NAME, VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
         } catch (Exception e) {
@@ -168,7 +168,7 @@ public class AccountServiceTests {
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidCustomerName(){
-        //Try creating a customer with invalid Name
+        //Try creating a customer with empty Name
         try {
             Person customer = accountService.createCustomer(VALID_EMAIL, "", VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
         } catch (Exception e) {
@@ -305,7 +305,6 @@ public class AccountServiceTests {
     @Test
     public void testCreateValidEmployee(){
         //Arrange 
-        // Whenever we save personRepositoy.save(person) -> it will return person, same for customer and cart
         when(personRepository.save(any(Person.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
         when(employeeRepository.save(any(Employee.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
@@ -322,9 +321,9 @@ public class AccountServiceTests {
         String encryptedPassword = createdEmployee.getEncryptedPassword(preSetPassword);
         assertEquals(encryptedPassword, createdEmployee.getPassword()); //Check if the password saved is the encrypted version
         
-        //Check the customer class atributes
-        Employee customerRole = (Employee) createdEmployee.getRole(0);
-        assertEquals(true, customerRole.getIsEmployed()); //When we create an employee it is always true
+        //Check the employee class atributes
+        Employee employeeRole = (Employee) createdEmployee.getRole(0);
+        assertEquals(true, employeeRole.getIsEmployed()); //When we create an employee it is always true
         //Verifiy we saved once
         verify(personRepository, times(1)).save(createdEmployee);
     }
@@ -337,7 +336,7 @@ public class AccountServiceTests {
         Cart cart = new Cart();
         Employee employeeRole = new Employee(true);
         Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, employeeRole);
-        // Whenever we save personRepositoy.save(person) -> it will return person, same for customer and cart
+        
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob); // Bob will be already created in the data base
 
         //Test if it's possible to create a new employee if there is an existing email in the data base.
@@ -366,7 +365,7 @@ public class AccountServiceTests {
     @Test
     public void testCreateInvalidEmployeeSpacesEmail(){
 
-        //Test if it's possible to create a new employee with an invalid email
+        //Test if it's possible to create a new employee with another type of invalid email
         try {
             Person createdEmployee = accountService.createEmployee("bo b", VALID_NAME);
          } catch (Exception e) {
@@ -379,7 +378,7 @@ public class AccountServiceTests {
     @Test
     public void testCreateInvalidEmployeeEmptyEmail(){
 
-        //Test if it's possible to create a new employee with an invalid email
+        //Test if it's possible to create a new employee with an empty email
         try {
             Person createdEmployee = accountService.createEmployee("", VALID_NAME);
          } catch (Exception e) {
@@ -392,7 +391,7 @@ public class AccountServiceTests {
     @Test
     public void testCreateInvalidEmployeeName(){
 
-        //Test if it's possible to create a new employee with an invalid name
+        //Test if it's possible to create a new employee with an null name
         try {
             Person createdEmployee = accountService.createEmployee(VALID_EMAIL, null);
          } catch (Exception e) {
@@ -509,7 +508,7 @@ public class AccountServiceTests {
         bob.setPassword(encryptedPassword); // this simulates the create customer
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
 
-        //Act : find employee
+        //Act : Deactivate the supposed employee
         try {
             accountService.deactivateEmployee(VALID_EMAIL);
          } catch (Exception e) {
