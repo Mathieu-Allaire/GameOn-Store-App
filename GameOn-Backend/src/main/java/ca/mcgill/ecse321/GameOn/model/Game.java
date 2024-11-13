@@ -113,6 +113,12 @@ public class Game
     return quantity;
   }
 
+  public String getGameStatusFullName()
+  {
+    String answer = gameStatus.toString();
+    return answer;
+  }
+
   public GameStatus getGameStatus()
   {
     return gameStatus;
@@ -164,11 +170,36 @@ public class Game
   {
     return category;
   }
+  /* Code from template association_GetMany */
+  public WishlistLink getWishlistlink(int index)
+  {
+    WishlistLink aWishlistlink = wishlistlink.get(index);
+    return aWishlistlink;
+  }
 
   public List<WishlistLink> getWishlistlink()
   {
     List<WishlistLink> newWishlistlink = Collections.unmodifiableList(wishlistlink);
     return newWishlistlink;
+  }
+
+  public int numberOfWishlistlink()
+  {
+    int number = wishlistlink.size();
+    return number;
+  }
+
+  public boolean hasWishlistlink()
+  {
+    boolean has = wishlistlink.size() > 0;
+    return has;
+  }
+
+  /* Code from template association_GetMany */
+  public Review getReview(int index)
+  {
+    Review aReview = reviews.get(index);
+    return aReview;
   }
 
   public List<Review> getReviews()
@@ -185,18 +216,10 @@ public class Game
     {
       return wasSet;
     }
-
-    Category existingCategory = category;
-    category = aCategory;
-    if (existingCategory != null && !existingCategory.equals(aCategory))
-    {
-      existingCategory.removeGame(this);
-    }
-    category.addGame(this);
+    this.category = aCategory;
     wasSet = true;
     return wasSet;
   }
-  /* Code from template association_MinimumNumberOfMethod */
 
   /* Code from template association_AddManyToOne */
   public WishlistLink addWishlistlink(Customer aCustomerWish)
@@ -233,7 +256,6 @@ public class Game
     }
     return wasRemoved;
   }
-
   /* Code from template association_AddUnidirectionalMany */
   public boolean addReview(Review aReview)
   {

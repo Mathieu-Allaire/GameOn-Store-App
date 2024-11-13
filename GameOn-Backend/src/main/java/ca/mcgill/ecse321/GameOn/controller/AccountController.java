@@ -19,7 +19,6 @@ import ca.mcgill.ecse321.GameOn.dto.EmployeeResponseDto;
 
 
 
-//import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 
 
@@ -48,7 +47,6 @@ public class AccountController {
 
     /**
      * Return the Employee with the given email.
-     *
      * @param email The primary key of the Employee to find.
      * @return The employee with the given email.
      */
