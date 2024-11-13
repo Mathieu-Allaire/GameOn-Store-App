@@ -49,10 +49,10 @@ Joseph Feghaly | 15
 ## Individual Effort
 Person | Hours | Tasks Done|
 --- | --- |---|
-Camilo Berdugo | 25| - Added cart to the constructor of customer and fix all the tests that failed - Account Service / with Luis - WishlistLink Service with Neeshal - AccountTestServices - WishListTestServices - AccountControllerTests - Customer Request/Response DTO- Employee Request/Response DTO|
-Neeshal Imrit | 25||
-Luis Jarquin | 25||
-Mathieu Allaire | 24||
+Camilo Berdugo | 25| - Added cart to the constructor of customer and fix all the tests that failed - Account Service / with Luis - WishlistLink Service with Neeshal - AccountTestServices - WishListTestServices / with Luis - AccountControllerTests - Customer Request/Response DTO|
+Neeshal Imrit | 25| - Modified Service methods in Game Service - Game Service Tests / with Luis & Joel - WishlistLink Service / with Camilo - GameController - GameControllerTests - Game Request DTO|
+Luis Jarquin | 25| - Game Service Tests refactoring tests / with Neeshal & Joel - Account Service / with Camilo - Slimming classes in model - Javadocs - Employee Request/Response DTO - WishListTestServices / with Camilo|
+Mathieu Allaire | 24| Review Service - Review Service Tests - Review Controller - Review Controller Tests|
 Joel Boyer | 23||
 Joseph Feghaly | 23||
 ---
