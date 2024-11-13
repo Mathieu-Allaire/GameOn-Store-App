@@ -246,8 +246,8 @@ public class GameService {
      * A game request is created by an employee and is approved by a manager.
      * A game request can either be a request to create a game or a request to archive a game.
      * 
-     * @param aRequestCreator
-     * @param aRequestedGame
+     * @param aRequestCreatorEmail
+     * @param aRequestedGameName
      * @param aRequestType
      */
     @Transactional
