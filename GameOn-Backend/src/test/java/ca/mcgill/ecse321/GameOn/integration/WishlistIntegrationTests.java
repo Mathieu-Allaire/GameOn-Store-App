@@ -73,7 +73,26 @@ public class WishlistIntegrationTests {
     private static final String VALID_EMAIL = "email@gmail.com";
     private static final String VALID_NAME = "John Doe";
     private static final String VALID_PASSWORD = "password";
-    
+
+    //Helper functions
+    Game exampleGame(){
+        Category category = new Category(VALID_CATEGORY_NAME);
+        return new Game(
+                VALID_GAME_PICTURE,
+                VALID_GAME_NAME,
+                VALID_GAME_DESCRIPTION,
+                VALID_GAME_PRICE,
+                VALID_GAME_QUANTITY,
+                category);
+    }
+    Customer exampleCustomer(){
+        Cart cart = new Cart();
+        return new Customer(VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS, cart);
+    }
+    Person examplePerson(){
+        return new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD);
+    }
+
     @AfterAll
     public void clearDatabase() {
         
