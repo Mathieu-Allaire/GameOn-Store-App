@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.GameOn.integration;
 
+import ca.mcgill.ecse321.GameOn.dto.GameResponseDTO;
 import ca.mcgill.ecse321.GameOn.dto.WishlistResponseDto;
 import ca.mcgill.ecse321.GameOn.repository.*;
 import org.aspectj.lang.annotation.Before;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -90,7 +93,16 @@ public class WishlistIntegrationTests {
 
     @BeforeAll
     public void setup(){
+        Game game = exampleGame();
+        Customer customer = exampleCustomer();
+        Person person = examplePerson();
 
+        cartRepository.save(customer.getCart());
+        categoryRepo.save(game.getCategory());
+
+        gameRepo.save(game);
+        customerRepo.save(customer);
+        personRepo.save(person);
     }
     @AfterAll
     public void clearDatabase() {
@@ -111,7 +123,7 @@ public class WishlistIntegrationTests {
         HttpEntity<WishlistRequestDto> entity = new HttpEntity<>(request);
 
         //Act
-        ResponseEntity<?> response = client.exchange(res, HttpMethod.DELETE, entity, WishlistResponseDto.class);
+        ResponseEntity<?> response = client.exchange(res, HttpMethod.DELETE, entity, String.class);
 
         //Assert
         assertNotNull(response);
@@ -119,6 +131,8 @@ public class WishlistIntegrationTests {
 
         assertNotNull(response.getBody());
         assertEquals("The Game is not in the customer's wishlist", response.getBody().toString() );
+
+
     }
 
     @Test
@@ -126,9 +140,9 @@ public class WishlistIntegrationTests {
     public void TestGetFromEmptyWishlist() {
         //Arrange
         String res = "/wishlist-get-all/"+ VALID_EMAIL;
-
+        WishlistRequestDto request = new WishlistRequestDto(VALID_GAME_NAME, VALID_EMAIL);
         //Act
-        ResponseEntity<List> response = client.getForEntity(res, List.class);
+        ResponseEntity<List> response = client.postForEntity(res, request, List.class);
 
         //Assert
         assertNotNull(response);
@@ -148,7 +162,7 @@ public class WishlistIntegrationTests {
         WishlistRequestDto request = new WishlistRequestDto(VALID_GAME_NAME, VALID_EMAIL);
 
         //Act
-        ResponseEntity<WishlistResponseDto> response = client.getForEntity(res, WishlistResponseDto.class);
+        ResponseEntity<WishlistResponseDto> response = client.postForEntity(res, request, WishlistResponseDto.class);
 
         //Assert
         assertNotNull(response);
@@ -156,8 +170,6 @@ public class WishlistIntegrationTests {
 
         assertNotNull(response.getBody());
         assertEquals(VALID_GAME_NAME, response.getBody().getGameName());
-
-
     }
     @Test
     @Order(2)
@@ -167,7 +179,7 @@ public class WishlistIntegrationTests {
         WishlistRequestDto request = new WishlistRequestDto("Bruh", VALID_EMAIL);
 
         //Act
-        ResponseEntity<WishlistResponseDto> response = client.getForEntity(res, WishlistResponseDto.class);
+        ResponseEntity<String> response = client.postForEntity(res, request, String.class);
 
         //Assert
         assertNotNull(response);
@@ -184,14 +196,14 @@ public class WishlistIntegrationTests {
         WishlistRequestDto request = new WishlistRequestDto(VALID_GAME_NAME, "Ghost");
 
         //Act
-        ResponseEntity<WishlistResponseDto> response = client.getForEntity(res, WishlistResponseDto.class);
+        ResponseEntity<WishlistResponseDto> response = client.postForEntity(res, request, WishlistResponseDto.class);
 
         //Assert
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
         assertNotNull(response.getBody());
-        assertEquals("Customer not found", response.getBody().toString() );
+        assertEquals("Customer not found", response.getBody() );
     }
 
     @Test
@@ -201,13 +213,13 @@ public class WishlistIntegrationTests {
         String res = "/wishlist-get-all/"+ VALID_EMAIL;
 
         //Act
-        ResponseEntity<List> response = client.getForEntity(res, List.class);
+        ResponseEntity<WishlistResponseDto []> response = client.getForEntity(res,  WishlistResponseDto[].class);
 
         //Assert
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        List<WishlistResponseDto> wishlist = response.getBody();
+        List<WishlistResponseDto> wishlist = Arrays.asList(response.getBody());
         assertNotNull(wishlist);
         assertEquals(1, wishlist.size());
 
