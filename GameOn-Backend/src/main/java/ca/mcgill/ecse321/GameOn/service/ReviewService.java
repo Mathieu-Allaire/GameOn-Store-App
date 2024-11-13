@@ -9,11 +9,15 @@ import jakarta.transaction.Transactional;
 
 
 import ca.mcgill.ecse321.GameOn.repository.ReviewRepository;
+import ca.mcgill.ecse321.GameOn.repository.CustomerRepository;
 import ca.mcgill.ecse321.GameOn.repository.GameRepository;
+import ca.mcgill.ecse321.GameOn.repository.ManagerRepository;
+import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
 import ca.mcgill.ecse321.GameOn.model.Review;
 import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Manager;
+import ca.mcgill.ecse321.GameOn.model.Person;
 
 @Service
 public class ReviewService {
@@ -21,6 +25,12 @@ public class ReviewService {
     private ReviewRepository reviewRepo;
     @Autowired
     private GameRepository gameRepo;
+    @Autowired
+    private CustomerRepository customerRepo;
+    @Autowired
+    private ManagerRepository managerRepo;
+    @Autowired
+    private PersonRepository personRepo;
 
     /**
      * Posts a new review with the specified details and saves it to the repository.
@@ -56,26 +66,42 @@ public class ReviewService {
      * @throws IllegalArgumentException if any parameters are invalid.
      * @author Mathieu Allaire
      */
-    public Review postReview(String aDescription, int aStars, int aLikes, int aDislikes, Customer aReviewAuthor, Manager aManager) {
-        if (aDescription == null || aDescription.trim().isEmpty()) {
-            throw new IllegalArgumentException("The review has an empty description");
+    public Review postReview(String aDescription, int aStars, int aLikes, int aDislikes, String aReviewAuthorEmail, int aManagerID) {
+        if (aDescription == null || aDescription.trim().length() == 0) {
+            throw new IllegalArgumentException("The review description must not be empty.");
         }
         if (aStars < 0 || aStars > 5) {
-            throw new IllegalArgumentException("The number of stars must be between 0 and 5");
+            throw new IllegalArgumentException("The number of stars must be between 0 and 5.");
         }
         if (aLikes < 0) {
-            throw new IllegalArgumentException("The number of likes must be non-negative");
+            throw new IllegalArgumentException("The number of likes must be non-negative.");
         }
         if (aDislikes < 0) {
-            throw new IllegalArgumentException("The number of dislikes must be non-negative");
+            throw new IllegalArgumentException("The number of dislikes must be non-negative.");
         }
+        if (aReviewAuthorEmail == null || aReviewAuthorEmail.trim().length() == 0) {
+            throw new IllegalArgumentException("The review author must not be empty.");
+        }
+        if (aManagerID < 0) {
+            throw new IllegalArgumentException("The manager ID must be non-negative.");
+        }
+        Manager manager = managerRepo.findManagerById(aManagerID);
+
+        if (manager == null) {
+            throw new IllegalArgumentException("The manager does not exist.");
+        }
+        Integer aPersonId = personRepo.findRoleIdsByPersonEmail(aReviewAuthorEmail);
+        if (aPersonId == null) {
+            throw new IllegalArgumentException("The person does not exist.");
+        }
+
+        Customer aReviewAuthor = customerRepo.findCustomerById(aPersonId);
+        
         if (aReviewAuthor == null) {
-            throw new IllegalArgumentException("The author is invalid");
+            throw new IllegalArgumentException("The customer does not exist.");
         }
-        if (aManager == null) {
-            throw new IllegalArgumentException("The manager is invalid");
-        }
-        Review review = new Review(aDescription, aStars, aLikes, aDislikes, aReviewAuthor, aManager);
+
+        Review review = new Review(aDescription, aStars, aLikes, aDislikes, aReviewAuthor, manager);
 
         reviewRepo.save(review);
         return review;

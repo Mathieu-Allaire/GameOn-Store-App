@@ -95,6 +95,22 @@ public class AccountController {
     }
 
     /**
+     * Create an manager.
+     *
+     * @param employee The employee to create
+     * @return The created employee 
+     */
+    @PostMapping("/manager")
+    public ResponseEntity<?> createManager(@Valid @RequestBody EmployeeRequestDto employee){
+        try {
+            Person createdManager = accountService.createManager(employee.getEmail(), employee.getName());
+            return new ResponseEntity<>(new EmployeeResponseDto(createdManager), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
      * deactivate the account of an employee
      *
      * @param email The primary key of the Employee to deactivate.

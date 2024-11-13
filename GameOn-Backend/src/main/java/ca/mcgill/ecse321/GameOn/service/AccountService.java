@@ -16,10 +16,9 @@ import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.repository.CustomerRepository;
 
 import ca.mcgill.ecse321.GameOn.model.Employee;
+import ca.mcgill.ecse321.GameOn.model.Manager;
 import ca.mcgill.ecse321.GameOn.repository.EmployeeRepository;
-
-
-
+import ca.mcgill.ecse321.GameOn.repository.ManagerRepository;
 import jakarta.transaction.Transactional;
 /**
  * This is the Service for the customer and employee clasess
@@ -37,9 +36,11 @@ public class AccountService {
     private EmployeeRepository employeeRepository;
     @Autowired
     private CartRepository cartRepository;
+    @Autowired
+    private ManagerRepository managerRepository;
 
     /**
-     * 
+     * Method to create a customer
      * @param aEmail
      * @param aName
      * @param aPassword
@@ -116,6 +117,39 @@ public class AccountService {
 
     }
 
+    /**
+     * Method to create a manager
+     * @param aEmail
+     * @param aName
+     * @param aPassword
+     */
+    @Transactional
+    public Person createManager(String aEmail, String aName){
+        //Make sure we got a correct email 
+        if (aEmail == null || aEmail.trim().length() == 0 || aEmail.contains(" ") || aEmail.contains("@") == false || aEmail.contains(".") == false) {
+            throw new IllegalArgumentException("Email is invalid");
+        }
+        //Make sure the name is not empty
+        if (aName == null || aName.trim().length() == 0) {
+            throw new IllegalArgumentException("Name is invalid");
+        }
+
+        //Make sure no repeated emails
+        if (personRepository.findPersonByEmail(aEmail) != null) {
+            throw new IllegalArgumentException("Email is already taken");
+        }
+
+        Manager aManager = new Manager();
+        managerRepository.save(aManager);
+        
+        String genericPassword = "GameOn123!";
+        Person manager = new Person(aEmail, aName, genericPassword, aManager);
+        String encryptedPassword = manager.getEncryptedPassword(genericPassword);
+        manager.setPassword(encryptedPassword); // this sets the generic password into an encrypted password
+        personRepository.save(manager);
+
+        return manager;
+    }
     /**
      * 
      * @param email

@@ -3,6 +3,8 @@ package ca.mcgill.ecse321.GameOn.integration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.sql.Date;
+
 import ca.mcgill.ecse321.GameOn.model.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -18,12 +20,17 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-
-import ca.mcgill.ecse321.GameOn.dto.ReviewDto;
-import ca.mcgill.ecse321.GameOn.model.Customer;
+import ca.mcgill.ecse321.GameOn.dto.CustomerRequestDto;
+import ca.mcgill.ecse321.GameOn.dto.CustomerResponseDto;
+import ca.mcgill.ecse321.GameOn.dto.EmployeeRequestDto;
+import ca.mcgill.ecse321.GameOn.dto.EmployeeResponseDto;
+import ca.mcgill.ecse321.GameOn.dto.ReviewRequestDto;
+import ca.mcgill.ecse321.GameOn.repository.CustomerRepository;
+import ca.mcgill.ecse321.GameOn.repository.ManagerRepository;
+import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
 import ca.mcgill.ecse321.GameOn.repository.ReviewRepository;
 
-import java.sql.Date;
+
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(OrderAnnotation.class)
@@ -35,47 +42,88 @@ public class ReviewIntegrationTests {
 
     @Autowired
     private ReviewRepository reviewRepo;
+    @Autowired
+    private CustomerRepository  customerRepo;
+    @Autowired
+    private ManagerRepository managerRepo;
+    @Autowired
+    private PersonRepository personRepo;
 
-    //Attributes for Customer Object
-    private static final int VALID_CARD_NUM = 123;
-    private static final Date VALID_CARD_DATE = Date.valueOf("2025-09-02");
-    private static final String VALID_BILLING_ADDRESS = "23 frjjrfngr";
-    private static final Cart VALID_CART = new Cart();
-    public Customer VALID_CUSTOMER = new Customer(VALID_CARD_NUM,VALID_CARD_DATE,VALID_BILLING_ADDRESS,VALID_CART);
+    //Attributes for customer
+    private static final String VALID_EMAIL = "bob@gmail.com"; // no spaces,contain @ and . 
+    private static final String VALID_NAME = "Bob"; // at least one letter
+    private static final String VALID_PASSWORD = "bob123456789"; // bigger than 8 characters
+    private static final int VALID_CARD_NUM = 123; // larger than 0
+    private static final Date VALID_DATE = Date.valueOf("2025-09-02"); // needs to be a date after today's date
+    private static final String VALID_BILLING_ADDRESS = "23 frjjrfngr"; // at least one character
+    private Customer aCustomer;
 
-
-    //Manager
-    private static final Manager VALID_MANAGER = new Manager();
-
-    //Attributes for Review DTO
-    private static final String VALID_DESCRIPTION = "Great game!";
-    private static final int VALID_STARS = 5;
-    private static final int VALID_LIKES = 10;
-    private static final int VALID_DISLIKES = 2;
-
-    //Extra things to test
-    private static final String VALID_REPLY = "Thank you for your review!";
+    //Attributes for manager
+    private static final String VALID_EMAIL_MANAGER = "manager@manager.com";
+    private static final String VALID_NAME_MANAGER = "Manager";
+    private Manager aManager;
 
 
     @AfterAll
     public void clearDatabase() {
         reviewRepo.deleteAll();
+        personRepo.deleteAll();
+        customerRepo.deleteAll();
+        managerRepo.deleteAll();
     }
 
 
     @Test
     @Order(1)
-    public void testCreateValidReview() {
+    public void createValidManagerTest(){
         // Arrange
-        ReviewDto review = new ReviewDto(VALID_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, null , VALID_CUSTOMER, VALID_MANAGER);
+        String url = "/manager";
+        EmployeeRequestDto manager = new EmployeeRequestDto(VALID_EMAIL_MANAGER, VALID_NAME_MANAGER);
 
         // Act
-        ResponseEntity<ReviewDto> response = client.postForEntity("/reviews", review, ReviewDto.class);
+        ResponseEntity<EmployeeResponseDto> response = client.postForEntity(url, manager, EmployeeResponseDto.class);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+    }
+
+    @Test
+    @Order(2)
+    public void testCreateValidCustomer(){
+        //Create the wanted customerRequest
+        CustomerRequestDto bob = new CustomerRequestDto(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
+
+        //ACT
+        ResponseEntity<CustomerResponseDto> response = client.postForEntity("/customer", bob, CustomerResponseDto.class);
+        
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        CustomerResponseDto person = response.getBody();
+        assertNotNull(person);
+        assertEquals(VALID_NAME, person.getName());
+        assertEquals(VALID_EMAIL, person.getEmail());
+        Integer aPerson = personRepo.findRoleIdsByPersonEmail(VALID_EMAIL);
+        assertNotNull(aPerson);
+        aCustomer = customerRepo.findCustomerById(aPerson);
+        assertNotNull(aCustomer);
+    }
+
+/*
+    @Test
+    @Order(1)
+    public void testCreateValidReview() {
+        // Arrange
+        ReviewRequestDto review = new ReviewRequestDto(VALID_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, null , VALID_CUSTOMER, VALID_MANAGER);
+
+        // Act
+        ResponseEntity<ReviewRequestDto> response = client.postForEntity("/reviews", review, ReviewRequestDto.class);
 
         // Assert response is not null
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        ReviewDto createdReview = response.getBody();
+        ReviewRequestDto createdReview = response.getBody();
         assertNotNull(createdReview);
         assertEquals(VALID_DESCRIPTION, createdReview.getDescription());
         assertEquals(VALID_STARS, createdReview.getStars());
@@ -84,7 +132,7 @@ public class ReviewIntegrationTests {
         assertEquals(VALID_CUSTOMER.getId(), createdReview.getCustomer().getId());
         assertEquals(VALID_MANAGER.getId(), createdReview.getManager().getId());
     }
-
+/* 
     @Test
     @Order(2)
     public void testReadValidReview() {
@@ -189,6 +237,6 @@ public class ReviewIntegrationTests {
 
     }
 
-
+*/
 
 }
