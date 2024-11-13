@@ -32,7 +32,7 @@ import ca.mcgill.ecse321.GameOn.model.Category;
 import ca.mcgill.ecse321.GameOn.model.Cart;
 import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.model.WishlistLink;
-import ca.mcgill.ecse321.GameOn.dto.WishlistLinkDto;
+import ca.mcgill.ecse321.GameOn.dto.WishlistRequestDto;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(OrderAnnotation.class)
@@ -82,7 +82,7 @@ public class WishlistIntegrationTests {
     @Test
     @Order(1)
     public void TestAddValidGameToWishlist() {
-                
+        
     }
         
 }
