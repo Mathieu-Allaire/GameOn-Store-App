@@ -1,19 +1,15 @@
 package ca.mcgill.ecse321.GameOn.integration;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+import ca.mcgill.ecse321.GameOn.dto.WishlistResponseDto;
 import ca.mcgill.ecse321.GameOn.repository.*;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Order;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
 import java.sql.Date;
+import java.util.List;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -28,6 +24,8 @@ import ca.mcgill.ecse321.GameOn.model.Cart;
 import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.model.WishlistLink;
 import ca.mcgill.ecse321.GameOn.dto.WishlistRequestDto;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(OrderAnnotation.class)
@@ -88,6 +86,10 @@ public class WishlistIntegrationTests {
         return new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD);
     }
 
+    @BeforeAll
+    public void setup(){
+
+    }
     @AfterAll
     public void clearDatabase() {
         wishlistLinkRepo.deleteAll();
@@ -101,51 +103,95 @@ public class WishlistIntegrationTests {
     @Test
     @Order(1)
     public void TestRemoveFromEmptyWishlist() {
+        //Arrange
+        String res = "/wishlist-remove";
+        WishlistRequestDto request = new WishlistRequestDto();
+        //Act
+        //ResponseEntity<>
 
+        //Assert
     }
     @Test
     @Order(1)
     public void TestGetFromEmptyWishlist() {
+        //Arrange
+        String res = "/wishlist-get-all/"+ VALID_EMAIL;
 
+        //Act
+        ResponseEntity<List> response = client.getForEntity(res, List.class);
+
+        //Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        List<WishlistResponseDto> wishlist = response.getBody();
+        assertNotNull(wishlist);
+        assertTrue(wishlist.isEmpty());
     }
 
 
     @Test
     @Order(2)
     public void TestAddValidGameToWishlist() {
-
+        String res = "/wishlist-add";
     }
     @Test
     @Order(2)
     public void TestAddInvalidGameToWishlist() {
-
+        String res = "/wishlist-add";
     }
     @Test
     @Order(2)
     public void TestAddGameToInvalidWishlist() {
-
+        String res = "/wishlist-add";
     }
 
     @Test
     @Order(3)
     public void TestGetFromValidWishlist() {
+        //Arrange
+        String res = "/wishlist-get-all/"+ VALID_EMAIL;
 
+        //Act
+        ResponseEntity<List> response = client.getForEntity(res, List.class);
+
+        //Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        List<WishlistResponseDto> wishlist = response.getBody();
+        assertNotNull(wishlist);
+        assertEquals(1, wishlist.size());
+
+        WishlistResponseDto game = wishlist.getFirst();
+        assertEquals(VALID_GAME_NAME, game.getGameName());
     }
     @Test
     @Order(3)
-    public void TestGetFromInvalidWishlist() {
+    public void TestGetFromInvalidCustomerWishlist() {
+        //Arrange
+        String res = "/wishlist-get-all/"+ "I don't exist";
 
+        //Act
+        ResponseEntity<List> response = client.getForEntity(res, List.class);
+
+        //Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        assertNotNull(response.getBody());
+        assertEquals("Person not found", response.getBody().toString() );
     }
 
     @Test
     @Order(4)
     public void TestRemoveFromInvalidWishlist() {
-
+        String res = "/wishlist-remove";
     }
     @Test
     @Order(4)
     public void TestRemoveFromValidWishlist() {
-
+        String res = "/wishlist-remove";
     }
 
         
