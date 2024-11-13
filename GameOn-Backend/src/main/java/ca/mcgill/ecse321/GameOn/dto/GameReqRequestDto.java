@@ -1,7 +1,5 @@
 package ca.mcgill.ecse321.GameOn.dto;
 
-import jakarta.validation.constraints.NotNull;
-
 public class GameReqRequestDto {
     //@NotNull(message = "The request creator must not be null")
     private String aEmployee;
