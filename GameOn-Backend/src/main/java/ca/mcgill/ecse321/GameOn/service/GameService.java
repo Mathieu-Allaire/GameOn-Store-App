@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.GameOn.service;
 
+import ca.mcgill.ecse321.GameOn.exception.GameOnException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
@@ -251,35 +253,35 @@ public class GameService {
     @Transactional
     public GameRequest createGameRequest(String aRequestCreatorEmail, String aRequestedGameName, String aRequestType){
         if (aRequestCreatorEmail == null || aRequestCreatorEmail.trim().length() == 0) {
-            throw new IllegalArgumentException("Request creator is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Request creator is invalid");
         }
         if (aRequestType == null) {
-            throw new IllegalArgumentException("Request type is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Request type is invalid");
         }
         if (aRequestedGameName == null || aRequestedGameName.trim().length() == 0) {
-            throw new IllegalArgumentException("Requested game is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Requested game is invalid");
         }
 
         if (!aRequestType.equals("Create") && !aRequestType.equals("Archive")) {
-            throw new IllegalArgumentException("Request type is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Request type is invalid");
         }
 
         Game requestedGame = gameRepository.findGameByName(aRequestedGameName);
 
         if (requestedGame == null) {
-            throw new IllegalArgumentException("Game does not exist");
+            throw new GameOnException(HttpStatus.NOT_FOUND, "Game does not exist");
         }
 
         Integer aRequestCreatorID = personRepository.findRoleIdsByPersonEmail(aRequestCreatorEmail);
 
         if (aRequestCreatorID == null) {
-            throw new IllegalArgumentException("Request creator does not exist");
+            throw new GameOnException(HttpStatus.NOT_FOUND, "Request creator does not exist");
         }
 
         Employee aEmployee = employeeRepository.findEmployeeById(aRequestCreatorID);
 
         if (aEmployee == null) {
-            throw new IllegalArgumentException("Request creator is not an employee");
+            throw new GameOnException(HttpStatus.FORBIDDEN, "Request creator is not an employee");
         }
 
         GameRequest gameRequest = new GameRequest(RequestType.valueOf(aRequestType), aEmployee, requestedGame);
@@ -297,18 +299,18 @@ public class GameService {
      */
     public void approveGameRequest(GameRequest aGameRequest){
         if (aGameRequest == null) {
-            throw new IllegalArgumentException("Game Request is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Game Request is invalid");
         }
 
         GameRequest gameRequest = gameRequestRepository.findGameRequestById(aGameRequest.getId());
 
         if (gameRequest == null) {
-            throw new IllegalArgumentException("Game request does not exist");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Game request does not exist");
         }
 
         if (gameRequest.getRequestType() == RequestType.Create) {
             if (gameRequest.getRequestedGame().getGameStatus().equals(GameStatus.Available)) {
-                throw new IllegalArgumentException("Game is already available");
+                throw new GameOnException(HttpStatus.CONFLICT, "Game is already available");
             } else {
                 gameRequest.getRequestedGame().setAvailable();
             }
@@ -328,7 +330,7 @@ public class GameService {
     @Transactional
     public int getGameQuantity(Game aGame){
         if (aGame == null) {
-            throw new IllegalArgumentException("Game is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Game is invalid");
         }
 
         return aGame.getQuantity();
@@ -343,17 +345,17 @@ public class GameService {
     @Transactional
     public Game updateGameQuantity(String aGame, int aQuantity){
         if (aGame == null) {
-            throw new IllegalArgumentException("Game is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Game is invalid");
         }
 
         if (aQuantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be greater than 0");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Quantity must be greater than 0");
         }
 
         Game game = gameRepository.findGameByName(aGame);
 
         if (game == null) {
-            throw new IllegalArgumentException("Game does not exist");
+            throw new GameOnException(HttpStatus.NOT_FOUND, "Game does not exist");
         }
 
         game.setQuantity(aQuantity);
@@ -371,13 +373,13 @@ public class GameService {
     @Transactional
     public int getGamePrice(Game aGame){
         if (aGame == null) {
-            throw new IllegalArgumentException("Game is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Game is invalid");
         }
 
         Game game = gameRepository.findGameByName(aGame.getName());
 
         if (game == null) {
-            throw new IllegalArgumentException("Game does not exist");
+            throw new GameOnException(HttpStatus.NOT_FOUND, "Game does not exist");
         }
         return game.getPrice();
     }
@@ -393,17 +395,17 @@ public class GameService {
     @Transactional
     public Game updateGamePrice(String aGame, int aPrice){
         if (aGame == null) {
-            throw new IllegalArgumentException("Game is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Game is invalid");
         }
 
         if (aPrice <= 0) {
-            throw new IllegalArgumentException("Price must be greater than 0");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Price must be greater than 0");
         }
 
         Game game = gameRepository.findGameByName(aGame);
        
         if (game == null) {
-            throw new IllegalArgumentException("Game does not exist");
+            throw new GameOnException(HttpStatus.NOT_FOUND, "Game does not exist");
         }
 
         game.setPrice(aPrice);
