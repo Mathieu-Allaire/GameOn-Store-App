@@ -18,9 +18,14 @@ import ca.mcgill.ecse321.GameOn.repository.CustomerRepository;
 import ca.mcgill.ecse321.GameOn.model.Employee;
 import ca.mcgill.ecse321.GameOn.repository.EmployeeRepository;
 
-import ca.mcgill.ecse321.GameOn.GameOnApplication;
+
 
 import jakarta.transaction.Transactional;
+/**
+ * This is the Service for the customer and employee clasess
+ *
+ * @author Camilo Berdugo and Luis Jarquin
+ */
 
 @Service
 public class AccountService {
@@ -204,6 +209,7 @@ public class AccountService {
         }
     }
 
+    /* Log in will be implemented later
     public boolean logIn(String email, String password){
 
         if (email == null || email.trim().length() == 0 || email.contains(" ") || email.contains("@") == false || email.contains(".") == false) {
@@ -244,6 +250,7 @@ public class AccountService {
         }
 
         return false;
-    }
+    }*/
+
 
 }

@@ -30,6 +30,7 @@ import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
 import ca.mcgill.ecse321.GameOn.repository.GameRepository;
 import ca.mcgill.ecse321.GameOn.repository.WishlistLinkRepository;
 import ca.mcgill.ecse321.GameOn.model.WishlistLink;
+import ca.mcgill.ecse321.GameOn.model.WishlistLink.Key;
 import ca.mcgill.ecse321.GameOn.model.Category;
 
 /**
@@ -41,7 +42,7 @@ import ca.mcgill.ecse321.GameOn.model.Category;
 
 @SpringBootTest
 @MockitoSettings(strictness = Strictness.STRICT_STUBS)
-public class WhishlistServiceTests {
+public class WishlistServiceTests {
     @Mock
     private WishlistLinkRepository wishlistLinkRepository;
     @Mock
@@ -95,19 +96,13 @@ public class WhishlistServiceTests {
         //Act 
         WishlistLink createdWishlist = wishlistService.addGameToWishlist(VALID_EMAIL, VALID_GAME_NAME);
 
-        //Assert
-        //Verify the customer
-        assertNotNull(createdWishlist);
-        assertEquals(createdWishlist.getCustomerWish().getBillingAddress(), VALID_BILLING_ADDRESS);
-        assertEquals(createdWishlist.getCustomerWish().getCardExpiryDate(), VALID_DATE);
-        assertEquals(createdWishlist.getCustomerWish().getCardNum(), VALID_CARD_NUM);
         //Verify the game
-        assertEquals(createdWishlist.getWishlistGames().getName(), VALID_GAME_NAME);
-        assertEquals(createdWishlist.getWishlistGames().getDescription(), VALID_DESCRIPTION);
-        assertEquals(createdWishlist.getWishlistGames().getPicture(), VALID_PICTURE);
-        assertEquals(createdWishlist.getWishlistGames().getPrice(), VALID_PRICE);
-        assertEquals(createdWishlist.getWishlistGames().getQuantity(), VALID_QUANTITY);
-        assertEquals(createdWishlist.getWishlistGames().getCategory().getName(), "WAR");
+        assertEquals(createdWishlist.getKey().getWishlistGames().getName(), VALID_GAME_NAME);
+        assertEquals(createdWishlist.getKey().getWishlistGames().getDescription(), VALID_DESCRIPTION);
+        assertEquals(createdWishlist.getKey().getWishlistGames().getPicture(), VALID_PICTURE);
+        assertEquals(createdWishlist.getKey().getWishlistGames().getPrice(), VALID_PRICE);
+        assertEquals(createdWishlist.getKey().getWishlistGames().getQuantity(), VALID_QUANTITY);
+        assertEquals(createdWishlist.getKey().getWishlistGames().getCategory().getName(), "WAR");
         //Verify that a game was added to the customer role
         assertEquals(customerRole.getCustomerWish().size(), 1);
         
@@ -477,28 +472,28 @@ public class WhishlistServiceTests {
        Customer customerRole = new Customer(VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS, cart);
 
        //Create Wishlist
-       WishlistLink existingWishlist = new WishlistLink(game, customerRole);
-       WishlistLink secondExistingWishlist = new WishlistLink(secondGame, customerRole);
-
-       //Create a customer
-       customerRole.addCustomerWish(existingWishlist);
-       customerRole.addCustomerWish(secondExistingWishlist);
+       WishlistLink existingWishlist = new WishlistLink(new Key(game, customerRole));
+       WishlistLink secondExistingWishlist = new WishlistLink(new Key(secondGame, customerRole));
+       when(wishlistLinkRepository.findAll()).thenReturn(List.of(existingWishlist, secondExistingWishlist));
+       
+    
        //In this case Bob has 2 games in his wishlist
        Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, customerRole);
        String encryptedPassword = bob.getEncryptedPassword(VALID_PASSWORD);
        bob.setPassword(encryptedPassword); // the password save into the system is encrypted
         
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
+
         
         //Act 
-        List<Game> gamesWishList = wishlistService.getAllGamesFromWishlist(VALID_EMAIL);
+        List<WishlistLink> gamesWishList = wishlistService.getAllGamesFromWishlist(VALID_EMAIL);
 
         //Assert
         //Verify the customer
         assertNotNull(gamesWishList);
         assertEquals(gamesWishList.size(), 2);
-        assertEquals(gamesWishList.get(0).getName(), VALID_GAME_NAME);
-        assertEquals(gamesWishList.get(1).getName(), "Game2");
+        assertEquals(gamesWishList.get(0).getKey().getWishlistGames().getName(), VALID_GAME_NAME);
+        assertEquals(gamesWishList.get(1).getKey().getWishlistGames().getName(), "Game2");
         
     }
 

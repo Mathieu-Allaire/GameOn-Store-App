@@ -74,7 +74,7 @@ public class WishlistService {
             throw new IllegalArgumentException("The Game is already at the customer wishlist");
         }
 
-        WishlistLink wishlist = new WishlistLink(game, customerRole);
+        WishlistLink wishlist = new WishlistLink(new WishlistLink.Key(game,customerRole));
         wishlistLinkRepository.save(wishlist);
         customerRole.addCustomerWish(wishlist);
         customerRepository.save(customerRole);
@@ -171,25 +171,7 @@ public class WishlistService {
         return wishlistLink;
     }
 
-    /**
-     * Remove all games from the wishlist of a customer.
-     * 
-     * @param customerEmail the email of the customer
-     * @throws IllegalArgumentException if the customer is null
-     */
-    @Transactional
-    public void removeAllGamesFromWishlist(String customerEmail) {
-        if (customerEmail == null) {
-            throw new IllegalArgumentException("Customer email cannot be null");
-        }
-        for (WishlistLink wishlistLink : wishlistLinkRepository.findAll()) {
-            Person aPerson = personRepository.findPersonByEmail(customerEmail);
-            Customer customer = customerRepository.findCustomerById(aPerson.getRole(0).getId().intValue());
-            if (wishlistLink.getKey().getCustomer().equals(customer)) {
-                wishlistLinkRepository.delete(wishlistLink);
-            }
-        }
-    }
+   
 
     /**
      * Retrieve the wishlist of a customer.
@@ -198,7 +180,7 @@ public class WishlistService {
      * @throws IllegalArgumentException if the customer is null
      */
     @Transactional
-    public List<Game> getAllGamesFromWishlist(String customerEmail) {
+    public List<WishlistLink> getAllGamesFromWishlist(String customerEmail) {
         if (customerEmail == null) {
             throw new IllegalArgumentException("Customer email cannot be null");
         }
@@ -206,23 +188,20 @@ public class WishlistService {
         if (aPerson == null) {
             throw new IllegalArgumentException("Person not found");
         }
-        if (!(aPerson.getRole(0).getClass() != Customer.class)) {
+        if ((aPerson.getRole(0).getClass() != Customer.class)) {
             throw new IllegalArgumentException("Person is not a customer");
         }
-        //pas necessaire
-        Long aCustomerId = aPerson.getRole(0).getId(); 
-
-        //Garde juste ca
-        Customer aCustomer = customerRepository.findCustomerById(aCustomerId.intValue()); // Why not Customer customerRole = (Customer) aPerson.getRole(0)
-        Iterable<WishlistLink> wishlistsCustomer = aCustomer.getCustomerWish(); // Why not return this aCustomer.getCustomerWish()
+      
+        Customer customerRole = (Customer) aPerson.getRole(0);
         
-        //Pas necessaire
-        List<Game> games = new ArrayList<>();
-        // Get all games from wishlist
-        for (WishlistLink wishlistLink : wishlistsCustomer) {
-            games.add(wishlistLink.getKey().getWishlistGames());
+        Iterable<WishlistLink> allWishlistLink = wishlistLinkRepository.findAll();
+        List<WishlistLink> wishlistsCustomer = new ArrayList<>();
+        for (WishlistLink wishlistLink : allWishlistLink) {
+            if (wishlistLink.getKey().getCustomer().getId() == customerRole.getId()) {
+                wishlistsCustomer.add(wishlistLink);
+            }
         }
 
-        return games;// return le aCustomer.getCustomerWish()
+        return wishlistsCustomer;
     }
 }

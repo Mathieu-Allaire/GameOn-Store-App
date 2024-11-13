@@ -6,7 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.GameOn.service.AccountService;
@@ -15,14 +16,12 @@ import ca.mcgill.ecse321.GameOn.dto.CustomerRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.CustomerResponseDto;
 import ca.mcgill.ecse321.GameOn.dto.EmployeeRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.EmployeeResponseDto;
-import ca.mcgill.ecse321.GameOn.model.Customer;
-import ca.mcgill.ecse321.GameOn.model.Employee;
 
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 import jakarta.validation.Valid;
 
-import java.sql.Date;
+
 
 @RestController
 public class AccountController {
@@ -48,7 +47,6 @@ public class AccountController {
 
     /**
      * Return the Employee with the given email.
-     *
      * @param email The primary key of the Employee to find.
      * @return The employee with the given email.
      */
@@ -71,9 +69,9 @@ public class AccountController {
     @PostMapping("/customer")
     public ResponseEntity<?> createCustomer(@Valid @RequestBody CustomerRequestDto customer){
         try {
-            int cardNumber = Integer.parseInt(customer.getCardNumber());
-            Date expiryDate = Date.valueOf(customer.getExpiracyDate());
-            Person createdCustomer = accountService.createCustomer(customer.getEmail(), customer.getName(), customer.getPassword(), cardNumber, expiryDate, customer.getBillingAddress());
+            //int cardNumber = Integer.parseInt(customer.getCardNumber());
+           // Date expiryDate = Date.valueOf(customer.getExpiracyDate());
+            Person createdCustomer = accountService.createCustomer(customer.getEmail(), customer.getName(), customer.getPassword(), customer.getCardNumber(), customer.getExpiracyDate(), customer.getBillingAddress());
             return new ResponseEntity<>(new CustomerResponseDto(createdCustomer), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
@@ -91,6 +89,22 @@ public class AccountController {
         try {
             Person createdEmployee = accountService.createEmployee(employee.getEmail(), employee.getName());
             return new ResponseEntity<>(new EmployeeResponseDto(createdEmployee), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * deactivate the account of an employee
+     *
+     * @param email The primary key of the Employee to deactivate.
+     * @return true if the employee was deactivated
+     */
+    @PutMapping("/employee/deactivate/{email}")
+    public ResponseEntity<?> deactivateEmployeeByEmail(@PathVariable String email){
+        try {
+            Boolean deactivated = accountService.deactivateEmployee(email);
+            return new ResponseEntity<>(deactivated, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
         }

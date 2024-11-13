@@ -7,14 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ca.mcgill.ecse321.GameOn.dto.WishlistLinkDto;
+import ca.mcgill.ecse321.GameOn.dto.WishlistRequestDto;
+import ca.mcgill.ecse321.GameOn.dto.WishlistResponseDto;
 import ca.mcgill.ecse321.GameOn.model.WishlistLink;
 import ca.mcgill.ecse321.GameOn.service.WishlistService;
 import ca.mcgill.ecse321.GameOn.dto.GameResponseDTO;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import ca.mcgill.ecse321.GameOn.model.Game;
 import jakarta.validation.Valid;
 
@@ -39,10 +41,10 @@ public class WishlistController {
      * @author Neeshal Imrit
      */
     @PostMapping("/wishlist-add")
-    public ResponseEntity<?> addGameToWishlist(@Valid @RequestBody WishlistLinkDto wishlistLinkDto) {
+    public ResponseEntity<?> addGameToWishlist(@Valid @RequestBody WishlistRequestDto wishlistLinkDto) {
         try {
             WishlistLink wishlistLink = wishlistService.addGameToWishlist(wishlistLinkDto.getCustomerEmail(), wishlistLinkDto.getGameName());
-            WishlistLinkDto wishlistLinkDtoResponse = new WishlistLinkDto(wishlistLink);
+            WishlistResponseDto wishlistLinkDtoResponse = new WishlistResponseDto(wishlistLink);
             return new ResponseEntity<>(wishlistLinkDtoResponse, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
@@ -56,25 +58,9 @@ public class WishlistController {
      * @author Neeshal Imrit
      */
     @DeleteMapping("/wishlist-remove")
-    public ResponseEntity<?> removeGameFromWishlist(@Valid @RequestBody WishlistLinkDto wishlistLinkDto) {
+    public ResponseEntity<?> removeGameFromWishlist(@Valid @RequestBody WishlistRequestDto wishlistLinkDto) {
         try {
             wishlistService.removeGameFromWishlist(wishlistLinkDto.getCustomerEmail(), wishlistLinkDto.getGameName());
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /*
-     * Remove all game from customer wishlist
-     * 
-     * @param customer email
-     * @Author Neeshal Imrit
-     */
-    @DeleteMapping("/wishlist-remove-all/{customerEmail}")
-    public ResponseEntity<?> removeAllGameFromWishlist(@PathVariable String customerEmail) {
-        try {
-            wishlistService.removeAllGamesFromWishlist(customerEmail);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
@@ -87,13 +73,13 @@ public class WishlistController {
      * @param customer email
      * @Author Neeshal Imrit
      */
-    @PostMapping("/wishlist-get-all/{customerEmail}")
+    @GetMapping("/wishlist-get-all/{customerEmail}")
     public ResponseEntity<?> getAllGamesFromWishlist(@PathVariable String customerEmail) {
+        List<WishlistResponseDto> dtos = new ArrayList<>();
         try {
-            List<Game> games = wishlistService.getAllGamesFromWishlist(customerEmail);
-            List<GameResponseDTO> dtos = new ArrayList<>();
-            for (Game g : games) {
-                dtos.add(new GameResponseDTO(g));
+            List<WishlistLink> wishlistLinks = wishlistService.getAllGamesFromWishlist(customerEmail);
+            for (WishlistLink wishlistLink : wishlistLinks) {
+                dtos.add(new WishlistResponseDto(wishlistLink));
             }
             return new ResponseEntity<>(dtos, HttpStatus.OK);
         } catch (Exception e) {

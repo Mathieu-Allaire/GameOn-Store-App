@@ -7,6 +7,11 @@ public class GameResponseDTO {
     private String description;
     private int price;
     private int quantity;
+    private String category;
+
+    @SuppressWarnings("unused")
+    protected GameResponseDTO() {
+    }
 
     public GameResponseDTO(Game game) {
         this.picture = game.getPicture();
@@ -14,6 +19,11 @@ public class GameResponseDTO {
         this.description = game.getDescription();
         this.price = game.getPrice();
         this.quantity = game.getQuantity();
+        this.category = game.getCategory().getName();
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public String getPicture() {

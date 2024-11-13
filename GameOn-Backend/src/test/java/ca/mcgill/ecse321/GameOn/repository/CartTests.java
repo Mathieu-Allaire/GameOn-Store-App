@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
@@ -27,15 +28,19 @@ public class CartTests {
     @Test
     public void testCreateCart(){
         //Arrange
-
         Cart aCart = new Cart();
         aCart = cartRepo.save(aCart);
 
         //Act
+        Boolean hasOrder = aCart.getOrder() != null;
         Cart result = cartRepo.findCartById(aCart.getId());
-
+        int noOfSpecificGames = aCart.numberOfSpecificGame();
+        Boolean hasSpecificGame = aCart.hasSpecificGame();
         //Assert
         assertNotNull(result);
+        assertFalse(hasOrder);
+        assertEquals(0, noOfSpecificGames);
+        assertFalse(hasSpecificGame);
         assertEquals(aCart.getId(), result.getId());
 
 

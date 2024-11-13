@@ -69,30 +69,6 @@ public class Game
   // INTERFACE
   //------------------------
 
-  public boolean setPicture(String aPicture)
-  {
-    boolean wasSet = false;
-    picture = aPicture;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setName(String aName)
-  {
-    boolean wasSet = false;
-    name = aName;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setDescription(String aDescription)
-  {
-    boolean wasSet = false;
-    description = aDescription;
-    wasSet = true;
-    return wasSet;
-  }
-
   public boolean setPrice(int aPrice)
   {
     boolean wasSet = false;
@@ -148,10 +124,6 @@ public class Game
     return gameStatus;
   }
 
-  public void updateIsInStock() {
-    isInStock = this.getQuantity() > 0;
-  }
-
   public boolean setUnavailable()
   {
     boolean wasEventProcessed = false;
@@ -162,28 +134,6 @@ public class Game
       case Available:
         setGameStatus(GameStatus.Unavailable);
         wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  private boolean __autotransition2699__()
-  {
-    boolean wasEventProcessed = false;
-    
-    GameStatus aGameStatus = gameStatus;
-    switch (aGameStatus)
-    {
-      case OutOfStock:
-        if (isInStock)
-        {
-          setGameStatus(GameStatus.Available);
-          wasEventProcessed = true;
-          break;
-        }
         break;
       default:
         // Other states do respond to this event
@@ -245,11 +195,6 @@ public class Game
     return has;
   }
 
-  public int indexOfWishlistlink(WishlistLink aWishlistlink)
-  {
-    int index = wishlistlink.indexOf(aWishlistlink);
-    return index;
-  }
   /* Code from template association_GetMany */
   public Review getReview(int index)
   {
@@ -263,23 +208,6 @@ public class Game
     return newReviews;
   }
 
-  public int numberOfReviews()
-  {
-    int number = reviews.size();
-    return number;
-  }
-
-  public boolean hasReviews()
-  {
-    boolean has = reviews.size() > 0;
-    return has;
-  }
-
-  public int indexOfReview(Review aReview)
-  {
-    int index = reviews.indexOf(aReview);
-    return index;
-  }
   /* Code from template association_SetOneToMany */
   public boolean setCategory(Category aCategory)
   {
@@ -288,22 +216,11 @@ public class Game
     {
       return wasSet;
     }
-
-    Category existingCategory = category;
-    category = aCategory;
-    if (existingCategory != null && !existingCategory.equals(aCategory))
-    {
-      existingCategory.removeGame(this);
-    }
-    category.addGame(this);
+    this.category = aCategory;
     wasSet = true;
     return wasSet;
   }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfWishlistlink()
-  {
-    return 0;
-  }
+
   /* Code from template association_AddManyToOne */
   public WishlistLink addWishlistlink(Customer aCustomerWish)
   {
@@ -339,43 +256,6 @@ public class Game
     }
     return wasRemoved;
   }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addWishlistlinkAt(WishlistLink aWishlistlink, int index)
-  {  
-    boolean wasAdded = false;
-    if(addWishlistlink(aWishlistlink))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfWishlistlink()) { index = numberOfWishlistlink() - 1; }
-      wishlistlink.remove(aWishlistlink);
-      wishlistlink.add(index, aWishlistlink);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveWishlistlinkAt(WishlistLink aWishlistlink, int index)
-  {
-    boolean wasAdded = false;
-    if(wishlistlink.contains(aWishlistlink))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfWishlistlink()) { index = numberOfWishlistlink() - 1; }
-      wishlistlink.remove(aWishlistlink);
-      wishlistlink.add(index, aWishlistlink);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addWishlistlinkAt(aWishlistlink, index);
-    }
-    return wasAdded;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfReviews()
-  {
-    return 0;
-  }
   /* Code from template association_AddUnidirectionalMany */
   public boolean addReview(Review aReview)
   {
@@ -386,74 +266,4 @@ public class Game
     return wasAdded;
   }
 
-  public boolean removeReview(Review aReview)
-  {
-    boolean wasRemoved = false;
-    if (reviews.contains(aReview))
-    {
-      reviews.remove(aReview);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addReviewAt(Review aReview, int index)
-  {  
-    boolean wasAdded = false;
-    if(addReview(aReview))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfReviews()) { index = numberOfReviews() - 1; }
-      reviews.remove(aReview);
-      reviews.add(index, aReview);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveReviewAt(Review aReview, int index)
-  {
-    boolean wasAdded = false;
-    if(reviews.contains(aReview))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfReviews()) { index = numberOfReviews() - 1; }
-      reviews.remove(aReview);
-      reviews.add(index, aReview);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addReviewAt(aReview, index);
-    }
-    return wasAdded;
-  }
-
-  public void delete()
-  {
-    Category placeholderCategory = category;
-    this.category = null;
-    if(placeholderCategory != null)
-    {
-      placeholderCategory.removeGame(this);
-    }
-    for(int i=wishlistlink.size(); i > 0; i--)
-    {
-      WishlistLink aWishlistlink = wishlistlink.get(i - 1);
-      aWishlistlink.delete();
-    }
-    reviews.clear();
-  }
-
-
-  public String toString()
-  {
-    return super.toString() + "["+
-            "picture" + ":" + getPicture()+ "," +
-            "name" + ":" + getName()+ "," +
-            "description" + ":" + getDescription()+ "," +
-            "price" + ":" + getPrice()+ "," +
-            "quantity" + ":" + getQuantity()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "category = "+(getCategory()!=null?Integer.toHexString(System.identityHashCode(getCategory())):"null");
-  }
 }
