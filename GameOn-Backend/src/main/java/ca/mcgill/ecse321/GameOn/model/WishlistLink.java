@@ -19,10 +19,11 @@ public class WishlistLink{
 
     //WishlistLink Associations
     @ManyToOne
-    //@JoinColumn(name = "wishlistGames_id", insertable = false, updatable = false)
+    //@MapsId("gameId")
+    @JoinColumn(name = "wishlistGames_id", insertable = false, updatable = false)
     private Game wishlistGames;
     @ManyToOne
-    //@JoinColumn(name = "customerWish_id", insertable = false, updatable = false)
+    @JoinColumn(name = "customerWish_id", insertable = false, updatable = false)
     private Customer CustomerWish;
 
     //------------------------
