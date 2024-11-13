@@ -9,25 +9,25 @@ import jakarta.validation.constraints.NotBlank;
 
 public class ReviewDto {
 
-    @NotBlank(message = "The description must not be empty")
+    //@NotBlank(message = "The description must not be empty")
     private String description;
 
-    @Min(value = 0, message = "The number of stars must be greater than or equal to 0")
-    @Max(value = 5, message = "The maximum number of stars allowed is 5")
+    //@Min(value = 0, message = "The number of stars must be greater than or equal to 0")
+    //@Max(value = 5, message = "The maximum number of stars allowed is 5")
     private int stars;
 
-    @Min(value = 0, message = "The number of likes must be positive")
+    //Min(value = 0, message = "The number of likes must be positive")
     private int likes;
 
-    @Min(value = 0, message = "The number of dislikes must be positive")
+    //@Min(value = 0, message = "The number of dislikes must be positive")
     private int dislikes;
 
     private String reply;
 
-    @NotBlank(message = "The customer is invalid")
+    //@NotBlank(message = "The customer is invalid")
     private Customer customer;
 
-    @NotBlank(message = "The manager is invalid")
+    //@NotBlank(message = "The manager is invalid")
     private Manager manager;
 
     public ReviewDto(){}

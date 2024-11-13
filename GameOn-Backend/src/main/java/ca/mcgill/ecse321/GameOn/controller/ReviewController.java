@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import ca.mcgill.ecse321.GameOn.dto.ReviewDto;
 import ca.mcgill.ecse321.GameOn.service.ReviewService;
 import ca.mcgill.ecse321.GameOn.model.Review;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import jakarta.validation.Valid;
 

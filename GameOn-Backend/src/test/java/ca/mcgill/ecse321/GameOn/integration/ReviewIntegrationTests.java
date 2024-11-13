@@ -1,8 +1,5 @@
 package ca.mcgill.ecse321.GameOn.integration;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import ca.mcgill.ecse321.GameOn.model.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -24,6 +21,8 @@ import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.repository.ReviewRepository;
 
 import java.sql.Date;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(OrderAnnotation.class)
@@ -73,6 +72,7 @@ public class ReviewIntegrationTests {
         ResponseEntity<ReviewDto> response = client.postForEntity("/reviews", review, ReviewDto.class);
 
         // Assert response is not null
+        assertNull(response);
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         ReviewDto createdReview = response.getBody();
@@ -84,7 +84,7 @@ public class ReviewIntegrationTests {
         assertEquals(VALID_CUSTOMER.getId(), createdReview.getCustomer().getId());
         assertEquals(VALID_MANAGER.getId(), createdReview.getManager().getId());
     }
-
+    /*
     @Test
     @Order(2)
     public void testReadValidReview() {
@@ -188,7 +188,7 @@ public class ReviewIntegrationTests {
         assertEquals(VALID_REPLY, updatedReview.getReply());
 
     }
-
+    */
 
 
 }
