@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
@@ -105,12 +107,20 @@ public class WishlistIntegrationTests {
     public void TestRemoveFromEmptyWishlist() {
         //Arrange
         String res = "/wishlist-remove";
-        WishlistRequestDto request = new WishlistRequestDto();
+        WishlistRequestDto request = new WishlistRequestDto(VALID_GAME_NAME, VALID_EMAIL);
+        HttpEntity<WishlistRequestDto> entity = new HttpEntity<>(request);
+
         //Act
-        //ResponseEntity<>
+        ResponseEntity<?> response = client.exchange(res, HttpMethod.DELETE, entity, WishlistResponseDto.class);
 
         //Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        assertNotNull(response.getBody());
+        assertEquals("The Game is not in the customer's wishlist", response.getBody().toString() );
     }
+
     @Test
     @Order(1)
     public void TestGetFromEmptyWishlist() {
@@ -186,12 +196,37 @@ public class WishlistIntegrationTests {
     @Test
     @Order(4)
     public void TestRemoveFromInvalidWishlist() {
+        //Arrange
         String res = "/wishlist-remove";
+        WishlistRequestDto request = new WishlistRequestDto("No name", "No game");
+        HttpEntity<WishlistRequestDto> entity = new HttpEntity<>(request);
+
+        //Act
+        ResponseEntity<WishlistResponseDto> response = client.exchange(res, HttpMethod.DELETE, entity, WishlistResponseDto.class);
+
+        //Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        assertNotNull(response.getBody());
+        assertEquals("No customer with this email", response.getBody().toString() );
+
     }
     @Test
     @Order(4)
     public void TestRemoveFromValidWishlist() {
+        //Arrange
         String res = "/wishlist-remove";
+        WishlistRequestDto request = new WishlistRequestDto(VALID_GAME_NAME, VALID_NAME);
+        HttpEntity<WishlistRequestDto> entity = new HttpEntity<>(request);
+
+        //Act
+        ResponseEntity<WishlistResponseDto> response = client.exchange(res, HttpMethod.DELETE, entity, WishlistResponseDto.class);
+
+        //Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+
     }
 
         
