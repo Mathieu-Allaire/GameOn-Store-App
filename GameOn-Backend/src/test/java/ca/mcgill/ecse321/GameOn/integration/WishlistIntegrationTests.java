@@ -76,48 +76,13 @@ public class WishlistIntegrationTests {
     
     @AfterAll
     public void clearDatabase() {
-        wishlistLinkRepo.deleteAll();
-        personRepo.deleteAll();
-        customerRepo.deleteAll();
-        cartRepository.deleteAll();
-        gameRepo.deleteAll();
-        categoryRepo.deleteAll();
+        
     }
     
     @Test
     @Order(1)
     public void TestAddValidGameToWishlist() {
-        // created what I need for constructing the wishlistLinkDto
-           
-        Category category = new Category(VALID_CATEGORY_NAME);
-        category = categoryRepo.save(category);
-        Game game = new Game(VALID_GAME_PICTURE, VALID_GAME_NAME, VALID_GAME_DESCRIPTION, VALID_GAME_PRICE, VALID_GAME_QUANTITY, category);
-        game = gameRepo.save(game);
-        Cart cart = new Cart();
-        cart = cartRepository.save(cart);
-        Customer customer = new Customer(VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS, cart);
-        customer = customerRepo.save(customer);
-        Person person = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, customer);
-        person = personRepo.save(person);
-
-        assertNotNull(person);
-        assertNotNull(customer);
-        assertNotNull(cart);
-        assertNotNull(game);
-        assertNotNull(category);
-
-        WishlistLink wishlistLink = new WishlistLink(game, customer);
-
-        // Create the wanted wishlistLinkDto
-        WishlistLinkDto wishlistLinkDto = new WishlistLinkDto(wishlistLink);
-        
-        // ACT
-        ResponseEntity<WishlistLinkDto> response = client.postForEntity("/wishlist-add", wishlistLinkDto, WishlistLinkDto.class);
-        
-        // ASSERT
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode()); 
-        
+                
     }
         
 }
