@@ -22,11 +22,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import ca.mcgill.ecse321.GameOn.repository.GameRepository;
 import ca.mcgill.ecse321.GameOn.repository.CategoryRepository;
 import ca.mcgill.ecse321.GameOn.repository.GameRequestRepository;
+import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
+import ca.mcgill.ecse321.GameOn.repository.EmployeeRepository;
 import ca.mcgill.ecse321.GameOn.model.Category;
 import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.model.RequestType;
 import ca.mcgill.ecse321.GameOn.model.Employee;
 import ca.mcgill.ecse321.GameOn.model.GameRequest;
+import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.model.Game.GameStatus;
 
 
@@ -39,6 +42,10 @@ public class GameServiceTests {
     private GameRepository gameMockRepo;
     @Mock
     private GameRequestRepository gameRequestMockRepo;
+    @Mock
+    private PersonRepository personMockRepo;
+    @Mock
+    private EmployeeRepository employeeMockRepo;
 
     @InjectMocks
     private GameService service;
@@ -399,18 +406,22 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Category does not exist");
     }
 
-   /* 
+    // |--------------------------------------------------------------------------
+   
     @Test
     public void testCreateGameRequest(){
         // Arrange
         Employee employee = new Employee(true);
         Game game = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
-        when(gameMockRepo.findGameByName(VALID_GAME_NAME)).thenReturn(game);
-        when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
-        when(gameRequestMockRepo.save(any(GameRequest.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+        String requestType = "Create";
 
+        when(personMockRepo.findRoleIdsByPersonEmail("testEmail@mail.com")).thenReturn(2);
+        when(employeeMockRepo.findEmployeeById(2)).thenReturn(employee);
+        when(gameMockRepo.findGameByName(VALID_GAME_NAME)).thenReturn(game);
+        when(gameRequestMockRepo.save(any(GameRequest.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+        
         // Act
-        GameRequest gameRequest = service.createGameRequest(employee, VALID_GAME_NAME, RequestType.Create);
+        GameRequest gameRequest = service.createGameRequest("testEmail@mail.com", VALID_GAME_NAME, requestType);
 
         // Assert
         assertNotNull(gameRequest);
@@ -444,46 +455,45 @@ public class GameServiceTests {
     @Test
     public void testCreateInvalidGameRequest(){
         // Arrange
-        Employee employee = null;
-        Game game = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+        String employeeEmail = null;
 
         // Assert
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            service.createGameRequest(employee, VALID_GAME_NAME, RequestType.Create);
+            service.createGameRequest(employeeEmail, VALID_GAME_NAME, "Create");
         });
 
         assertEquals(ex.getMessage(), "Request creator is invalid");
+
     }
      
     @Test
     public void testCreateGameRequestInvalidGame(){
         // Arrange
-        Employee employee = new Employee(true);
-        String game = null;
+        String game = INVALID_GAME_NAME;
+        String employeeEmail = "testEmail@mcgill.ca";
 
         // Assert
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            service.createGameRequest(employee, game, RequestType.Create);
+            service.createGameRequest(employeeEmail, game, "Create");
         });
 
         assertEquals(ex.getMessage(), "Requested game is invalid");
     }
-
+    
     @Test
     public void testCreateGameRequestInvalidRequestType(){
         // Arrange
-        Employee employee = new Employee(true);
-        Game game = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
+        String employeeEmail = "lalal@lala.lala";
+        String requestType = "Invalid";
         
-
         // Assert
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            service.createGameRequest(employee, VALID_GAME_NAME, null);
+            service.createGameRequest(employeeEmail, VALID_GAME_NAME, requestType);
         });
 
         assertEquals(ex.getMessage(), "Request type is invalid");
     }
-*/
+
     @Test
     public void testApproveCreateGameRequest(){
         // Arrange
