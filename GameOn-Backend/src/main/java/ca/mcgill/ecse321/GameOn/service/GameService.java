@@ -40,7 +40,7 @@ public class GameService {
 
     /**
      * Method to create new category
-     * @param aName
+     * @param aName name of category
      * @throws IllegalArgumentException if name is invalid
      */
     @Transactional
@@ -59,7 +59,7 @@ public class GameService {
 
     /**
      * Method to delete category
-     * @param aName
+     * @param aName name of category
      * @throws IllegalArgumentException if name is invalid
      */
     @Transactional
@@ -84,7 +84,7 @@ public class GameService {
 
     /**
      * Method to get all categories
-     * @param List<Category>
+     * @param List<Category> list of categories
      * @throws IllegalArgumentException if name is invalid
      */
     @Transactional
@@ -95,7 +95,7 @@ public class GameService {
     /**
      * Method to get a specific category.
      * 
-     * @param aCategoryName
+     * @param aCategoryName name of category
      * @return Category
      * @throws IllegalArgumentException if name is invalid
      */
@@ -170,7 +170,7 @@ public class GameService {
     /**
      * Method to delete a game.
      * 
-     * @param aName
+     * @param aName name of game
      */
     @Transactional
     public void deleteGame(String aName){
@@ -199,7 +199,7 @@ public class GameService {
     /**
      * Method to get a specific game.
      * 
-     * @param aGameName
+     * @param aGameName name of game
      * @return Game
      */
     @Transactional
@@ -220,7 +220,7 @@ public class GameService {
     /**
      * Method to get all games in a category.
      * 
-     * @param aCategoryName
+     * @param aCategoryName name of category
      * @return List<Game>
      */
     @Transactional
@@ -244,9 +244,9 @@ public class GameService {
      * A game request is created by an employee and is approved by a manager.
      * A game request can either be a request to create a game or a request to archive a game.
      * 
-     * @param aRequestCreator
-     * @param aRequestedGame
-     * @param aRequestType
+     * @param aRequestCreator Email of the employee who created the request
+     * @param aRequestedGame Name of the game requested
+     * @param aRequestType Type of request (Create or Archive)
      */
     @Transactional
     public GameRequest createGameRequest(String aRequestCreatorEmail, String aRequestedGameName, String aRequestType){
@@ -292,7 +292,7 @@ public class GameService {
      * Method to approve a game request.
      * This changes the game status to available.
      * 
-     * @param aGameRequest
+     * @param aGameRequest Game request to approve
      * @throws IllegalArgumentException if game or manager is invalid
      */
     public void approveGameRequest(GameRequest aGameRequest){
@@ -322,7 +322,7 @@ public class GameService {
     /**
      * Method to get the quantity of a game.
      * 
-     * @param aGame
+     * @param aGame game
      * @return int quantity
      */
     @Transactional
@@ -337,8 +337,10 @@ public class GameService {
     /**
      * Method to update the quantity of a game.
      * 
-     * @param aGame
-     * @param aQuantity
+     * @param aGame game
+     * @param aQuantity quantity
+     * 
+     * @return Game game
      */
     @Transactional
     public Game updateGameQuantity(String aGame, int aQuantity){
@@ -365,7 +367,7 @@ public class GameService {
     /**
      * Method to get the price of a game.
      * 
-     * @param aGame
+     * @param aGame game
      * @return int price
      */
     @Transactional

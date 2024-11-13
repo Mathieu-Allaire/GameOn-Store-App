@@ -18,7 +18,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-
 import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
 import ca.mcgill.ecse321.GameOn.repository.CustomerRepository;
 import ca.mcgill.ecse321.GameOn.repository.EmployeeRepository;
@@ -28,6 +27,10 @@ import ca.mcgill.ecse321.GameOn.dto.CustomerRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.CustomerResponseDto;
 import ca.mcgill.ecse321.GameOn.repository.CartRepository;
 
+/**
+ * Integration tests for the Account controller
+ * @author Camilo Berdugo
+ */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -66,6 +69,10 @@ public class AccountIntegrationTests {
         cartRepository.deleteAll();
         
     }
+
+    /**
+     * Tests the creation of a valid customer
+     */
     @Test
     @Order(1)
     public void testCreateValidCustomer(){
@@ -84,6 +91,9 @@ public class AccountIntegrationTests {
    
     }
 
+    /**
+     * Tests the reading of a valid customer
+     */
     @Test
     @Order(2)
     public void testReadValidCustomer(){
@@ -103,7 +113,9 @@ public class AccountIntegrationTests {
 
     }
 
-    
+    /**
+     * Tests the creation of a valid employee
+     */
     @Test
     @Order(3)
     public void testCreateValidEmployee(){
@@ -122,6 +134,9 @@ public class AccountIntegrationTests {
    
     }
 
+    /**
+     * Tests the reading of a valid employee
+     */
     @Test
     @Order(4)
     public void testReadValidEmployee(){
@@ -142,6 +157,9 @@ public class AccountIntegrationTests {
 
     }
 
+    /**
+     * Tests the deactivation of a valid employee
+     */
     @Test
     @Order(5)
     public void testDeactivateValidEmployee(){
@@ -162,6 +180,9 @@ public class AccountIntegrationTests {
 
     }
 
+    /**
+     * Tests the reactivation of a valid employee
+     */
     @Test
     @Order(6)
     public void testCreateInvalidCustomer(){
@@ -177,6 +198,9 @@ public class AccountIntegrationTests {
     
     }
 
+    /**
+     * Tests the reading of an invalid customer
+     */
     @Test
     @Order(7)
     public void testReadInvalidCustomer(){

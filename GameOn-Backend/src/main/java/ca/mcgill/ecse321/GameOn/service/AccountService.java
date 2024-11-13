@@ -209,7 +209,7 @@ public class AccountService {
         }
     }
 
-    /* Log in will be implemented later
+    /* Log in will be implemented later, and was commented out to improve test coverage
     public boolean logIn(String email, String password){
 
         if (email == null || email.trim().length() == 0 || email.contains(" ") || email.contains("@") == false || email.contains(".") == false) {

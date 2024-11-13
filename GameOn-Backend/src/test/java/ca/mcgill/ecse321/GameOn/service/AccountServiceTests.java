@@ -68,7 +68,9 @@ public class AccountServiceTests {
 
     //For creating employees, we only need the name and email, the password and isEmployed is automatically created for them 
     
-
+    /**
+     * Testing the creation of a valid customer
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateValidCustomer(){
@@ -100,6 +102,9 @@ public class AccountServiceTests {
         verify(personRepository, times(1)).save(createdCustomer);
     }
 
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidCustomerEmail(){
@@ -110,6 +115,10 @@ public class AccountServiceTests {
         assertEquals("Email is invalid", e.getMessage());
         }
     }
+
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidCustomerEmptyEmail(){
@@ -121,6 +130,9 @@ public class AccountServiceTests {
         }
     }
 
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidCustomerContainSpacesEmail(){
@@ -128,10 +140,13 @@ public class AccountServiceTests {
         try {
             Person customer = accountService.createCustomer("casui@   feefnief.com", VALID_NAME, VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
         } catch (Exception e) {
-        assertEquals("Email is invalid", e.getMessage());
+            assertEquals("Email is invalid", e.getMessage());
         }
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidCustomerEmailIsNull(){
@@ -139,10 +154,13 @@ public class AccountServiceTests {
         try {
             Person customer = accountService.createCustomer(null, VALID_NAME, VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
         } catch (Exception e) {
-        assertEquals("Email is invalid", e.getMessage());
+            assertEquals("Email is invalid", e.getMessage());
         }
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidCustomerEmailnoPoint(){
@@ -150,10 +168,13 @@ public class AccountServiceTests {
         try {
             Person customer = accountService.createCustomer("camilo@mcgillcom", VALID_NAME, VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
         } catch (Exception e) {
-        assertEquals("Email is invalid", e.getMessage());
+            assertEquals("Email is invalid", e.getMessage());
         }
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidCustomerCardNum(){
@@ -161,10 +182,13 @@ public class AccountServiceTests {
         try {
             Person customer = accountService.createCustomer(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, -1, VALID_DATE, VALID_BILLING_ADDRESS);
         } catch (Exception e) {
-        assertEquals("Card number is invalid", e.getMessage());
+            assertEquals("Card number is invalid", e.getMessage());
         }
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidCustomerName(){
@@ -172,10 +196,13 @@ public class AccountServiceTests {
         try {
             Person customer = accountService.createCustomer(VALID_EMAIL, "", VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
         } catch (Exception e) {
-        assertEquals("Name is invalid", e.getMessage());
+            assertEquals("Name is invalid", e.getMessage());
         }
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidCustomerExpiracyDate(){
@@ -183,10 +210,13 @@ public class AccountServiceTests {
         try {
             Person customer = accountService.createCustomer(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, VALID_CARD_NUM, INVALID_DATE, VALID_BILLING_ADDRESS);
         } catch (Exception e) {
-        assertEquals("Card expiry date is invalid", e.getMessage());
+            assertEquals("Card expiry date is invalid", e.getMessage());
         }
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidCustomerBillingAdress(){
@@ -194,10 +224,13 @@ public class AccountServiceTests {
         try {
             Person customer = accountService.createCustomer(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, INVALID_BILLING_ADDRESS);
         } catch (Exception e) {
-        assertEquals("Billing address is invalid", e.getMessage());
+            assertEquals("Billing address is invalid", e.getMessage());
         }
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateCustomerAlreadyExistingEmail(){
@@ -206,16 +239,19 @@ public class AccountServiceTests {
         Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, customerRole);
         String encryptedPassword = bob.getEncryptedPassword(VALID_PASSWORD);
         bob.setPassword(encryptedPassword); // this simulates the create customer
-
+        
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);// Case when we want to create a customer, but there is already an account with that email
         
         try {
             Person customer = accountService.createCustomer(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
         } catch (Exception e) {
-        assertEquals("Email is already taken", e.getMessage());
+            assertEquals("Email is already taken", e.getMessage());
         }
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidCustomerPassword(){
@@ -223,10 +259,13 @@ public class AccountServiceTests {
         try {
             Person customer = accountService.createCustomer(VALID_EMAIL, VALID_NAME, INVALID_PASSWORD, VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS);
         } catch (Exception e) {
-        assertEquals("Password is invalid", e.getMessage());
+            assertEquals("Password is invalid", e.getMessage());
         }
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testReadCustomerByValidEmail(){
@@ -237,29 +276,32 @@ public class AccountServiceTests {
         String encryptedPassword = bob.getEncryptedPassword(VALID_PASSWORD);
         bob.setPassword(encryptedPassword); // this simulates the create customer
         
-
+        
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
-
+        
         //Act : find customer
         Person wantedCustomer = accountService.findCustomerByEmail(VALID_EMAIL);
-
+        
         //Assert
         assertNotNull(wantedCustomer);
         assertEquals(bob.getName(), wantedCustomer.getName());
         assertEquals(bob.getEmail(), wantedCustomer.getEmail());
-
+        
         //The password saved is encrypted, so we need to compare the encrypted password
         assertEquals(encryptedPassword, wantedCustomer.getPassword()); 
         
         //Check the customer class atributes
         Customer wantedCustomerRole = (Customer) wantedCustomer.getRole(0);
-
+        
         assertEquals(customerRole.getCardNum(), wantedCustomerRole.getCardNum());  // customerRole is bob's role
         assertEquals(customerRole.getCardExpiryDate(), wantedCustomerRole.getCardExpiryDate()); 
         assertEquals(customerRole.getBillingAddress(), wantedCustomerRole.getBillingAddress()); 
         assertEquals(customerRole.getCart().getId(), wantedCustomerRole.getCart().getId()); 
     }
-
+    
+    /**
+     *  Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testReadCustomerByEmailNotFound(){
@@ -276,12 +318,15 @@ public class AccountServiceTests {
         //Case when there is no person with that email
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(null);
         try {
-           Person wantedPerson = accountService.findCustomerByEmail(VALID_EMAIL);
+            Person wantedPerson = accountService.findCustomerByEmail(VALID_EMAIL);
         } catch (Exception e) {
-        assertEquals("Customer not found", e.getMessage());
+            assertEquals("Customer not found", e.getMessage());
         }
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testReadCustomerByInvalidRole(){
@@ -293,14 +338,17 @@ public class AccountServiceTests {
         //Case when the person found is an employee and not a customer
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
         try {
-           Person wantedPerson = accountService.findCustomerByEmail(VALID_EMAIL);
+            Person wantedPerson = accountService.findCustomerByEmail(VALID_EMAIL);
         } catch (Exception e) {
-        assertEquals("No customer with this email", e.getMessage());
+            assertEquals("No customer with this email", e.getMessage());
         }
     }
-
-    //EMPLOYEES TESTS
-
+    
+    //EMPLOYEES TESTS----------------------
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateValidEmployee(){
@@ -308,15 +356,15 @@ public class AccountServiceTests {
         // Whenever we save personRepositoy.save(person) -> it will return person, same for customer and cart
         when(personRepository.save(any(Person.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
         when(employeeRepository.save(any(Employee.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
-
+        
         //Act
         Person createdEmployee = accountService.createEmployee(VALID_EMAIL, VALID_NAME);
-
+        
         //Assert
         assertNotNull(createdEmployee);
         assertEquals(VALID_NAME, createdEmployee.getName());
         assertEquals(VALID_EMAIL, createdEmployee.getEmail());
-
+        
         //The password saved is encrypted, so its need to be the same as the basePassword : GameOn123
         String preSetPassword = "GameOn123!";
         String encryptedPassword = createdEmployee.getEncryptedPassword(preSetPassword);
@@ -328,7 +376,10 @@ public class AccountServiceTests {
         //Verifiy we saved once
         verify(personRepository, times(1)).save(createdEmployee);
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidEmployeeAlreadyCreated(){
@@ -339,68 +390,83 @@ public class AccountServiceTests {
         Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, employeeRole);
         // Whenever we save personRepositoy.save(person) -> it will return person, same for customer and cart
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob); // Bob will be already created in the data base
-
+        
         //Test if it's possible to create a new employee if there is an existing email in the data base.
         try {
             Person createdEmployee = accountService.createEmployee(VALID_EMAIL, VALID_NAME);
-         } catch (Exception e) {
-         assertEquals("Email is already taken", e.getMessage());
-         }
-
+        } catch (Exception e) {
+            assertEquals("Email is already taken", e.getMessage());
+        }
+        
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidEmployeeEmail(){
-
+        
         //Test if it's possible to create a new employee with an invalid email
         try {
             Person createdEmployee = accountService.createEmployee(INVALID_EMAIL, VALID_NAME);
-         } catch (Exception e) {
-         assertEquals("Email is invalid", e.getMessage());
-         }
-
+        } catch (Exception e) {
+            assertEquals("Email is invalid", e.getMessage());
+        }
+        
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidEmployeeSpacesEmail(){
-
+        
         //Test if it's possible to create a new employee with an invalid email
         try {
             Person createdEmployee = accountService.createEmployee("bo b", VALID_NAME);
-         } catch (Exception e) {
+        } catch (Exception e) {
          assertEquals("Email is invalid", e.getMessage());
-         }
-
+        }
+        
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidEmployeeEmptyEmail(){
-
+        
         //Test if it's possible to create a new employee with an invalid email
         try {
             Person createdEmployee = accountService.createEmployee("", VALID_NAME);
-         } catch (Exception e) {
-         assertEquals("Email is invalid", e.getMessage());
-         }
-
+        } catch (Exception e) {
+            assertEquals("Email is invalid", e.getMessage());
+        }
+        
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testCreateInvalidEmployeeName(){
-
+        
         //Test if it's possible to create a new employee with an invalid name
         try {
             Person createdEmployee = accountService.createEmployee(VALID_EMAIL, null);
-         } catch (Exception e) {
-         assertEquals("Name is invalid", e.getMessage());
-         }
-
+        } catch (Exception e) {
+            assertEquals("Name is invalid", e.getMessage());
+        }
+         
     }
-
+        
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testReadEmployeeByValidEmail(){
@@ -413,25 +479,28 @@ public class AccountServiceTests {
         bob.setPassword(encryptedPassword);
         
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
-
+        
         //Act : find employee
         Person wantedEmployee = accountService.findEmployeeByEmail(VALID_EMAIL);
-
+        
         //Assert
         assertNotNull(wantedEmployee);
         assertEquals(bob.getName(), wantedEmployee.getName());
         assertEquals(bob.getEmail(), wantedEmployee.getEmail());
-
+        
         //The password saved is encrypted, so we need to compare the encrypted password
         
         assertEquals(encryptedPassword, wantedEmployee.getPassword()); 
         
         //Check the customer class atributes
         Employee wantedEmployeeRole = (Employee) wantedEmployee.getRole(0);
-
+        
         assertEquals(true, wantedEmployeeRole.getIsEmployed());  //Employee role attribute
     }
-
+        
+    /**
+     *  Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testReadEmployeeByInvalidEmail(){
@@ -445,17 +514,20 @@ public class AccountServiceTests {
         
         //CASE when there is no employee with the given email
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(null);
-
+        
         //Act : find employee
         try {
             Person wantedEmployee = accountService.findEmployeeByEmail(VALID_EMAIL);
-         } catch (Exception e) {
-         assertEquals("Employee not found", e.getMessage());
-         }
+        } catch (Exception e) {
+            assertEquals("Employee not found", e.getMessage());
+        }
         
-
+        
     }
-
+        
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testDesactivateEmployee(){
@@ -466,12 +538,12 @@ public class AccountServiceTests {
         Person bob = new Person(VALID_EMAIL, VALID_NAME, preSetPassword, employeeRole);
         String encryptedPassword = bob.getEncryptedPassword(preSetPassword);
         bob.setPassword(encryptedPassword);
-        
+            
         //CASE where bob is an existing employee
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
         when(personRepository.save(any(Person.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
         when(employeeRepository.save(any(Employee.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
-
+        
         //Act: fire employee
         accountService.deactivateEmployee(VALID_EMAIL);
         
@@ -479,24 +551,30 @@ public class AccountServiceTests {
         verify(personRepository, times(1)).save(bob);
         verify(employeeRepository, times(1)).save(employeeRole);
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testDeactivateIncorrectEmployee(){
         
         //CASE when there is no employee with the given email
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(null);
-
+        
         //Act : find employee
         try {
             accountService.deactivateEmployee(VALID_EMAIL);
-         } catch (Exception e) {
-         assertEquals("Employee not found", e.getMessage());
-         }
+        } catch (Exception e) {
+            assertEquals("Employee not found", e.getMessage());
+        }
         
-
+        
     }
-
+    
+    /**
+     * Testing the creation of a valid employee
+     */
     @SuppressWarnings("null")
     @Test
     public void testDeactivateEmployeeWrongPerson(){
@@ -508,22 +586,12 @@ public class AccountServiceTests {
         String encryptedPassword = bob.getEncryptedPassword(VALID_PASSWORD);
         bob.setPassword(encryptedPassword); // this simulates the create customer
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
-
+        
         //Act : find employee
         try {
             accountService.deactivateEmployee(VALID_EMAIL);
-         } catch (Exception e) {
-         assertEquals("No employee with this email", e.getMessage());
-         }
-        
-
+        } catch (Exception e) {
+            assertEquals("No employee with this email", e.getMessage());
+        }
     }
-
-    
-
-
-
-
-
-    
 }

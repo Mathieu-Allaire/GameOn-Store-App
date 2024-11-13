@@ -29,10 +29,12 @@ import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.model.RequestType;
 import ca.mcgill.ecse321.GameOn.model.Employee;
 import ca.mcgill.ecse321.GameOn.model.GameRequest;
-import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.model.Game.GameStatus;
 
-
+/**
+ * These are tests for the GameService class
+ * @author Joel Boyer, Luis Jarquin, Neeshal Imrit
+ */
 @SpringBootTest
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class GameServiceTests {
@@ -52,18 +54,19 @@ public class GameServiceTests {
 
     private static final String VALID_URL = "testURL";
     private static final String VALID_GAME_NAME = "testGame";
-    private static final String VALID_GAME_NAME2 = "testGame2";
 
     private static final String VALID_DESCRIPTION = "testDescription";
     private static final int VALID_PRICE = 10;
     private static final int VALID_QUANTITY = 5;
     private static final String VALID_CATEGORY_NAME = "testCategory";
     private static final Category VALID_CATEGORY = new Category(VALID_CATEGORY_NAME);
-    private static final RequestType VALID_REQUEST_TYPE = RequestType.Create;
 
     private static final String INVALID_GAME_NAME = "";
     private static final String INVALID_CATEGORY_NAME = "";
     
+    /**
+     * Tests the creation of a valid category
+     */
     @Test
     public void testCreateValidCategory(){
         // Arrange
@@ -77,6 +80,9 @@ public class GameServiceTests {
         assertEquals(VALID_CATEGORY_NAME, category.getName());
     }
 
+    /**
+     * Tests the creation of an invalid category
+     */
     @Test
     public void testCreateInvalidCategory(){
         // Arrange
@@ -90,6 +96,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Name is invalid");
     }
 
+    /**
+     * Tests the deletion of a valid category
+     */
     @Test
     public void TestDeleteCategory(){
         // Arrange
@@ -112,6 +121,9 @@ public class GameServiceTests {
         verify(categoryMockRepo, times(1)).delete(category);
     }
 
+    /**
+     * Tests the deletion of an invalid category
+     */
     @Test
     public void testDeleteCategoryWithInvalidName(){
         // Arrange
@@ -125,6 +137,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Name is invalid");
     }
 
+    /**
+     * Tests the deletion of a category that does not exist
+     */
     @Test
     public void testDeleteInvalidCategory(){
         // Arrange
@@ -141,6 +156,9 @@ public class GameServiceTests {
         assertEquals("Category does not exist", ex.getMessage());
     }
 
+    /**
+     * Tests the retrieval of all categories
+     */
     @Test
     public void testGetAllCategories(){
         // Arrange
@@ -153,6 +171,9 @@ public class GameServiceTests {
         verify(categoryMockRepo, times(1)).findAll();
     }
 
+    /**
+     * Tests the retrieval of a category by name
+     */
     @Test
     public void testCreateValidGame(){
         // Arrange
@@ -172,6 +193,9 @@ public class GameServiceTests {
         assertEquals(VALID_CATEGORY_NAME, game.getCategory().getName());
     }
 
+    /**
+     * Tests the creation of an invalid game
+     */
     @Test
     public void testCreateGameInvalidName(){
         // Arrange
@@ -186,6 +210,9 @@ public class GameServiceTests {
 
     }
 
+    /**
+     * Tests the creation of an invalid game
+     */
     @Test
     public void testCreateGameInvalidPicture(){
         // Arrange
@@ -199,6 +226,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Picture is invalid");
     }
 
+    /**
+     * Tests the creation of an invalid game
+     */
     @Test
     public void testCreateGameInvalidDescription(){
         // Arrange
@@ -212,6 +242,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Description is invalid");
     }
 
+    /**
+     * Tests the creation of an invalid game
+     */
     @Test
     public void testCreateGameInvalidPrice(){
         // Arrange
@@ -225,6 +258,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Price must be greater than 0");
     }
 
+    /**
+     * Tests the creation of an invalid game
+     */
     @Test
     public void testCreateGameInvalidQuantity(){
         // Arrange
@@ -238,6 +274,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Quantity must be greater than 0");
     }
 
+    /**
+     * Tests the creation of an invalid game
+     */
     @Test
     public void testCreateGameInvalidCategory(){
         // Arrange
@@ -251,6 +290,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Category is invalid");
     }
 
+    /**
+     * Tests the creation of an invalid game
+     */
     @Test
     public void testCreateGameAlreadyExists(){
         // Arrange
@@ -265,6 +307,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Game already exists");
     }
 
+    /**
+     * Tests the deletion of a valid game
+     */
     @Test
     public void testDeleteGame(){
         // Arrange
@@ -279,6 +324,9 @@ public class GameServiceTests {
         verify(gameMockRepo, times(1)).delete(game);
     }
 
+    /**
+     * Tests the deletion of an invalid game
+     */
     @Test void testDeleteInvalidGame(){
         // Arrange
         when(gameMockRepo.findGameByName(INVALID_GAME_NAME)).thenReturn(null);
@@ -291,6 +339,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Name is invalid");
     }
 
+    /**
+     * Tests the deletion of a game that does not exist
+     */
     @Test void testDeleteGameDoesNotExist(){
         // Arrange
         when(gameMockRepo.findGameByName(VALID_GAME_NAME)).thenReturn(null);
@@ -303,6 +354,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Game does not exist");
     }
 
+    /**
+     * Tests the retrieval of all games
+     */
     @Test
     public void testGetAllGames(){
         // Arrange
@@ -315,6 +369,9 @@ public class GameServiceTests {
         verify(gameMockRepo, times(1)).findAll();
     }
 
+    /**
+     * Tests the retrieval of a game by name
+     */
     @Test
     public void testFindGameByName(){
         // Arrange
@@ -334,6 +391,9 @@ public class GameServiceTests {
         assertEquals(VALID_CATEGORY, foundGame.getCategory());
     }
 
+    /**
+     * Tests the retrieval of an invalid game by name
+     */
     @Test
     public void testFindGameInvalidName(){
         // Arrange
@@ -347,6 +407,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Name is invalid");
     }
 
+    /**
+     * Tests the retrieval of a game that does not exist
+     */
     @Test
     public void testFindGameDoesNotExist(){
         // Arrange
@@ -360,6 +423,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Game does not exist");
     }
 
+    /**
+     * Tests the retrieval of all games in a category
+     */
     @Test
     public void testGetGamesInCategory(){
         // Arrange
@@ -380,6 +446,9 @@ public class GameServiceTests {
         assertEquals(game2, category.getGames().get(1));
     }
 
+    /**
+     * Tests the retrieval of games in an invalid category
+     */
     @Test
     public void testGetGamesInInvalidCategoryName(){
         // Arrange
@@ -393,6 +462,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Name is invalid");
     }
 
+    /**
+     * Tests the retrieval of games in a category that does not exist
+     */
     @Test
     public void testGetGamesInCategoryDoesNotExist(){
         // Arrange
@@ -406,8 +478,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Category does not exist");
     }
 
-    // |--------------------------------------------------------------------------
-   
+    /**
+     * Tests the creation of a game request
+     */
     @Test
     public void testCreateGameRequest(){
         // Arrange
@@ -430,13 +503,14 @@ public class GameServiceTests {
         assertEquals(RequestType.Create, gameRequest.getRequestType());
     }
     
+    /**
+     * Tests the creation of a game request with an invalid employee email
+     */
     @Test
     public void testCreateGame(){
-        // String aPicture, String aName, String aDescription, int aPrice, int aQuantity, String aCategory
         // Arrange
         Category category = new Category(VALID_CATEGORY_NAME);
         when(categoryMockRepo.findCategoryByName(VALID_CATEGORY_NAME)).thenReturn(category);
-        // Game game = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
         when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
         // Act
@@ -452,6 +526,9 @@ public class GameServiceTests {
         assertEquals(VALID_CATEGORY_NAME, createdGame.getCategory().getName());
     }
     
+    /**
+     * Tests the creation of a game request with an invalid employee email
+     */
     @Test
     public void testCreateInvalidGameRequest(){
         // Arrange
@@ -465,7 +542,10 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Request creator is invalid");
 
     }
-     
+    
+    /**
+     * Tests the creation of a game request with an invalid game name
+     */
     @Test
     public void testCreateGameRequestInvalidGame(){
         // Arrange
@@ -480,6 +560,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Requested game is invalid");
     }
     
+    /**
+     * Tests the creation of a game request with an invalid request type
+     */
     @Test
     public void testCreateGameRequestInvalidRequestType(){
         // Arrange
@@ -494,6 +577,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Request type is invalid");
     }
 
+    /**
+     * Tests the retrieval of a game request by id
+     */
     @Test
     public void testApproveCreateGameRequest(){
         // Arrange
@@ -512,6 +598,9 @@ public class GameServiceTests {
         assertEquals(GameStatus.Available, game.getGameStatus());
     }
 
+    /**
+     * Tests the retrieval of a game request by id
+     */
     @Test
     public void testApproveArchiveGameRequest(){
         // Arrange
@@ -531,6 +620,9 @@ public class GameServiceTests {
         assertEquals(GameStatus.Unavailable, game.getGameStatus());
     }
 
+    /**
+     * Tests the retrieval of a game request by id
+     */
     @Test
     public void testGetGameQuantity(){
         // Arrange
@@ -545,6 +637,9 @@ public class GameServiceTests {
         assertEquals(VALID_QUANTITY, quantity);
     }
 
+    /**
+     * Tests the retrieval of a game request by id
+     */
     @Test
     public void testUpdateGameQuantity(){
         // Arrange
@@ -560,6 +655,9 @@ public class GameServiceTests {
         assertEquals(VALID_QUANTITY + 1, game.getQuantity());
     }
 
+    /**
+     * Tests the retrieval of a game request by id
+     */
     @Test
     public void testUpdateInvalidGameQuantity(){
         // Arrange
@@ -576,6 +674,9 @@ public class GameServiceTests {
         assertEquals(ex.getMessage(), "Quantity must be greater than 0");
     }
 
+    /**
+     * Tests the retrieval of a game request by id
+     */
     @Test
     public void testGetGamePrice(){
         // Arrange
@@ -590,6 +691,9 @@ public class GameServiceTests {
         assertEquals(VALID_PRICE, price);
     }
 
+    /**
+     * Tests the retrieval of a game request by id
+     */
     @Test
     public void testUpdateGamePrice(){
         // Arrange
@@ -605,6 +709,9 @@ public class GameServiceTests {
         assertEquals(VALID_PRICE + 1, game.getPrice());
     }
 
+    /**
+     * Tests the retrieval of a game request by id
+     */
     @Test
     public void testUpdateInvalidGamePrice(){
         // Arrange
