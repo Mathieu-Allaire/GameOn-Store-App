@@ -143,17 +143,55 @@ public class WishlistIntegrationTests {
     @Test
     @Order(2)
     public void TestAddValidGameToWishlist() {
+        //Arrange
         String res = "/wishlist-add";
+        WishlistRequestDto request = new WishlistRequestDto(VALID_GAME_NAME, VALID_EMAIL);
+
+        //Act
+        ResponseEntity<WishlistResponseDto> response = client.getForEntity(res, WishlistResponseDto.class);
+
+        //Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+        assertNotNull(response.getBody());
+        assertEquals(VALID_GAME_NAME, response.getBody().getGameName());
+
+
     }
     @Test
     @Order(2)
     public void TestAddInvalidGameToWishlist() {
+        //Arrange
         String res = "/wishlist-add";
+        WishlistRequestDto request = new WishlistRequestDto("Bruh", VALID_EMAIL);
+
+        //Act
+        ResponseEntity<WishlistResponseDto> response = client.getForEntity(res, WishlistResponseDto.class);
+
+        //Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        assertNotNull(response.getBody());
+        assertEquals("The game does not exist", response.getBody().toString() );
     }
     @Test
     @Order(2)
     public void TestAddGameToInvalidWishlist() {
+        //Arrange
         String res = "/wishlist-add";
+        WishlistRequestDto request = new WishlistRequestDto(VALID_GAME_NAME, "Ghost");
+
+        //Act
+        ResponseEntity<WishlistResponseDto> response = client.getForEntity(res, WishlistResponseDto.class);
+
+        //Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        assertNotNull(response.getBody());
+        assertEquals("Customer not found", response.getBody().toString() );
     }
 
     @Test
