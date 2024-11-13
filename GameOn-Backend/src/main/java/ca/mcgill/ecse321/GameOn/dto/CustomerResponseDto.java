@@ -1,5 +1,4 @@
 package ca.mcgill.ecse321.GameOn.dto;
-import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Person;
 
 public class CustomerResponseDto {

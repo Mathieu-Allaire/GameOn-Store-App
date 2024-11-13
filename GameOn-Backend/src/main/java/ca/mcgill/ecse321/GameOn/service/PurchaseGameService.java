@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 import java.sql.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,41 +31,84 @@ public class PurchaseGameService {
 
     /**
      * Method to retrieve Cart by ID
-     * @param id id of cart
-     * @throws IllegalArgumentException if id is negative
+     * @param cartId id of cart
+     * @throws IllegalArgumentException if cartId is negative
+     * @return List<SpecificGame> returns the list of specific games in a cart
      */
-
-    public Cart findCartByID(int id) {
-        if (id < 0) {
+    public List<SpecificGame> findListOfGamesInCart(int cartId) {
+        if (cartId < 0) {
             throw new IllegalArgumentException("ID is invalid.");
+        }
+        Cart cart = cartRepository.findCartById(cartId);
+        if (cart == null) {
+            throw new IllegalArgumentException("There are no cart with the ID: " + cartId + ".");
+        }
+        List<SpecificGame> specificGames = cart.getSpecificGames();
+        return specificGames;
+    }
+
+    /**
+     * Method to retrieve Cart by ID
+     * @param sgId, specific game id
+     * @param cartId, cart id
+     * @return SpecificGame, returns the the SpecificGame in the cart
+     */
+    public SpecificGame findSpecificGameByIdInCart(int sgId, int cartId) {
+        if (cartId < 0) {
+            throw new IllegalArgumentException("ID is invalid.");
+        }
+        if (sgId < 0) {
+            throw new IllegalArgumentException("ID is invalid.");
+        }
+        Cart cart = cartRepository.findCartById(cartId);
+        if (cart == null) {
+            throw new IllegalArgumentException("There are no cart with the ID: " + cartId + ".");
+        }
+        List<SpecificGame> specificGames = cart.getSpecificGames();
+        for (SpecificGame sg : specificGames) {
+            if (sg.getId() == sgId) {
+                return sg;
+            }
+        }
+        throw new IllegalArgumentException("There are no specific games with the id " + sgId + ".");
+    }
+     /**
+     * Method to return the list of games from the cart
+     * @param id
+     * @return id, cart id
+     * @throws IllegalArgumentException if input is invalid
+     */
+    public List<SpecificGame> getListOfSpecificGamesById(int id) {
+        if (id < 0 ) {
+            throw new IllegalArgumentException("Cart ID is invalid.");
         }
         Cart cart = cartRepository.findCartById(id);
         if (cart == null) {
             throw new IllegalArgumentException("There are no cart with the ID: " + id + ".");
         }
-        return cart;
+        return cart.getSpecificGames();
     }
-
     /**
-     * Method to retrieve Specific Game by ID
-     * @param id
-     * @throws IllegalArgumentException if id is negative
+     * Method to retrieve Game by ID
+     * @param name, the name of the game
+     * @return Game, the game
+     * @throws IllegalArgumentException if name is null or empty
      */
-
-    public SpecificGame findSpecificGameById(int id) {
-        if (id < 0) {
-            throw new IllegalArgumentException("ID is invalid.");
+    public Game findGameByName(String name) {
+        if (name == "" || name == null) {
+            throw new IllegalArgumentException("Name cant be empty");
         }
-        SpecificGame specificGame = specificGameRepository.findSpecificGameById(id);
-        if (specificGame == null) {
-            throw new IllegalArgumentException("There are no specific game with the ID: " + id + ".");
+        Game game = gameRepository.findGameByName(name);
+        if (game == null) {
+            throw new IllegalArgumentException("There are no game named " + name + ".");
         }
-        return specificGame;
+        return game;
     }
 
     /**
      * Method to retrieve Order by ID
-     * @param id
+     * @param id, returns the id
+     * @return Order, returns the order
      * @throws IllegalArgumentException if id is negative
      */
 
@@ -81,8 +125,9 @@ public class PurchaseGameService {
 
     /**
      * Method to add Specific Game to cart
-     * @param aGameName
-     * @param cartId
+     * @param aGameName, string being the name of the game
+     * @param cartId, cart id being the id of the cart
+     * @return Cart, returns the updated cart
      * @throws IllegalArgumentException if inputs are invalid
      */
     @Transactional
@@ -94,7 +139,7 @@ public class PurchaseGameService {
             throw new IllegalArgumentException("Name cannot be empty.");
         }
 
-        Cart cart = findCartByID(cartId);
+        Cart cart = cartRepository.findCartById(cartId);
         if (cart == null) {
             throw new IllegalArgumentException("There are no cart with the ID: " + cartId + ".");
         }
@@ -117,19 +162,20 @@ public class PurchaseGameService {
     /**
      * Method to remove a Specific Game from the cart
      * @param specificGame
-     * @param id
+     * @param cartId
+     * @return Cart, the updated cart
      * @throws IllegalArgumentException if inputs are invalid
      */
     @Transactional
-    public void removeSpecificGameFromCart(int specificGameId, int cartId) {
+    public Cart removeSpecificGameFromCart(int specificGameId, int cartId) {
         if (cartId < 0) {
             throw new IllegalArgumentException("Cart ID is invalid.");
         }
         if (specificGameId < 0) {
             throw new IllegalArgumentException("Specific Game ID is invalid.");
         }
-        Cart cart = findCartByID(cartId);
-        SpecificGame specificGame = findSpecificGameById(specificGameId);
+        Cart cart = cartRepository.findCartById(cartId);
+        SpecificGame specificGame = findSpecificGameByIdInCart(specificGameId, cartId);
         if (cart == null) {
             throw new IllegalArgumentException("There are no cart with the ID: " + cartId + ".");
         }
@@ -137,20 +183,21 @@ public class PurchaseGameService {
             throw new IllegalArgumentException("This game is not in the cart.");
         }
         cart.removeSpecificGame(specificGame);
-        cartRepository.save(cart);
+        return cartRepository.save(cart);
     }
 
      /**
      * Method to remove all games from the cart
      * @param id
+     * @return Cart the updated cart
      * @throws IllegalArgumentException if id is negative
      */
     @Transactional
-    public void removeAllGamesFromCart(int id) {
+    public Cart removeAllGamesFromCart(int id) {
         if (id < 0) {
             throw new IllegalArgumentException("Cart ID is invalid.");
         }
-        Cart cart = findCartByID(id);
+        Cart cart = cartRepository.findCartById(id);
         if (cart == null) {
             throw new IllegalArgumentException("Cart cannot be null.");
         }
@@ -160,11 +207,12 @@ public class PurchaseGameService {
         }
 
         cart.removeAllGamesFromCart();
-        cartRepository.save(cart);
+        return cartRepository.save(cart);
     }
     /**
      * Method to create an order from a cart after a transaction
      * @param id
+     * @return Order, the new order created
      * @throws IllegalArgumentException if id is negative
      */
     @Transactional
@@ -172,7 +220,7 @@ public class PurchaseGameService {
         if (id < 0) {
             throw new IllegalArgumentException("ID is invalid.");
         }
-        Cart cart = findCartByID(id);
+        Cart cart = cartRepository.findCartById(id);
         if (cart == null) {
             throw new IllegalArgumentException("Cart cannot be null.");
         }
