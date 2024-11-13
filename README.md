@@ -47,13 +47,13 @@ Joseph Feghaly | 15
 
 # Deliverable 2
 ## Individual Effort
-Person | Hours |
---- | --- |
-Camilo Berdugo | 25
-Neeshal Imrit | 25
-Luis Jarquin | 25
-Mathieu Allaire | 24
-Joel Boyer | 23
-Joseph Feghaly | 23
+Person | Hours | Tasks Done|
+--- | --- |---|
+Camilo Berdugo | 25| - Added cart to the constructor of customer and fix all the tests that failed - Account Service / with Luis - WishlistLink Service with Neeshal - AccountTestServices - WishListTestServices - AccountControllerTests - Customer Request/Response DTO- Employee Request/Response DTO|
+Neeshal Imrit | 25||
+Luis Jarquin | 25||
+Mathieu Allaire | 24||
+Joel Boyer | 23||
+Joseph Feghaly | 23||
 ---
 [Deliverable 2 report](https://github.com/McGill-ECSE321-Fall2024/project-group-3/wiki/Deliverable-2)
