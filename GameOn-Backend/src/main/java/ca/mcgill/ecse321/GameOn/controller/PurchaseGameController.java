@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 /**
  * this class allows us to control the purchase of games
- * @author Neeshal Imrit
+ * @author Neeshal Imrit, Joseph Feghaly
  */
 @RestController
 public class PurchaseGameController {
@@ -83,7 +83,7 @@ public class PurchaseGameController {
      * @param addToCartRequestDto
      * @return a ResponseEntity containing the CartResponseDto or an error message
      */
-    @PostMapping("/addToCart")
+    @PostMapping("/game-add")
     public ResponseEntity<?> addGameToCart(@Valid @RequestBody AddToCartRequestDto addToCartRequestDto){
         try{
             Cart aCart = purchaseGameService.addGameToCart(addToCartRequestDto.getGameName(), addToCartRequestDto.getCustomerId());
@@ -99,9 +99,20 @@ public class PurchaseGameController {
      * @param specificGameInCartDto
      * @return the http status
      */
-    @PostMapping("/removeFromCart") //done 
+    @PostMapping("/game-remove/{dto}") //done 
     public ResponseEntity<?> removeGameFromCart(@Valid @RequestBody SpecificGameInCartDto specificGameInCartDto){
         try{
+            purchaseGameService.removeSpecificGameFromCart(specificGameInCartDto.getSpecificGameId(), specificGameInCartDto.getCartId());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/game-remove/{sgid}/{cid}") //done 
+    public ResponseEntity<?> removeGameFromCart(@PathVariable("sgId") int sgId, @PathVariable("cId") int cId){
+        try{
+            SpecificGameInCartDto specificGameInCartDto = new SpecificGameInCartDto(sgId, cId);
             purchaseGameService.removeSpecificGameFromCart(specificGameInCartDto.getSpecificGameId(), specificGameInCartDto.getCartId());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
@@ -114,8 +125,8 @@ public class PurchaseGameController {
      * @param cartId
      * @return the http status
      */
-    @PostMapping("/removeAllFromCart/{cartId}")
-    public ResponseEntity<?> removeAllGamesFromCart(@PathVariable int cartId){
+    @PostMapping("/remove-all/{id}")
+    public ResponseEntity<?> removeAllGamesFromCart(@PathVariable("id") int cartId){
         try{
             purchaseGameService.removeAllGamesFromCart(cartId);
             return new ResponseEntity<>(HttpStatus.OK);
