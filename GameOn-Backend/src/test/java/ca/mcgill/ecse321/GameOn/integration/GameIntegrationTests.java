@@ -18,11 +18,20 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
 import ca.mcgill.ecse321.GameOn.dto.CategoryRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.CategoryResponseDto;
+import ca.mcgill.ecse321.GameOn.dto.EmployeeRequestDto;
+import ca.mcgill.ecse321.GameOn.dto.EmployeeResponseDto;
 import ca.mcgill.ecse321.GameOn.dto.GameCreateDto;
+import ca.mcgill.ecse321.GameOn.dto.GameReqRequestDto;
+import ca.mcgill.ecse321.GameOn.dto.GameRequestResponseDto;
 import ca.mcgill.ecse321.GameOn.dto.GameResponseDTO;
 import ca.mcgill.ecse321.GameOn.repository.GameRepository;
+import ca.mcgill.ecse321.GameOn.repository.GameRequestRepository;
+import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
 import ca.mcgill.ecse321.GameOn.repository.CategoryRepository;
+import ca.mcgill.ecse321.GameOn.repository.EmployeeRepository;
 import ca.mcgill.ecse321.GameOn.model.Category;
+import ca.mcgill.ecse321.GameOn.model.Game;
+import ca.mcgill.ecse321.GameOn.model.GameRequest;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -35,6 +44,13 @@ public class GameIntegrationTests {
     private GameRepository gameRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
+    @Autowired
+    private PersonRepository personRepo;
+    @Autowired
+    private GameRequestRepository gameRequestRepository;
+
 
     private static final String GAME_NAME2 = "Test Game 2";
     private static final String GAME_NAME = "Test Game";
@@ -44,12 +60,21 @@ public class GameIntegrationTests {
     private static final int GAME_QUANTITY = 10;
     private static final String CATEGORY_NAME = "Test Category";
 
+    //Attributes for employee
+    private static final Boolean VALID_IS_EMPLOYED = true;
+    private static final String VALID_EMAIL_EMPLOYEE = "james@gmail.com"; // no spaces,contain @ and . 
+    private static final String VALID_NAME_EMPLOYEE = "James"; // at least one letter
+
     @AfterAll
     public void clearDatabase() {
         gameRepository.deleteAll();
         categoryRepository.deleteAll();
+        personRepo.deleteAll();
+        gameRequestRepository.deleteAll();
+        employeeRepository.deleteAll();
     }
 
+    @SuppressWarnings("null")
     @Test
     @Order(1)
     public void testCreateCategory() {
@@ -68,6 +93,7 @@ public class GameIntegrationTests {
         assertEquals(CATEGORY_NAME, aCategory.getName());
     }
 
+    @SuppressWarnings("null")
     @Test
     @Order(2)
     public void testGetValidCategoryByName(){
@@ -157,6 +183,7 @@ public class GameIntegrationTests {
     }
 
 
+    @SuppressWarnings("null")
     @Test
     @Order(8)
     public void testCreateGame() {
@@ -208,6 +235,7 @@ public class GameIntegrationTests {
         assertEquals("Game already exists",response.getBody());
     }
 
+    @SuppressWarnings("null")
     @Test
     @Order(10)
     public void testFindAllGames(){
@@ -223,6 +251,7 @@ public class GameIntegrationTests {
         assertEquals(GAME_NAME2, response.getBody()[1].getName());
     }
 
+    @SuppressWarnings("null")
     @Test
     @Order(11)
     public void testFindGameByName(){
@@ -252,6 +281,7 @@ public class GameIntegrationTests {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
+    @SuppressWarnings("null")
     @Test
     @Order(13)
     public void testFindGameByCategory(){
@@ -283,6 +313,7 @@ public class GameIntegrationTests {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
+    @SuppressWarnings("null")
     @Test
     @Order(15)
     public void testUpdateGameQuantity(){
@@ -326,6 +357,7 @@ public class GameIntegrationTests {
         assertEquals("Quantity must be greater than 0",response.getBody());
     }
 
+    @SuppressWarnings("null")
     @Test
     @Order(18)
     public void testUpdateGamePrice(){
@@ -337,6 +369,7 @@ public class GameIntegrationTests {
         // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getName());
         assertEquals(GAME_NAME, response.getBody().getName());
         assertEquals(15, response.getBody().getPrice());
     }
@@ -369,6 +402,7 @@ public class GameIntegrationTests {
         assertEquals("Price must be greater than 0",response.getBody());
     }
 
+    @SuppressWarnings("null")
     @Test
     @Order(21)
     public void testGetAllCategories(){
@@ -382,4 +416,116 @@ public class GameIntegrationTests {
         assertEquals(1, response.getBody().length);
         assertEquals(CATEGORY_NAME, response.getBody()[0].getName());
     }
+        
+    @Test
+    @Order(22)
+    public void testCreateValidEmployee(){
+        //Create the wanted customerRequest
+        EmployeeRequestDto james = new EmployeeRequestDto(VALID_EMAIL_EMPLOYEE, VALID_NAME_EMPLOYEE);
+        //ACT
+        ResponseEntity<EmployeeResponseDto> response = client.postForEntity("/employee", james, EmployeeResponseDto.class);
+        
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        EmployeeResponseDto person = response.getBody();
+        assertNotNull(person);
+        assertEquals(VALID_EMAIL_EMPLOYEE, person.getEmail());
+        assertEquals(VALID_NAME_EMPLOYEE, person.getName());
+        assertEquals(VALID_IS_EMPLOYED, person.getIsEmployed());
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    @Order(23) 
+    public void testCreateGameRequest(){
+        // Arrange
+        String url = "/games/request";
+        GameReqRequestDto gameReq = new GameReqRequestDto(VALID_EMAIL_EMPLOYEE, GAME_NAME2, "Create");
+
+        // Act
+        ResponseEntity<GameRequestResponseDto> response = client.postForEntity(url, gameReq, GameRequestResponseDto.class);
+
+        // Assert
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals("Create",response.getBody().getRequestType());
+        assertEquals(GAME_NAME2,response.getBody().getRequestedGame());
+        assertEquals("Unavailable",response.getBody().getRequestedGameStatus());
+    }
+
+    @Test
+    @Order(24)
+    public void testCreateGameRequestInvalidGame(){
+        // Arrange
+        String url = "/games/request";
+        GameReqRequestDto gameReq = new GameReqRequestDto(VALID_EMAIL_EMPLOYEE, "InvalidGame", "Create");
+
+        // Act
+        ResponseEntity<?> response = client.postForEntity(url, gameReq, String.class);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Game does not exist",response.getBody());
+    }
+
+    @Test
+    @Order(25)
+    public void testCreateGameRequestInvalidEmployee(){
+        // Arrange
+        String url = "/games/request";
+        GameReqRequestDto gameReq = new GameReqRequestDto("InvalidEmployee", GAME_NAME, "Create");
+
+        // Act
+        ResponseEntity<?> response = client.postForEntity(url, gameReq, String.class);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Request creator does not exist",response.getBody());
+    }
+
+    @Test
+    @Order(26)
+    public void testCreateGameRequestInvalidRequestType(){
+        // Arrange
+        String url = "/games/request";
+        GameReqRequestDto gameReq = new GameReqRequestDto(VALID_EMAIL_EMPLOYEE, GAME_NAME, "InvalidRequest");
+
+        // Act
+        ResponseEntity<?> response = client.postForEntity(url, gameReq, String.class);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Request type is invalid",response.getBody());
+    }
+
+    @Test
+    @Order(27)
+    public void testDuplicateGameRequest(){
+        // Arrange
+        String url = "/games/request";
+        GameReqRequestDto gameReq = new GameReqRequestDto(VALID_EMAIL_EMPLOYEE, GAME_NAME2, "Create");
+
+        // Act
+        ResponseEntity<?> response = client.postForEntity(url, gameReq, String.class);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Game request already exists",response.getBody());
+    }
+  
+    @Test
+    @Order(28)
+    public void testApproveGameRequest(){
+        // Arrange
+        Game game = gameRepository.findGameByName(GAME_NAME2);
+        GameRequest gameRequest = gameRequestRepository.findGameRequestByresquestedGame(game);
+        Integer GAME_REQUEST_ID = gameRequest.getId();
+        String url = "/games/request/approve?" + "gameRequestId=" + GAME_REQUEST_ID;
+
+        // Act
+        ResponseEntity<?> response = client.postForEntity(url, null, String.class);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
 }

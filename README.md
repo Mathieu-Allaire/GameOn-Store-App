@@ -49,11 +49,11 @@ Joseph Feghaly | 15
 ## Individual Effort
 Person | Hours | Tasks Done|
 --- | --- |---|
-Camilo Berdugo | 25| - Added cart to the constructor of customer and fix all the tests that failed - Account Service / with Luis - WishlistLink Service with Neeshal - AccountTestServices - WishListTestServices / with Luis - AccountControllerTests - Customer Request/Response DTO|
-Neeshal Imrit | 25| - Modified Service methods in Game Service - Game Service Tests / with Luis & Joel - WishlistLink Service / with Camilo - GameController - GameControllerTests - Game Request DTO|
-Luis Jarquin | 25| - Game Service Tests refactoring tests / with Neeshal & Joel - Account Service / with Camilo - Slimming classes in model - Javadocs - Employee Request/Response DTO - WishListTestServices / with Camilo|
-Mathieu Allaire | 24| Review Service - Review Service Tests - Review Controller - Review Controller Tests|
-Joel Boyer | 23||
-Joseph Feghaly | 23||
+Camilo Berdugo | 35| <ul><li>Added cart to the constructor of customer and fix all the tests that failed</li> <li>Account Service / with Luis</li> <li>WishlistLink Service with Neeshal</li> <li>AccountTestServices</li> <li>WishListTestServices / with Luis</li> <li>AccountControllerTests</li> <li>Customer Request/Response DTO</li></ul>|
+Neeshal Imrit | 36| <ul><li>Modified Service methods in Game Service</li> <li>Game Service Tests / with Luis & Joel</li> <li>WishlistLink Service / with Camilo </li> <li>GameController </li> <li>GameControllerTests </li> <li>Game Request DTO</li> <li>Wishlist Controller</li> <li>Wishlist Integeration Tests</li>   </ul>|
+Luis Jarquin | 28| <ul><li>Game Service Tests refactoring tests / with Neeshal & Joel </li> <li>Account Service / with Camilo </li> <li>Slimming classes in model </li> <li>Employee Request/Response DTO </li> <li>WishListTestServices / with Camilo</li></ul>|
+Mathieu Allaire | 24| <ul><li>Review Service </li> <li>Review Service Tests </li> <li>Review Controller </li> <li>Review Controller Tests</li></ul>|
+Joel Boyer | 23| <ul><li>PurchaseGame Service and DTOs </li> <li>PurchaseGameService Unit Tests </li> <li>WishList Integration Tests/ with Neeshal </li> <li>SQA Plan </li> <li>Document RESTful Service Endpoints </li></ul>|
+Joseph Feghaly | 24| <ul><li>PurchaseGameService </li> <li>PurchaseGameIntegrationTests</li> <li>PurchaseGameController</li></ul>|
 ---
 [Deliverable 2 report](https://github.com/McGill-ECSE321-Fall2024/project-group-3/wiki/Deliverable-2)
