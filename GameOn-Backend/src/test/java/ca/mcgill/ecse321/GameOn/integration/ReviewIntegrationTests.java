@@ -84,7 +84,7 @@ public class ReviewIntegrationTests {
         assertEquals(VALID_CUSTOMER.getId(), createdReview.getCustomer().getId());
         assertEquals(VALID_MANAGER.getId(), createdReview.getManager().getId());
     }
-    /*
+
     @Test
     @Order(2)
     public void testReadValidReview() {
@@ -188,7 +188,7 @@ public class ReviewIntegrationTests {
         assertEquals(VALID_REPLY, updatedReview.getReply());
 
     }
-    */
+
 
 
 }
