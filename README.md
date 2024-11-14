@@ -51,7 +51,7 @@ Person | Hours | Tasks Done|
 --- | --- |---|
 Camilo Berdugo | 25| - Added cart to the constructor of customer and fix all the tests that failed - Account Service / with Luis - WishlistLink Service with Neeshal - AccountTestServices - WishListTestServices / with Luis - AccountControllerTests - Customer Request/Response DTO|
 Neeshal Imrit | 25| - Modified Service methods in Game Service - Game Service Tests / with Luis & Joel - WishlistLink Service / with Camilo - GameController - GameControllerTests - Game Request DTO|
-Luis Jarquin | 25| - Game Service Tests refactoring tests / with Neeshal & Joel - Account Service / with Camilo - Slimming classes in model - Javadocs - Employee Request/Response DTO - WishListTestServices / with Camilo|
+Luis Jarquin | 25| - Game Service Tests refactoring tests / with Neeshal & Joel - Account Service / with Camilo - Slimming classes in model - Employee Request/Response DTO - WishListTestServices / with Camilo|
 Mathieu Allaire | 24| Review Service - Review Service Tests - Review Controller - Review Controller Tests|
 Joel Boyer | 23| - PurchaseGame Service and DTOs - PurchaseGameService Unit Tests - WishList Integration Tests - SQA Plan - Document RESTful Service Endpoints -|
 Joseph Feghaly | 23||
