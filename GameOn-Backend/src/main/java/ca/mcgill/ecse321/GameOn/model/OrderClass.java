@@ -11,7 +11,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "\"order\"")
-public class Order
+public class OrderClass
 {
 
   //------------------------
@@ -36,7 +36,7 @@ public class Order
   // CONSTRUCTOR
   //------------------------
 
-  public Order(Date aPurchaseDate, Cart aCart, Customer aOrderCustomer)
+  public OrderClass(Date aPurchaseDate, Cart aCart, Customer aOrderCustomer)
   {
     purchaseDate = aPurchaseDate;
     boolean didAddCart = setCart(aCart);
@@ -52,7 +52,7 @@ public class Order
     }
   }
 
-  protected Order() {
+  protected OrderClass() {
   }
 
   //------------------------
@@ -89,8 +89,8 @@ public class Order
       return wasSet;
     }
     
-    Order existingOrder = aNewCart.getOrder();
-    if (existingOrder != null && !equals(existingOrder))
+    OrderClass existingOrderClass = aNewCart.getOrder();
+    if (existingOrderClass != null && !equals(existingOrderClass))
     {
       //Unable to setCart, the current cart already has a order, which would be orphaned if it were re-assigned
       return wasSet;

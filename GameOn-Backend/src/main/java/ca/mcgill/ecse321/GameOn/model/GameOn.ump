@@ -110,7 +110,7 @@ association
 
 association
 {
-  1 Cart cart -- 1 Order order;
+  1 Cart cart -- 1 Order orderClass;
   0..1 Cart cart -> * SpecificGame specificGame;
 }
   
@@ -125,7 +125,7 @@ association
   
 association
 {
-    0..1 Order order -> * SpecificGame orderGames;
+    0..1 Order orderClass -> * SpecificGame orderGames;
 }
 
 association

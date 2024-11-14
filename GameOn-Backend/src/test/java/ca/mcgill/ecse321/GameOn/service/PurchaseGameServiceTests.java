@@ -145,20 +145,20 @@ public class PurchaseGameServiceTests {
         String aBillingAddress = "434 Waterloo Street";
         Customer aCustomer = new Customer(aCardNum, aCardExpiryDate, aBillingAddress, aCart);
 
-        Order aOrder = new Order(aDate, aCart, aCustomer);
+        OrderClass aOrderClass = new OrderClass(aDate, aCart, aCustomer);
 
-        when(orderRepository.findOrderById(id)).thenReturn(aOrder);
+        when(orderRepository.findOrderById(id)).thenReturn(aOrderClass);
 
         //Act
-        Order order = purchaseGameService.findOrderById(id);
+        OrderClass orderClass = purchaseGameService.findOrderById(id);
 
         //Assert
-        assertNotNull(order);
-        assertEquals(aOrder.getPurchaseDate(), order.getPurchaseDate());
-        assertEquals(aOrder.getCart().getId(), order.getCart().getId());
-        assertEquals(aOrder.getOrderCustomer().getCardNum(), order.getOrderCustomer().getCardNum());
-        assertEquals(aOrder.getOrderCustomer().getCardExpiryDate(), order.getOrderCustomer().getCardExpiryDate());
-        assertEquals(aOrder.getOrderCustomer().getBillingAddress(), order.getOrderCustomer().getBillingAddress());
+        assertNotNull(orderClass);
+        assertEquals(aOrderClass.getPurchaseDate(), orderClass.getPurchaseDate());
+        assertEquals(aOrderClass.getCart().getId(), orderClass.getCart().getId());
+        assertEquals(aOrderClass.getOrderCustomer().getCardNum(), orderClass.getOrderCustomer().getCardNum());
+        assertEquals(aOrderClass.getOrderCustomer().getCardExpiryDate(), orderClass.getOrderCustomer().getCardExpiryDate());
+        assertEquals(aOrderClass.getOrderCustomer().getBillingAddress(), orderClass.getOrderCustomer().getBillingAddress());
     }
     @Test
     public void testFindInvalidOrder() {
@@ -386,18 +386,18 @@ public class PurchaseGameServiceTests {
 
         when(cartRepository.findCartById(aCart.getId())).thenReturn(aCart);
         when(cartRepository.save(any(Cart.class))).thenReturn(aCart);
-        when(orderRepository.save(any(Order.class))).thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+        when(orderRepository.save(any(OrderClass.class))).thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 
         //Act
-        Order order = purchaseGameService.createOrderFromCart(aCart.getId());
+        OrderClass orderClass = purchaseGameService.createOrderFromCart(aCart.getId());
 
         //Assert
-        assertNotNull(order);
-        assertEquals(aCart.getId(), order.getCart().getId());
-        assertEquals(aCustomer.getCardNum(), order.getOrderCustomer().getCardNum());
-        assertEquals(aCustomer.getCardExpiryDate(), order.getOrderCustomer().getCardExpiryDate());
-        assertEquals(aCustomer.getBillingAddress(), order.getOrderCustomer().getBillingAddress());
-        assertEquals(aCart.getSpecificGames().size(), order.getCart().getSpecificGames().size());
+        assertNotNull(orderClass);
+        assertEquals(aCart.getId(), orderClass.getCart().getId());
+        assertEquals(aCustomer.getCardNum(), orderClass.getOrderCustomer().getCardNum());
+        assertEquals(aCustomer.getCardExpiryDate(), orderClass.getOrderCustomer().getCardExpiryDate());
+        assertEquals(aCustomer.getBillingAddress(), orderClass.getOrderCustomer().getBillingAddress());
+        assertEquals(aCart.getSpecificGames().size(), orderClass.getCart().getSpecificGames().size());
     }
     @Test
     public void testCreateOrderFromInvalidCart() {

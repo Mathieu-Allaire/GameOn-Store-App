@@ -4,7 +4,7 @@ import ca.mcgill.ecse321.GameOn.dto.CartResponseDto;
 import ca.mcgill.ecse321.GameOn.dto.OrderResponseDto;
 import ca.mcgill.ecse321.GameOn.dto.SpecificGameResponseDto;
 import ca.mcgill.ecse321.GameOn.model.Cart;
-import ca.mcgill.ecse321.GameOn.model.Order;
+import ca.mcgill.ecse321.GameOn.model.OrderClass;
 import ca.mcgill.ecse321.GameOn.model.SpecificGame;
 import ca.mcgill.ecse321.GameOn.service.PurchaseGameService;
 import jakarta.validation.Valid;
@@ -70,8 +70,8 @@ public class PurchaseGameController {
     @GetMapping("/orders/{id}")
     public ResponseEntity<?> getOrder(@PathVariable int id) {
         try{
-            Order order = purchaseGameService.findOrderById(id);
-            OrderResponseDto response = new OrderResponseDto(order);
+            OrderClass orderClass = purchaseGameService.findOrderById(id);
+            OrderResponseDto response = new OrderResponseDto(orderClass);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -143,8 +143,8 @@ public class PurchaseGameController {
     @PostMapping("/createOrder/{cartId}")
     public ResponseEntity<?> createOrder(@PathVariable int cartId){
         try{
-            Order order = purchaseGameService.createOrderFromCart(cartId);
-            OrderResponseDto response = new OrderResponseDto(order);
+            OrderClass orderClass = purchaseGameService.createOrderFromCart(cartId);
+            OrderResponseDto response = new OrderResponseDto(orderClass);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.GameOn.repository;
 
+import ca.mcgill.ecse321.GameOn.model.OrderClass;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,14 +14,13 @@ import java.util.List;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ca.mcgill.ecse321.GameOn.model.Order;
 import ca.mcgill.ecse321.GameOn.model.SpecificGame;
 import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Cart;
 
 
 @SpringBootTest
-public class OrderTests {
+public class OrderClassTests {
     @Autowired
     private OrderRepository orderRepo;
     @Autowired
@@ -56,23 +56,23 @@ public class OrderTests {
 
         
         // Create Order
-        Order aOrder = new Order(aCustomerDate, cart, aCustomer);
-        aOrder = orderRepo.save(aOrder);
+        OrderClass aOrderClass = new OrderClass(aCustomerDate, cart, aCustomer);
+        aOrderClass = orderRepo.save(aOrderClass);
         
-        int id = aOrder.getId();
+        int id = aOrderClass.getId();
 
-        List<SpecificGame> orderGames = aOrder.getOrderGames();
+        List<SpecificGame> orderGames = aOrderClass.getOrderGames();
 
         // Act
-        Order result = orderRepo.findOrderById(id);
+        OrderClass result = orderRepo.findOrderById(id);
 
         // Assert
         assertNotNull(result);
-        assertEquals(result.getId(), aOrder.getId());
+        assertEquals(result.getId(), aOrderClass.getId());
         assertNotNull(orderGames);
-        assertEquals(result.getOrderCustomer().getBillingAddress(), aOrder.getOrderCustomer().getBillingAddress());
-        assertEquals(result.getOrderCustomer().getCardExpiryDate(), aOrder.getOrderCustomer().getCardExpiryDate());
-        assertEquals(result.getOrderCustomer().getCardNum(), aOrder.getOrderCustomer().getCardNum());
+        assertEquals(result.getOrderCustomer().getBillingAddress(), aOrderClass.getOrderCustomer().getBillingAddress());
+        assertEquals(result.getOrderCustomer().getCardExpiryDate(), aOrderClass.getOrderCustomer().getCardExpiryDate());
+        assertEquals(result.getOrderCustomer().getCardNum(), aOrderClass.getOrderCustomer().getCardNum());
     }
     
 }

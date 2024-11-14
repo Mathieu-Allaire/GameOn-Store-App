@@ -1,10 +1,7 @@
 package ca.mcgill.ecse321.GameOn.service;
 
-import ca.mcgill.ecse321.GameOn.model.Cart;
-import ca.mcgill.ecse321.GameOn.model.Customer;
-import ca.mcgill.ecse321.GameOn.model.Order;
-import ca.mcgill.ecse321.GameOn.model.SpecificGame;
-import ca.mcgill.ecse321.GameOn.model.Game;
+import ca.mcgill.ecse321.GameOn.model.*;
+import ca.mcgill.ecse321.GameOn.model.OrderClass;
 import ca.mcgill.ecse321.GameOn.repository.CartRepository;
 import ca.mcgill.ecse321.GameOn.repository.OrderRepository;
 import ca.mcgill.ecse321.GameOn.repository.SpecificGameRepository;
@@ -68,15 +65,15 @@ public class PurchaseGameService {
      * @throws IllegalArgumentException if id is negative
      */
 
-    public Order findOrderById(int id) {
+    public OrderClass findOrderById(int id) {
         if (id < 0) {
             throw new IllegalArgumentException("ID is invalid.");
         }
-        Order order = orderRepository.findOrderById(id);
-        if (order == null) {
+        OrderClass orderClass = orderRepository.findOrderById(id);
+        if (orderClass == null) {
             throw new IllegalArgumentException("There are no order with the ID: " + id + ".");
         }
-        return order;
+        return orderClass;
     }
 
     /**
@@ -168,7 +165,7 @@ public class PurchaseGameService {
      * @throws IllegalArgumentException if id is negative
      */
     @Transactional
-    public Order createOrderFromCart(int id) {
+    public OrderClass createOrderFromCart(int id) {
         if (id < 0) {
             throw new IllegalArgumentException("ID is invalid.");
         }
@@ -185,10 +182,10 @@ public class PurchaseGameService {
             gameRepository.save(game);
         }
 
-        Order order = new Order(aPurchaseDate, cart, aCustomer);
-        order = orderRepository.save(order);
+        OrderClass orderClass = new OrderClass(aPurchaseDate, cart, aCustomer);
+        orderClass = orderRepository.save(orderClass);
         cart.removeAllGamesFromCart();
         cartRepository.save(cart);
-        return order;
+        return orderClass;
     }
 }
