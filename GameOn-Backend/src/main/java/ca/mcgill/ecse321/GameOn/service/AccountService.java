@@ -3,19 +3,18 @@ package ca.mcgill.ecse321.GameOn.service;
 import java.sql.Date;
 import java.time.LocalDate;
 
-import ca.mcgill.ecse321.GameOn.model.Cart;
+import ca.mcgill.ecse321.GameOn.exception.GameOnException;
+import ca.mcgill.ecse321.GameOn.model.*;
 import ca.mcgill.ecse321.GameOn.repository.CartRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
 
-import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.repository.CustomerRepository;
 
-import ca.mcgill.ecse321.GameOn.model.Employee;
 import ca.mcgill.ecse321.GameOn.repository.EmployeeRepository;
 
 
@@ -51,32 +50,32 @@ public class AccountService {
     @Transactional
     public Person createCustomer(String aEmail, String aName, String aPassword, int aCardNum, Date aCardExpiryDate, String BillingAddress){
         if (aEmail == null || aEmail.trim().length() == 0 || aEmail.contains(" ") || !aEmail.contains("@") || !aEmail.contains(".")) {
-            throw new IllegalArgumentException("Email is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST,"Email is invalid");
         }
         //email cannot be null  
         if (personRepository.findPersonByEmail(aEmail) != null) {
-            throw new IllegalArgumentException("Email is already taken");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Email is already taken");
         }
         //verifies name
         if (aName == null || aName.trim().length() == 0) {
-            throw new IllegalArgumentException("Name is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Name is invalid");
         }
         //verifies password
         if (aPassword == null || aPassword.trim().length() == 0 || aPassword.length() < 8) {
-            throw new IllegalArgumentException("Password is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Password is invalid");
         }
         //verifies card number
         if (aCardNum < 0) {
-            throw new IllegalArgumentException("Card number is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST,"Card number is invalid");
         }
         //verifies date
         Date currentDate = Date.valueOf(LocalDate.now());
         if (aCardExpiryDate == null || aCardExpiryDate.before(currentDate)) {
-            throw new IllegalArgumentException("Card expiry date is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST,"Card expiry date is invalid");
         }
 
         if (BillingAddress == null || BillingAddress.trim().length() == 0) {
-            throw new IllegalArgumentException("Billing address is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST,"Billing address is invalid");
         }
 
         // ENCRYPT THE PASSWORD OUR OWN WAY
@@ -114,16 +113,16 @@ public class AccountService {
     public Person findCustomerByEmail(String email){
         //Verify email
         if (email == null || email.trim().length() == 0 || email.contains(" ") || email.contains("@") == false || email.contains(".") == false) {
-            throw new IllegalArgumentException("Email is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Email is invalid");
         }
         //search customer
         Person customer = personRepository.findPersonByEmail(email);
         if (customer == null) {
-            throw new IllegalArgumentException("Customer not found");
+            throw new GameOnException(HttpStatus.NOT_FOUND, "Customer not found");
         }
         //if the person is not a customer
         if(personRepository.findPersonByEmail(email).getRole(0).getClass() != Customer.class){
-            throw new IllegalArgumentException("No customer with this email");
+            throw new GameOnException(HttpStatus.NOT_FOUND, "No customer with this email");
         }
 
         return customer;
@@ -138,16 +137,16 @@ public class AccountService {
     public Person createEmployee(String aEmail, String aName){
         //Make sure we got a correct email 
         if (aEmail == null || aEmail.trim().length() == 0 || aEmail.contains(" ") || aEmail.contains("@") == false || aEmail.contains(".") == false) {
-            throw new IllegalArgumentException("Email is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Email is invalid");
         }
         //Make sure the name is not empty
         if (aName == null || aName.trim().length() == 0) {
-            throw new IllegalArgumentException("Name is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Name is invalid");
         }
 
         //Make sure no repeated emails
         if (personRepository.findPersonByEmail(aEmail) != null) {
-            throw new IllegalArgumentException("Email is already taken");
+            throw new GameOnException(HttpStatus.CONFLICT, "Email is already taken");
         }
 
         Employee employeeRole = new Employee(true);
@@ -168,16 +167,16 @@ public class AccountService {
      */
     public Person findEmployeeByEmail(String email){
         if (email == null || email.trim().length() == 0 || email.contains(" ") || email.contains("@") == false || email.contains(".") == false) {
-            throw new IllegalArgumentException("Email is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Email is invalid");
         }
         
         Person employee = personRepository.findPersonByEmail(email);
         if (employee == null) {
-            throw new IllegalArgumentException("Employee not found");
+            throw new GameOnException(HttpStatus.NOT_FOUND, "Employee not found");
         }
 
         if(personRepository.findPersonByEmail(email).getRole(0).getClass() != Employee.class){
-            throw new IllegalArgumentException("No employee with this email");
+            throw new GameOnException(HttpStatus.NOT_FOUND, "No employee with this email");
         }
     
         return employee;
@@ -191,16 +190,16 @@ public class AccountService {
     public boolean deactivateEmployee(String email){
         try{
             if (email == null || email.trim().length() == 0 || email.contains(" ") || email.contains("@") == false || email.contains(".") == false) {
-                throw new IllegalArgumentException("Email is invalid");
+                throw new GameOnException(HttpStatus.BAD_REQUEST, "Email is invalid");
             }
 
             Person employee = personRepository.findPersonByEmail(email);
             if (employee == null) {
-                throw new IllegalArgumentException("Employee not found");
+                throw new GameOnException(HttpStatus.NOT_FOUND, "Employee not found");
             }
 
             if(personRepository.findPersonByEmail(email).getRole(0).getClass() != Employee.class){
-                throw new IllegalArgumentException("No employee with this email");
+                throw new GameOnException(HttpStatus.NOT_FOUND, "No employee with this email");
             }
 
             Employee employeeRole = (Employee) employee.getRole(0);

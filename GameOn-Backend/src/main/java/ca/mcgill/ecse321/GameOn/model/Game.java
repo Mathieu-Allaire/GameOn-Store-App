@@ -27,6 +27,7 @@ public class Game
   private int price;
   private int quantity;
 
+  @SuppressWarnings("unused")
   private boolean isInStock;
 
   //Game State Machines

@@ -16,8 +16,6 @@ import ca.mcgill.ecse321.GameOn.dto.WishlistRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.WishlistResponseDto;
 import ca.mcgill.ecse321.GameOn.model.WishlistLink;
 import ca.mcgill.ecse321.GameOn.service.WishlistService;
-import ca.mcgill.ecse321.GameOn.dto.GameResponseDTO;
-import ca.mcgill.ecse321.GameOn.model.Game;
 import jakarta.validation.Valid;
 
 /**

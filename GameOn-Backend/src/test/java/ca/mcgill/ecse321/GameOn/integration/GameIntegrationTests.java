@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.GameOn.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Order;
@@ -435,6 +434,7 @@ public class GameIntegrationTests {
         assertEquals(VALID_IS_EMPLOYED, person.getIsEmployed());
     }
 
+    @SuppressWarnings("null")
     @Test
     @Order(23) 
     public void testCreateGameRequest(){

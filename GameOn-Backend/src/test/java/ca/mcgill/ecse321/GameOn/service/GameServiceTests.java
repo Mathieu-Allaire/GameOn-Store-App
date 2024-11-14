@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.GameOn.service;
 
+import ca.mcgill.ecse321.GameOn.exception.GameOnException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,7 +30,6 @@ import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.model.RequestType;
 import ca.mcgill.ecse321.GameOn.model.Employee;
 import ca.mcgill.ecse321.GameOn.model.GameRequest;
-import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.model.Game.GameStatus;
 
 
@@ -50,17 +50,16 @@ public class GameServiceTests {
     @InjectMocks
     private GameService service;
 
+    // Game attributes
     private static final String VALID_URL = "testURL";
     private static final String VALID_GAME_NAME = "testGame";
-    private static final String VALID_GAME_NAME2 = "testGame2";
-
     private static final String VALID_DESCRIPTION = "testDescription";
     private static final int VALID_PRICE = 10;
     private static final int VALID_QUANTITY = 5;
+
+    // Category attributes
     private static final String VALID_CATEGORY_NAME = "testCategory";
     private static final Category VALID_CATEGORY = new Category(VALID_CATEGORY_NAME);
-    private static final RequestType VALID_REQUEST_TYPE = RequestType.Create;
-
     private static final String INVALID_GAME_NAME = "";
     private static final String INVALID_CATEGORY_NAME = "";
     
@@ -458,7 +457,7 @@ public class GameServiceTests {
         String employeeEmail = null;
 
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             service.createGameRequest(employeeEmail, VALID_GAME_NAME, "Create");
         });
 
@@ -473,7 +472,7 @@ public class GameServiceTests {
         String employeeEmail = "testEmail@mcgill.ca";
 
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             service.createGameRequest(employeeEmail, game, "Create");
         });
 
@@ -487,7 +486,7 @@ public class GameServiceTests {
         String requestType = "Invalid";
         
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             service.createGameRequest(employeeEmail, VALID_GAME_NAME, requestType);
         });
 
@@ -571,7 +570,7 @@ public class GameServiceTests {
         when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
     
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             service.updateGameQuantity(VALID_GAME_NAME, -1);
         });
 
@@ -616,7 +615,7 @@ public class GameServiceTests {
         when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             service.updateGamePrice(VALID_GAME_NAME, -1);
         });
 

@@ -8,31 +8,24 @@ import ca.mcgill.ecse321.GameOn.dto.GameCreateDto;
 import ca.mcgill.ecse321.GameOn.dto.GameResponseDTO;
 import ca.mcgill.ecse321.GameOn.dto.WishlistResponseDto;
 import ca.mcgill.ecse321.GameOn.repository.*;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
 import java.sql.Date;
-import java.util.Arrays;
-import java.util.List;
+
 
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
-import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Category;
-import ca.mcgill.ecse321.GameOn.model.Cart;
-import ca.mcgill.ecse321.GameOn.model.Person;
-import ca.mcgill.ecse321.GameOn.model.WishlistLink;
 import ca.mcgill.ecse321.GameOn.dto.WishlistRequestDto;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(Lifecycle.PER_CLASS)
+@SuppressWarnings("null")
 public class WishlistIntegrationTests {
     
     @Autowired
@@ -54,8 +48,6 @@ public class WishlistIntegrationTests {
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
-    private CartRepository cartRepository;
-    @Autowired
     private PersonRepository personRepo;
     
     //Attributes for game
@@ -66,9 +58,6 @@ public class WishlistIntegrationTests {
     private static final int GAME_PRICE = 10;
     private static final int GAME_QUANTITY = 10;
     private static final String CATEGORY_NAME = "Test Category";
-
-    private Game game1;
-    private Game game2;
 
     //Attributes for customer
     private static final String VALID_EMAIL = "bob@gmail.com"; // no spaces,contain @ and . 
@@ -118,9 +107,7 @@ public class WishlistIntegrationTests {
         // Act
         ResponseEntity<GameResponseDTO> response = client.postForEntity("/games", gameCreateDto, GameResponseDTO.class);
         ResponseEntity<GameResponseDTO> response2 = client.postForEntity("/games", gameCreateDto2, GameResponseDTO.class);
-        game1 = gameRepository.findGameByName(GAME_NAME);
-        game2 = gameRepository.findGameByName(GAME_NAME2);
-
+   
         // Assert
         assertNotNull(response);
         assertNotNull(response2);
@@ -280,9 +267,5 @@ public class WishlistIntegrationTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(0, response.getBody().length);
     }
-
-
-
- 
         
 }

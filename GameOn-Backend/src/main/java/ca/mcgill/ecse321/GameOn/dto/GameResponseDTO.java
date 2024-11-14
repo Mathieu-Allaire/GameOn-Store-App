@@ -9,7 +9,6 @@ public class GameResponseDTO {
     private int quantity;
     private String category;
 
-    @SuppressWarnings("unused")
     protected GameResponseDTO() {
     }
 
