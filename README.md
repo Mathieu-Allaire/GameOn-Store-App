@@ -54,6 +54,6 @@ Neeshal Imrit | 25| <ul><li>Modified Service methods in Game Service</li> <li>Ga
 Luis Jarquin | 25| <ul><li>Game Service Tests refactoring tests / with Neeshal & Joel </li> <li>Account Service / with Camilo </li> <li>Slimming classes in model </li> <li>Employee Request/Response DTO </li> <li>WishListTestServices / with Camilo</li></ul>|
 Mathieu Allaire | 24| <ul><li>Review Service </li> <li>Review Service Tests </li> <li>Review Controller </li> <li>Review Controller Tests</li></ul>|
 Joel Boyer | 23| <ul><li>PurchaseGame Service and DTOs </li> <li>PurchaseGameService Unit Tests </li> <li>WishList Integration Tests/ with Neeshal </li> <li>SQA Plan </li> <li>Document RESTful Service Endpoints </li></ul>|
-Joseph Feghaly | 24|| <ul><li>PurchaseGameService</li> <li>PurchaseGameIntegrationTests</li> <li>PurchaseGameController</li></ul>|
+Joseph Feghaly | 24| <ul><li>PurchaseGameService </li> <li>PurchaseGameIntegrationTests</li> <li>PurchaseGameController</li></ul>|
 ---
 [Deliverable 2 report](https://github.com/McGill-ECSE321-Fall2024/project-group-3/wiki/Deliverable-2)
