@@ -76,7 +76,7 @@ public class WishlistService {
             throw new IllegalArgumentException("The Game is already at the customer wishlist");
         }
 
-        WishlistLink wishlist = new WishlistLink(game, customerRole);
+        WishlistLink wishlist = new WishlistLink(new WishlistLink.Key(game,customerRole));
         wishlistLinkRepository.save(wishlist);
         customerRole.addCustomerWish(wishlist);
         customerRepository.save(customerRole);
@@ -182,7 +182,7 @@ public class WishlistService {
      * @throws IllegalArgumentException if the customer is null
      */
     @Transactional
-    public List<Game> getAllGamesFromWishlist(String customerEmail) {
+    public List<WishlistLink> getAllGamesFromWishlist(String customerEmail) {
         if (customerEmail == null) {
             throw new GameOnException(HttpStatus.BAD_REQUEST, "Customer email cannot be null");
         }
@@ -195,14 +195,15 @@ public class WishlistService {
         }
       
         Customer customerRole = (Customer) aPerson.getRole(0);
-        List<WishlistLink> wishlistsCustomer = customerRole.getCustomerWish(); 
         
-        List<Game> games = new ArrayList<>();
-        // Get all games from wishlist
-        for (WishlistLink wishlistLink : wishlistsCustomer) {
-            games.add(wishlistLink.getWishlistGames()); //this will add the game associated to the wishlistlink into the List of games
+        Iterable<WishlistLink> allWishlistLink = wishlistLinkRepository.findAll();
+        List<WishlistLink> wishlistsCustomer = new ArrayList<>();
+        for (WishlistLink wishlistLink : allWishlistLink) {
+            if (wishlistLink.getKey().getCustomer().getId() == customerRole.getId()) {
+                wishlistsCustomer.add(wishlistLink);
+            }
         }
 
-        return games;
+        return wishlistsCustomer;
     }
 }

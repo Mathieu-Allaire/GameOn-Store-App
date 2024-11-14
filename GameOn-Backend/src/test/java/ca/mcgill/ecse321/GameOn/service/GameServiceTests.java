@@ -494,7 +494,7 @@ public class GameServiceTests {
 
         assertEquals(ex.getMessage(), "Request type is invalid");
     }
-
+ 
     @Test
     public void testApproveCreateGameRequest(){
         // Arrange
@@ -507,12 +507,14 @@ public class GameServiceTests {
         when(gameRequestMockRepo.save(any(GameRequest.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
         
         // Act
-        service.approveGameRequest(gameRequest);
+        service.approveGameRequest(gameRequest.getId());
 
         // Assert
         assertEquals(GameStatus.Available, game.getGameStatus());
     }
 
+
+ 
     @Test
     public void testApproveArchiveGameRequest(){
         // Arrange
@@ -526,7 +528,7 @@ public class GameServiceTests {
         when(gameRequestMockRepo.save(any(GameRequest.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
         // Act
-        service.approveGameRequest(gameRequest);
+        service.approveGameRequest(gameRequest.getId());
 
         // Assert
         assertEquals(GameStatus.Unavailable, game.getGameStatus());

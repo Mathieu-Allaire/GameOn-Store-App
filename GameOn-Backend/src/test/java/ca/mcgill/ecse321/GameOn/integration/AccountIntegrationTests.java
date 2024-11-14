@@ -75,6 +75,7 @@ public class AccountIntegrationTests {
         //ACT
         ResponseEntity<CustomerResponseDto> response = client.postForEntity("/customer", bob, CustomerResponseDto.class);
         
+        //Assert: Verify the attributes of the customerResponse, which are name and email
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         CustomerResponseDto person = response.getBody();
@@ -93,7 +94,7 @@ public class AccountIntegrationTests {
         // Act
         ResponseEntity<CustomerResponseDto> response = client.getForEntity(url, CustomerResponseDto.class);
 
-        // Assert
+        // Assert: Verify the attributes of the customerResponse, which are name and email
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         CustomerResponseDto person = response.getBody();
@@ -107,11 +108,12 @@ public class AccountIntegrationTests {
     @Test
     @Order(3)
     public void testCreateValidEmployee(){
-        //Create the wanted customerRequest
+        //Create the wanted EmployeeRequest
         EmployeeRequestDto james = new EmployeeRequestDto(VALID_EMAIL_EMPLOYEE, VALID_NAME_EMPLOYEE);
         //ACT
         ResponseEntity<EmployeeResponseDto> response = client.postForEntity("/employee", james, EmployeeResponseDto.class);
         
+        //Assert: Verify the attributes of the EmployeeResponse, which are name , email and isEmployed (boolean)
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         EmployeeResponseDto person = response.getBody();
@@ -131,7 +133,7 @@ public class AccountIntegrationTests {
         // Act
         ResponseEntity<EmployeeResponseDto> response = client.getForEntity(url, EmployeeResponseDto.class);
 
-        // Assert
+        // Assert: Verify the attributes of the EmployeeResponse, which are name , email and isEmployed (boolean)
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         EmployeeResponseDto person = response.getBody();
@@ -152,7 +154,7 @@ public class AccountIntegrationTests {
         String url = "/employee/" + VALID_EMAIL_EMPLOYEE;
         ResponseEntity<EmployeeResponseDto> response = client.getForEntity(url, EmployeeResponseDto.class);
 
-        // Assert
+        // Assert : Verify the attributes of the EmployeeResponse, which are name , email and isEmployed (boolean)
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         EmployeeResponseDto person = response.getBody();
@@ -173,7 +175,7 @@ public class AccountIntegrationTests {
         
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals(response.getBody(), "Email is already taken");
+        assertEquals(response.getBody(), "Email is already taken"); //Make sure that the system outputs an error message
     
     }
 
@@ -189,7 +191,7 @@ public class AccountIntegrationTests {
         // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals(response.getBody(), "Customer not found");
+        assertEquals(response.getBody(), "Customer not found");//Make sure that the system outputs an error message
 
     }
 

@@ -268,6 +268,11 @@ public class GameService {
 
         Game requestedGame = gameRepository.findGameByName(aRequestedGameName);
 
+        GameRequest aGameRequest = gameRequestRepository.findGameRequestByresquestedGame(requestedGame);
+        if (aGameRequest != null) {
+            throw new IllegalArgumentException("Game request already exists");
+        }
+
         if (requestedGame == null) {
             throw new GameOnException(HttpStatus.NOT_FOUND, "Game does not exist");
         }
@@ -294,15 +299,16 @@ public class GameService {
      * Method to approve a game request.
      * This changes the game status to available.
      * 
-     * @param aGameRequest
+     * @param aGameRequestid
      * @throws IllegalArgumentException if game or manager is invalid
      */
-    public void approveGameRequest(GameRequest aGameRequest){
-        if (aGameRequest == null) {
-            throw new GameOnException(HttpStatus.BAD_REQUEST, "Game Request is invalid");
+    public void approveGameRequest(Integer aGameRequestId){
+        
+        if (aGameRequestId == null) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Game request is invalid");
         }
 
-        GameRequest gameRequest = gameRequestRepository.findGameRequestById(aGameRequest.getId());
+        GameRequest gameRequest = gameRequestRepository.findGameRequestById(aGameRequestId);
 
         if (gameRequest == null) {
             throw new GameOnException(HttpStatus.BAD_REQUEST, "Game request does not exist");
@@ -319,6 +325,8 @@ public class GameService {
         }
 
         gameRepository.save(gameRequest.getRequestedGame());
+        gameRequestRepository.delete(gameRequest);
+
     }
 
     /**

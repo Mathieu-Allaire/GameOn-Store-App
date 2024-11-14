@@ -262,9 +262,9 @@ public class GameController {
     public ResponseEntity<?> createGameRequest(@Valid @RequestBody GameReqRequestDto gameReqRequestDto){
         try{
             GameRequest gameRequest = gameService.createGameRequest(
-                gameReqRequestDto.getaEmployee(),
-                gameReqRequestDto.getrequestedGameName(),
-                gameReqRequestDto.getrequestType()
+                gameReqRequestDto.getEmployeeEmail(),
+                gameReqRequestDto.getRequestedGameName(),
+                gameReqRequestDto.getRequestType()
             );
             GameRequestResponseDto response = new GameRequestResponseDto(gameRequest);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -275,17 +275,15 @@ public class GameController {
     
     /**
      * Approve a game request
-     * @param gameRequest the name of the game request to approve
+     * @param gameRequestId the ID of the game request to approve
      */
-    /* 
-    @PostMapping("/games/request/{name}/approve")
-    public ResponseEntity<?> approveGameRequest(@Valid @RequestBody GameRequestResponseDto gameRequest){
+    @PostMapping("/games/request/approve")
+    public ResponseEntity<?> approveGameRequest(@RequestParam Integer gameRequestId ){
         try{
-            gameService.approveGameRequest(gameRequest.getGameRequest());
+            gameService.approveGameRequest(gameRequestId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
         }
     }
-        */
 }
