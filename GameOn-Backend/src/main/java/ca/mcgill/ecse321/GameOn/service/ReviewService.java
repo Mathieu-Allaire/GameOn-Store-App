@@ -1,6 +1,4 @@
 package ca.mcgill.ecse321.GameOn.service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import ca.mcgill.ecse321.GameOn.exception.GameOnException;

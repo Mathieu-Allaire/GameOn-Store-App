@@ -282,7 +282,7 @@ public class ReviewServiceTests {
     @Test
     public void testPostInvalidReviewWithInvalidAuthor() {
         // Arrange
-        Cart cart = new Cart();
+        new Cart();
         Customer customer = null;
         Manager manager = new Manager();
 

@@ -30,7 +30,6 @@ import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.model.RequestType;
 import ca.mcgill.ecse321.GameOn.model.Employee;
 import ca.mcgill.ecse321.GameOn.model.GameRequest;
-import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.model.Game.GameStatus;
 
 
@@ -51,17 +50,16 @@ public class GameServiceTests {
     @InjectMocks
     private GameService service;
 
+    // Game attributes
     private static final String VALID_URL = "testURL";
     private static final String VALID_GAME_NAME = "testGame";
-    private static final String VALID_GAME_NAME2 = "testGame2";
-
     private static final String VALID_DESCRIPTION = "testDescription";
     private static final int VALID_PRICE = 10;
     private static final int VALID_QUANTITY = 5;
+
+    // Category attributes
     private static final String VALID_CATEGORY_NAME = "testCategory";
     private static final Category VALID_CATEGORY = new Category(VALID_CATEGORY_NAME);
-    private static final RequestType VALID_REQUEST_TYPE = RequestType.Create;
-
     private static final String INVALID_GAME_NAME = "";
     private static final String INVALID_CATEGORY_NAME = "";
     

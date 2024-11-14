@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.GameOn.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ErrorDto {

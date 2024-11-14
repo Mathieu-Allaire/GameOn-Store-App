@@ -37,7 +37,6 @@ public class PurchaseGameServiceTests {
     @InjectMocks
     private PurchaseGameService purchaseGameService;
 
-    @SuppressWarnings("null")
 
     //Helper Test Functions
     private SpecificGame exampleSpecificGame() {
