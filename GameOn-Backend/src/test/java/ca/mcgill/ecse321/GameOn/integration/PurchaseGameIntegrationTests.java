@@ -1,6 +1,10 @@
 package ca.mcgill.ecse321.GameOn.integration;
 
 import ca.mcgill.ecse321.GameOn.model.Cart;
+import ca.mcgill.ecse321.GameOn.model.Category;
+import ca.mcgill.ecse321.GameOn.model.Game;
+import ca.mcgill.ecse321.GameOn.model.SpecificGame;
+import ca.mcgill.ecse321.GameOn.repository.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
@@ -21,10 +25,6 @@ import ca.mcgill.ecse321.GameOn.dto.OrderResponseDto;
 import ca.mcgill.ecse321.GameOn.dto.SpecificGameInCartDto;
 import ca.mcgill.ecse321.GameOn.dto.SpecificGameResponseDto;
 
-import ca.mcgill.ecse321.GameOn.repository.CartRepository;
-import ca.mcgill.ecse321.GameOn.repository.GameRepository;
-import ca.mcgill.ecse321.GameOn.repository.OrderRepository;
-import ca.mcgill.ecse321.GameOn.repository.SpecificGameRepository;
 import ca.mcgill.ecse321.GameOn.service.PurchaseGameService;
 
 
@@ -38,8 +38,6 @@ public class PurchaseGameIntegrationTests {
     private TestRestTemplate client;
 
     @Autowired
-    private PurchaseGameService purchaseGameService;
-    @Autowired
     private CartRepository cartRepository;
     @Autowired
     private SpecificGameRepository specificGameRepository;
@@ -49,16 +47,39 @@ public class PurchaseGameIntegrationTests {
     private GameRepository gameRepository;
 
 
-    private static final int ID_SG = 1234;
-    private static final int ID_O = 12345;
-    private static final String GAME_NAME = "GAME 1";
+    private static  int ID_SG;
+    private static  int ID_O = 12345;
+    private static  String GAME_NAME = "GAME 1";
     private static  int C_ID;
+
+    SpecificGame specificGame;
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    private Game exampleGame(Category aCategory) {
+        String aPicture = "url";
+        String aName = "exGame";
+        String aDescription = "fun in 321";
+        int aPrice = 60;
+        int aQuantity = 100;
+
+
+        return new Game(aPicture, aName, aDescription, aPrice, aQuantity, aCategory);
+    }
 
     @BeforeAll
     public void setup(){
         Cart cart = new Cart();
         cartRepository.save(cart);
         C_ID = cart.getId();
+
+        Category category = new Category("Open World");
+        categoryRepository.save(category);
+        Game game = exampleGame(category);
+        gameRepository.save(game);
+        SpecificGame specificGame = new SpecificGame(game);
+        specificGameRepository.save(specificGame);
+        ID_SG = specificGame.getId();
 
     }
     @AfterAll
