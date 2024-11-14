@@ -1,16 +1,13 @@
 package ca.mcgill.ecse321.GameOn.integration;
 
+import ca.mcgill.ecse321.GameOn.model.Cart;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.junit.jupiter.api.TestMethodOrder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -55,8 +52,15 @@ public class PurchaseGameIntegrationTests {
     private static final int ID_SG = 1234;
     private static final int ID_O = 12345;
     private static final String GAME_NAME = "GAME 1";
-    private static final int C_ID = 12;
+    private static  int C_ID;
 
+    @BeforeAll
+    public void setup(){
+        Cart cart = new Cart();
+        cartRepository.save(cart);
+        C_ID = cart.getId();
+
+    }
     @AfterAll
     public void clearDatabase(){
         cartRepository.deleteAll();
