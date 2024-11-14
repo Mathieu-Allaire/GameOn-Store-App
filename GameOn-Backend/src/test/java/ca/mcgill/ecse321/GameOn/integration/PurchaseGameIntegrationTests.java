@@ -95,12 +95,13 @@ public class PurchaseGameIntegrationTests {
     }
     @AfterAll
     public void clearDatabase(){
+        orderRepository.deleteAll();
         customerRepository.deleteAll();
         cartRepository.deleteAll();
-        categoryRepository.deleteAll();
+
         specificGameRepository.deleteAll();
-        orderRepository.deleteAll();
         gameRepository.deleteAll();
+        categoryRepository.deleteAll();
 
     }
 
