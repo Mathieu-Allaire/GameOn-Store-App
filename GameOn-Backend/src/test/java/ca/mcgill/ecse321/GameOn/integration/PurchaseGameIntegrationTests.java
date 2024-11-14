@@ -21,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import ca.mcgill.ecse321.GameOn.dto.AddToCartRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.CartResponseDto;
 import ca.mcgill.ecse321.GameOn.dto.OrderResponseDto;
-import ca.mcgill.ecse321.GameOn.dto.SpecificGameInCartDto;
 import ca.mcgill.ecse321.GameOn.dto.SpecificGameResponseDto;
 
 import java.sql.Date;
