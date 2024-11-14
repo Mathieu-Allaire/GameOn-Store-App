@@ -22,7 +22,10 @@ import ca.mcgill.ecse321.GameOn.dto.EmployeeResponseDto;
 import jakarta.validation.Valid;
 
 
-
+/**
+ * This class is the controller for the account related endpoints.
+ * @author Camilo Berdugo
+ */
 @RestController
 public class AccountController {
 
