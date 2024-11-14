@@ -8,6 +8,10 @@ public class SpecificGameInCartDto {
     @NotNull(message = "Cart ID must not be null")
     private int cartId;
 
+    public SpecificGameInCartDto(int specificGameId, int cartId){
+        this.cartId = cartId;
+        this.specificGameId = specificGameId;
+    }
     // Getter methods
     public int getSpecificGameId() {
         return specificGameId;
