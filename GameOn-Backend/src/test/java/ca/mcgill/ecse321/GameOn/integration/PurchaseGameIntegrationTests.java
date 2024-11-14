@@ -47,8 +47,8 @@ public class PurchaseGameIntegrationTests {
 
 
     private static  int ID_SG;
-    private static  int ID_O = 12345;
-    private static  String GAME_NAME = "GAME 1";
+    private static  int ID_O;
+    private static  String GAME_NAME;
     private static  int C_ID;
     private static final Date VALID_DATE = Date.valueOf("2025-09-02");
 
@@ -89,15 +89,19 @@ public class PurchaseGameIntegrationTests {
         OrderClass orderClass = new OrderClass(VALID_DATE ,cart, customer);
         orderRepository.save(orderClass);
 
+        ID_O = orderClass.getId();
+        GAME_NAME = game.getName();
+
+
     }
     @AfterAll
     public void clearDatabase(){
+        customerRepository.deleteAll();
         cartRepository.deleteAll();
         categoryRepository.deleteAll();
         specificGameRepository.deleteAll();
         orderRepository.deleteAll();
         gameRepository.deleteAll();
-        customerRepository.deleteAll();
 
     }
 
