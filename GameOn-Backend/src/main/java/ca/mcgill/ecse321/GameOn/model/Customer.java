@@ -23,7 +23,7 @@ public class Customer extends Role
   //Customer Associations
 
   @OneToMany
-  private List<Order> customerOrder;
+  private List<OrderClass> customerOrderClass;
 
   @OneToMany(mappedBy = "CustomerWish" ,cascade = CascadeType.ALL, orphanRemoval = true)
   private List<WishlistLink> CustomerWish;
@@ -46,7 +46,7 @@ public class Customer extends Role
     billingAddress = aBillingAddress;
     cart = aCart;
     CustomerWish = new ArrayList<WishlistLink>();
-    customerOrder = new ArrayList<Order>();
+    customerOrderClass = new ArrayList<OrderClass>();
     customerReview = new ArrayList<Review>();
   }
 
@@ -111,10 +111,10 @@ public class Customer extends Role
   /* Code from template association_GetMany */
   
 
-  public List<Order> getCustomerOrder()
+  public List<OrderClass> getCustomerOrder()
   {
-    List<Order> newCustomerOrder = Collections.unmodifiableList(customerOrder);
-    return newCustomerOrder;
+    List<OrderClass> newCustomerOrderClass = Collections.unmodifiableList(customerOrderClass);
+    return newCustomerOrderClass;
   }
 
 
@@ -175,36 +175,36 @@ public class Customer extends Role
 
   
   /* Code from template association_AddManyToOne */
-  public Order addCustomerOrder(int aId, Date aPurchaseDate, Cart aCart)
+  public OrderClass addCustomerOrder(int aId, Date aPurchaseDate, Cart aCart)
   {
-    return new Order(aPurchaseDate, aCart, this);
+    return new OrderClass(aPurchaseDate, aCart, this);
   }
 
-  public boolean addCustomerOrder(Order aCustomerOrder)
+  public boolean addCustomerOrder(OrderClass aCustomerOrderClass)
   {
     boolean wasAdded = false;
-    if (customerOrder.contains(aCustomerOrder)) { return false; }
-    Customer existingOrderCustomer = aCustomerOrder.getOrderCustomer();
+    if (customerOrderClass.contains(aCustomerOrderClass)) { return false; }
+    Customer existingOrderCustomer = aCustomerOrderClass.getOrderCustomer();
     boolean isNewOrderCustomer = existingOrderCustomer != null && !this.equals(existingOrderCustomer);
     if (isNewOrderCustomer)
     {
-      aCustomerOrder.setOrderCustomer(this);
+      aCustomerOrderClass.setOrderCustomer(this);
     }
     else
     {
-      customerOrder.add(aCustomerOrder);
+      customerOrderClass.add(aCustomerOrderClass);
     }
     wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeCustomerOrder(Order aCustomerOrder)
+  public boolean removeCustomerOrder(OrderClass aCustomerOrderClass)
   {
     boolean wasRemoved = false;
     //Unable to remove aCustomerOrder, as it must always have a orderCustomer
-    if (!this.equals(aCustomerOrder.getOrderCustomer()))
+    if (!this.equals(aCustomerOrderClass.getOrderCustomer()))
     {
-      customerOrder.remove(aCustomerOrder);
+      customerOrderClass.remove(aCustomerOrderClass);
       wasRemoved = true;
     }
     return wasRemoved;

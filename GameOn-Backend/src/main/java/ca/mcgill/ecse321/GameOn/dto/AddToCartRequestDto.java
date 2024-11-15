@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.GameOn.dto;
 
+
 import jakarta.validation.constraints.NotNull;
 
 public class AddToCartRequestDto {
@@ -16,6 +17,14 @@ public class AddToCartRequestDto {
 
     public String getGameName() {
         return aGameName;
+    }
+
+    public void setGameName(String gameName) {
+        this.aGameName = gameName;
+    }
+
+    public void setCustomerId(int cId) {
+        this.customerId = cId;
     }
 
 }

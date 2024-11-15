@@ -10,7 +10,7 @@ public class SpecificGameResponseDto {
     private int price;
     private String picture;
     private String Category;
-
+    private int id;
 
     @SuppressWarnings("unused")
     private SpecificGameResponseDto() {
@@ -23,6 +23,7 @@ public class SpecificGameResponseDto {
         this.price = aSpecificGame.getGame().getPrice();
         this.picture = aSpecificGame.getGame().getPicture();
         this.Category = aSpecificGame.getGame().getCategory().getName();
+        this.id = aSpecificGame.getId();
     }
 
     public String getName() {
@@ -47,6 +48,10 @@ public class SpecificGameResponseDto {
 
     public String getCategory() {
         return Category;
+    }
+
+    public int getId() {
+        return id;
     }
 
 }
