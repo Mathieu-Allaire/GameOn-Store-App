@@ -10,14 +10,21 @@
 a,
 .green {
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
+  color: rgb(160, 233, 255);
   transition: 0.4s;
   padding: 3px;
 }
 
+.light_green {
+  text-decoration:color-mix(in hsl shorter hue, color percentage, color percentage);
+  color: rgb(255, 236, 174);
+  transition: 0.4s;
+  padding: 15px;
+}
+
 @media (hover: hover) {
   a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+    background-color: hsla(160, 65%, 37%, 0.719);
   }
 }
 
