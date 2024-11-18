@@ -1,9 +1,9 @@
 package ca.mcgill.ecse321.GameOn.service;
-
-import java.util.ArrayList;
 import java.util.List;
 
+import ca.mcgill.ecse321.GameOn.exception.GameOnException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
@@ -33,12 +33,12 @@ public class ReviewService {
      */
     public List<Review> getAllReviewsforGame(String gameName){
         if (gameName == null || gameName.trim().isEmpty()) {
-            throw new IllegalArgumentException("The name is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The name is invalid");
         }
         Game game = gameRepo.findGameByName(gameName);
 
         if (game == null) {
-            throw new IllegalArgumentException("Game does not exist");
+            throw new GameOnException(HttpStatus.NOT_FOUND, "Game does not exist");
         }
         return game.getReviews();
 
@@ -58,22 +58,22 @@ public class ReviewService {
      */
     public Review postReview(String aDescription, int aStars, int aLikes, int aDislikes, Customer aReviewAuthor, Manager aManager) {
         if (aDescription == null || aDescription.trim().isEmpty()) {
-            throw new IllegalArgumentException("The review has an empty description");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The review has an empty description");
         }
         if (aStars < 0 || aStars > 5) {
-            throw new IllegalArgumentException("The number of stars must be between 0 and 5");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The number of stars must be between 0 and 5");
         }
         if (aLikes < 0) {
-            throw new IllegalArgumentException("The number of likes must be non-negative");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The number of likes must be non-negative");
         }
         if (aDislikes < 0) {
-            throw new IllegalArgumentException("The number of dislikes must be non-negative");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The number of dislikes must be non-negative");
         }
         if (aReviewAuthor == null) {
-            throw new IllegalArgumentException("The author is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The author is invalid");
         }
         if (aManager == null) {
-            throw new IllegalArgumentException("The manager is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The manager is invalid");
         }
         Review review = new Review(aDescription, aStars, aLikes, aDislikes, aReviewAuthor, aManager);
 
@@ -91,11 +91,11 @@ public class ReviewService {
      */
     public Review findReviewById(int id) {
         if (id < 0) {
-            throw new IllegalArgumentException("The review ID must be non-negative.");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The review ID must be non-negative.");
         }
         Review existingReview = reviewRepo.findReviewById(id);
         if (existingReview == null) {
-            throw new IllegalArgumentException("There is no review with ID " + id + ".");
+            throw new GameOnException(HttpStatus.NOT_FOUND , "There is no review with ID " + id + ".");
         }
         return existingReview;
     }
@@ -111,11 +111,11 @@ public class ReviewService {
     @Transactional
     public Review likeReview(int id) {
         if (id < 0) {
-            throw new IllegalArgumentException("The review ID must be non-negative.");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The review ID must be non-negative.");
         }
         Review review = findReviewById(id);
         if (review == null) {
-            throw new IllegalArgumentException("There is no review with ID " + id + ".");
+            throw new GameOnException(HttpStatus.NOT_FOUND, "There is no review with ID " + id + ".");
         }
         review.setLikes(review.getLikes() + 1);
         reviewRepo.save(review);
@@ -134,14 +134,14 @@ public class ReviewService {
     @Transactional
     public Review addReply(int id, String description) {
         if (id < 0) {
-            throw new IllegalArgumentException("The review ID must be non-negative.");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The review ID must be non-negative.");
         }
         if (description == null || description.trim().length() == 0) {
-            throw new IllegalArgumentException("The reply has an empty description");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The reply has an empty description");
         }
         Review review = findReviewById(id);
         if (review == null) {
-            throw new IllegalArgumentException("There is no review with ID " + id + ".");
+            throw new GameOnException(HttpStatus.NOT_FOUND, "There is no review with ID " + id + ".");
         }
         review.setReply(description);
         reviewRepo.save(review);

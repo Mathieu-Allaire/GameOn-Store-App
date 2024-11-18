@@ -24,7 +24,7 @@ public class Cart
 
   //Cart Associations
   @OneToOne
-  private Order order;
+  private OrderClass orderClass;
   @OneToMany
   private List<SpecificGame> specificGame;
   @OneToOne
@@ -59,9 +59,9 @@ public class Cart
     return id;
   }
   /* Code from template association_GetOne */
-  public Order getOrder()
+  public OrderClass getOrder()
   {
-    return this.order;
+    return this.orderClass;
   }
 
   /* Code from template association_GetMany */
@@ -90,27 +90,27 @@ public class Cart
   }
 
   /* Code from template association_SetOptionalOneToOne */
-  public boolean setOrder(Order aNewOrder)
+  public boolean setOrder(OrderClass aNewOrderClass)
   {
     boolean wasSet = false;
-    if (order != null && !order.equals(aNewOrder) && equals(order.getCart()))
+    if (orderClass != null && !orderClass.equals(aNewOrderClass) && equals(orderClass.getCart()))
     {
       //Unable to setOrder, as existing order would become an orphan
       return wasSet;
     }
 
-    order = aNewOrder;
-    Cart anOldCart = aNewOrder != null ? aNewOrder.getCart() : null;
+    orderClass = aNewOrderClass;
+    Cart anOldCart = aNewOrderClass != null ? aNewOrderClass.getCart() : null;
 
     if (!this.equals(anOldCart))
     {
       if (anOldCart != null)
       {
-        anOldCart.order = null;
+        anOldCart.orderClass = null;
       }
-      if (order != null)
+      if (orderClass != null)
       {
-        order.setCart(this);
+        orderClass.setCart(this);
       }
     }
     wasSet = true;

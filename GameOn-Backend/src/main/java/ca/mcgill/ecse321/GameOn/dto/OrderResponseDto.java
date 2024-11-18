@@ -1,6 +1,6 @@
 package ca.mcgill.ecse321.GameOn.dto;
 
-import ca.mcgill.ecse321.GameOn.model.Order;
+import ca.mcgill.ecse321.GameOn.model.OrderClass;
 import ca.mcgill.ecse321.GameOn.model.SpecificGame;
 
 import java.sql.Date;
@@ -17,13 +17,13 @@ public class OrderResponseDto {
     private OrderResponseDto() {
     }
 
-    public OrderResponseDto(Order aOrder) {
+    public OrderResponseDto(OrderClass aOrderClass) {
         this.specificGameNames = new ArrayList<>();
-        for (SpecificGame specificGame : aOrder.getOrderGames()) {
+        for (SpecificGame specificGame : aOrderClass.getOrderGames()) {
             specificGameNames.add(specificGame.getGame().getName());
         }
-        this.id = aOrder.getId();
-        this.purchaseDate = aOrder.getPurchaseDate();
+        this.id = aOrderClass.getId();
+        this.purchaseDate = aOrderClass.getPurchaseDate();
     }
 
     public int getId() {

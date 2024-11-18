@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.GameOn.service;
 
+import ca.mcgill.ecse321.GameOn.exception.GameOnException;
 import ca.mcgill.ecse321.GameOn.model.Review;
 import ca.mcgill.ecse321.GameOn.model.Customer;
 import ca.mcgill.ecse321.GameOn.model.Manager;
@@ -12,14 +13,13 @@ import ca.mcgill.ecse321.GameOn.repository.GameRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
 import org.mockito.invocation.InvocationOnMock;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.doNothing;
+
 
 import java.util.List;
 import java.util.ArrayList;
@@ -116,7 +116,7 @@ public class ReviewServiceTests {
     /**
      * Tests error handling when trying to retrieve reviews for an invalid game.
      *
-     * @throws An exception indicating that the game does not exist.
+     * @throws GameOnException An exception indicating that the game does not exist.
      * @author Mathieu Allaire
      */
     @Test
@@ -126,7 +126,7 @@ public class ReviewServiceTests {
         when(gameRepoMock.findGameByName(INVALID_GAME_NAME_WRONG)).thenReturn(null);
 
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             reviewService.getAllReviewsforGame(INVALID_GAME_NAME_WRONG);
         });
         assertEquals("Game does not exist", ex.getMessage());
@@ -135,7 +135,7 @@ public class ReviewServiceTests {
     /**
      * Tests error handling when trying to retrieve reviews for an invalid name game.
      *
-     * @throwns An exception indicating that the name of the game is invalid.
+     * @throws GameOnException An exception indicating that the name of the game is invalid.
      * @author Mathieu Allaire
      */
     @Test
@@ -145,7 +145,7 @@ public class ReviewServiceTests {
         when(gameRepoMock.findGameByName(INVALID_GAME_NAME_EMPTY)).thenReturn(null);
 
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             reviewService.getAllReviewsforGame(INVALID_GAME_NAME_EMPTY);
         });
         assertEquals("The name is invalid", ex.getMessage());
@@ -186,7 +186,7 @@ public class ReviewServiceTests {
     /**
      * Tests posting a review with an empty description, expecting an exception.
      *
-     * @throws An exception indicating that the description is empty.
+     * @throws GameOnException An exception indicating that the description is empty.
      * @author Mathieu Allaire
      */
     @Test
@@ -199,7 +199,7 @@ public class ReviewServiceTests {
         when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             reviewService.postReview(INVALID_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, customer, manager);
         });
         assertEquals("The review has an empty description", ex.getMessage());
@@ -209,7 +209,7 @@ public class ReviewServiceTests {
     /**
      * Tests posting a review with an invalid number of stars, expecting an exception.
      *
-     * @throws An exception indicating that the number of stars is invalid.
+     * @throws GameOnException An exception indicating that the number of stars is invalid.
      * @author Mathieu Allaire
      */
     @Test
@@ -222,7 +222,7 @@ public class ReviewServiceTests {
         when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             reviewService.postReview(VALID_REVIEW_DESCRIPTION, INVALID_STARS, VALID_LIKES, VALID_DISLIKES, customer, manager);
         });
         assertEquals("The number of stars must be between 0 and 5", ex.getMessage());
@@ -232,7 +232,7 @@ public class ReviewServiceTests {
     /**
      * Tests posting a review with an invalid number of likes, expecting an exception.
      *
-     * @throws An exception indicating that the number of likes must be non-negative.
+     * @throws GameOnException An exception indicating that the number of likes must be non-negative.
      * @author Mathieu Allaire
      */
     @Test
@@ -245,7 +245,7 @@ public class ReviewServiceTests {
         when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, INVALID_LIKES, VALID_DISLIKES, customer, manager);
         });
         assertEquals("The number of likes must be non-negative", ex.getMessage());
@@ -254,7 +254,7 @@ public class ReviewServiceTests {
     /**
      * Tests posting a review with an invalid number of dislikes, expecting an exception.
      *
-     * @throws An exception indicating that the number of dislikes must be non-negative.
+     * @throws GameOnException An exception indicating that the number of dislikes must be non-negative.
      * @author Mathieu Allaire
      */
     @Test
@@ -267,7 +267,7 @@ public class ReviewServiceTests {
         when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, INVALID_DISLIKES, customer, manager);
         });
         assertEquals("The number of dislikes must be non-negative", ex.getMessage());
@@ -276,20 +276,20 @@ public class ReviewServiceTests {
     /**
      * Tests posting a review with an invalid author, expecting an exception.
      *
-     * @throws An exception indicating that the author exist.
+     * @throws GameOnException An exception indicating that the author exist.
      * @author Mathieu Allaire
      */
     @Test
     public void testPostInvalidReviewWithInvalidAuthor() {
         // Arrange
-        Cart cart = new Cart();
+        new Cart();
         Customer customer = null;
         Manager manager = new Manager();
 
         when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, customer, manager);
         });
         assertEquals("The author is invalid", ex.getMessage());
@@ -299,7 +299,7 @@ public class ReviewServiceTests {
     /**
      * Tests posting a review with an invalid manager, expecting an exception.
      *
-     * @throws An exception indicating that the manager must exist.
+     * @throws GameOnException An exception indicating that the manager must exist.
      * @author Mathieu Allaire
      */
     @Test
@@ -312,7 +312,7 @@ public class ReviewServiceTests {
         when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, customer, manager);
         });
         assertEquals("The manager is invalid", ex.getMessage());
@@ -354,7 +354,7 @@ public class ReviewServiceTests {
         when(reviewRepoMock.findReviewById(VALID_REVIEW_ID)).thenReturn(null);
 
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             reviewService.findReviewById(VALID_REVIEW_ID);
         });
         assertEquals("There is no review with ID " + VALID_REVIEW_ID + ".", ex.getMessage());
@@ -397,7 +397,7 @@ public class ReviewServiceTests {
     public void testLikeNonExistentReview() {
         when(reviewRepoMock.findReviewById(VALID_REVIEW_ID)).thenReturn(null);
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             reviewService.likeReview(VALID_REVIEW_ID);
         });
         assertEquals("There is no review with ID " + VALID_REVIEW_ID + ".", ex.getMessage());
@@ -446,7 +446,7 @@ public class ReviewServiceTests {
         when(reviewRepoMock.findReviewById(VALID_REVIEW_ID)).thenReturn(review);
 
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             reviewService.addReply(VALID_REVIEW_ID, INVALID_DESCRIPTION);
         });
         assertEquals("The reply has an empty description", ex.getMessage());
@@ -458,7 +458,7 @@ public class ReviewServiceTests {
         when(reviewRepoMock.findReviewById(VALID_REVIEW_ID)).thenReturn(null);
 
         // Assert
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+        GameOnException ex = assertThrows(GameOnException.class, () -> {
             reviewService.addReply(VALID_REVIEW_ID, VALID_REPLY);
         });
         assertEquals("There is no review with ID " + VALID_REVIEW_ID + ".", ex.getMessage());
