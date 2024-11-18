@@ -3,7 +3,7 @@
     <ul class="nav-links">
       <li><RouterLink to="/">Main Page</RouterLink></li>
       <li><RouterLink to="/about">About</RouterLink></li>
-      <li><RouterLink to="/main-page">Home</RouterLink></li>
+      <li><RouterLink to="/home">Home</RouterLink></li>
       <li><RouterLink to="/login">Sign In</RouterLink></li>
       <li><RouterLink to="/register">Sign Up</RouterLink></li>
       <li class="dropdown">
