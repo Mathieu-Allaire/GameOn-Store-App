@@ -20,6 +20,16 @@ const router = createRouter({
       component: () => import('../views/RegisterView.vue'),
     },
     {
+      path: '/manage/games',
+      name : 'manage-games',
+      component: () => import('../views/ManageGamesView.vue'),
+    },
+    {
+      path: '/manage/categories',
+      name : 'manage-categories',
+      component: () => import('../views/ManageCategoriesView.vue'),
+    },
+    {
       path: '/home',
       name: 'home',
       component: HomeView,
