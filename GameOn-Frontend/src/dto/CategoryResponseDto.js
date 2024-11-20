@@ -1,0 +1,3 @@
+class CategoryResponseDto {
+  name;
+}

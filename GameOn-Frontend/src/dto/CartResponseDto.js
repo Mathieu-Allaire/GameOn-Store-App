@@ -1,0 +1,4 @@
+class CartResponseDto {
+  specificGameNames = [];
+  id;
+}

@@ -1,0 +1,4 @@
+class CustomerResponseDto {
+  email;
+  name;
+}
