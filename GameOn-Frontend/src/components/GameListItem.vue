@@ -14,7 +14,7 @@ export default {
 <style scoped>
     .GameListItemn{
         width: 100%;
-        height: 20px;
+        height: 5%;
     }
 </style>
 

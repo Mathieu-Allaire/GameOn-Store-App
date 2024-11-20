@@ -6,17 +6,27 @@ import Logo from './components/Logo.vue'
 </script>
 
 <template>
-  <Navbar />
-  <RouterView />
+  <div style="height:10vh">
+    <Navbar />
+  </div>
+  <div style="height:80vh; width:100vw">
+    <RouterView />
+  </div>
+ 
   <Logo />
+
 </template>
 
 <style>
-/* Remove logo styles if previously added here */
+/* Remove logos styles if previously added here */
 
 /* Ensure body has no margin to prevent unexpected spacing */
 body {
   margin: 0;
   padding: 0;
 }
+.navbarHeight{
+  height:10vh;
+}
+
 </style>
