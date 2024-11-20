@@ -1,6 +1,7 @@
 <template>
-    <div class="GameListItem">
+    <div class="rect">
         <t>test</t>
+        <img src="../assets/controller.png" style="object-fit: contain;" />
     </div>
 </template>
 
@@ -12,9 +13,9 @@ export default {
 
 
 <style scoped>
-    .GameListItemn{
-        width: 100%;
-        height: 5%;
-    }
+.rect {
+    height:15%;
+    display: flex;
+}
 </style>
 

@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div style="height:80vh; width:100vw; display:flex;">
     <GameListItem />
-    <GameListItem />
-    <GameListItem />
+    <GameListItem  />
+    <GameListItem  />
   </div>
 </template>
 
@@ -19,10 +19,5 @@ export default {
 </script>
 
 <style scoped>
-  .view {
-    position: relative;
-    width:100%;
-    top: 0;
-    left: 0;
-  }
+
 </style>

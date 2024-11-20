@@ -6,12 +6,12 @@ import Logo from './components/Logo.vue'
 </script>
 
 <template>
-  <div style="height:10vh">
+  
     <Navbar />
-  </div>
-  <div style="height:80vh; width:100vw">
+ 
+  
     <RouterView />
-  </div>
+
  
   <Logo />
 
