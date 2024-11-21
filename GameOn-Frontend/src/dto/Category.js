@@ -1,10 +1,12 @@
-class Category {
+import axios from "axios";
+
+export class Category {
   constructor(name) {
     this.name = name;
   }
 
   async createCategory() {
-    path = "/categories";
+    const path = "/categories";
     try {
       const response = await axios.post(path, this);
       return response.data;
@@ -12,8 +14,8 @@ class Category {
       return { error: error.message };
     }
   }
-  async deleteCategory(name) {
-    path = "/categories/" + name;
+  static async deleteCategory(name) {
+    const path = "/categories/" + name;
     try {
       const response = await axios.delete(path);
       return response.data;
@@ -21,8 +23,8 @@ class Category {
       return { error: error.message };
     }
   }
-  async findAllCategories() {
-    path = "/categories";
+  static async findAllCategories() {
+    const path = "/categories";
     try {
       const response = await axios.get(path);
       return response.data;
@@ -30,8 +32,8 @@ class Category {
       return { error: error.message };
     }
   }
-  async findCategoryByName(name) {
-    path = "/categories" + name;
+  static async findCategoryByName(name) {
+    const path = "/categories" + name;
     try {
       const response = await axios.get(path);
       return response.data;

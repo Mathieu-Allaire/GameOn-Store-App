@@ -1,10 +1,10 @@
-class Employee {
+export class Employee {
   constructor(email, name) {
     this.email = email;
     this.name = name;
   }
   async createEmployee() {
-    path = "/employee";
+    const path = "/employee";
     try {
       const response = await axios.post(path, this);
       return response;
@@ -12,8 +12,8 @@ class Employee {
       return { error: error.message };
     }
   }
-  async findEmployeeByEmail(email) {
-    path = "/employee/" + email;
+  static async findEmployeeByEmail(email) {
+    const path = "/employee/" + email;
     try {
       const response = await axios.get(path);
       return response;
@@ -21,8 +21,8 @@ class Employee {
       return { error: error.message };
     }
   }
-  async deactivateEmployeeByEmail(email) {
-    path = "/employee/deactivate/" + email;
+  static async deactivateEmployeeByEmail(email) {
+    const path = "/employee/deactivate/" + email;
     try {
       const response = await axios.put(path);
       return response;

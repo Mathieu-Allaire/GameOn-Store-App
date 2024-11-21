@@ -1,4 +1,4 @@
-class Customer {
+export class Customer {
   constructor(
     email,
     name,
@@ -16,7 +16,7 @@ class Customer {
   }
 
   async createCustomer() {
-    path = "/customer";
+    const path = "/customer";
     try {
       const response = await axios.post(path, this);
       return response;
@@ -24,8 +24,8 @@ class Customer {
       return { error: error.message };
     }
   }
-  async findCustomerByEmail(email) {
-    path = "/customer/" + email;
+  static async findCustomerByEmail(email) {
+    const path = "/customer/" + email;
     try {
       const response = await axios.get(path);
       return response;

@@ -1,9 +1,9 @@
-class SpecificGame {
+export class SpecificGame {
   constructor(specificGameId, cartId) {
     this.cartId = cartId;
     this.specificGameId = specificGameId;
   }
-  async getGameById(id) {
+  static async getGameById(id) {
     const path = "/specificGames/" + id;
     try {
       const response = await axios.get(path);

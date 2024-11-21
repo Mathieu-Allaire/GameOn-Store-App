@@ -1,4 +1,4 @@
-class GameRequest {
+export class GameRequest {
   constructor(employeeEmail, requestedGameName, requestType) {
     this.employeeEmail = employeeEmail;
     this.requestedGameName = requestedGameName;
@@ -6,7 +6,7 @@ class GameRequest {
   }
 
   async createGameRequest() {
-    path = "/games/request";
+    const path = "/games/request";
     try {
       const response = await axios.post(path, this);
       return response.data;
@@ -14,8 +14,8 @@ class GameRequest {
       return { error: error.message };
     }
   }
-  async approveGameRequest(gameRequestId) {
-    path = "games/request/approve";
+  static async approveGameRequest(gameRequestId) {
+    const path = "games/request/approve";
     try {
       const response = await axios.post(path, null, {
         params: { gameRequestId },

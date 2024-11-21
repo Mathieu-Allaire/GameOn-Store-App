@@ -1,10 +1,10 @@
-class Cart {
+export class Cart {
   constructor(customerId, aGameName) {
     this.customerId = customerId;
     this.aGameName = aGameName;
   }
 
-  async getCart(id) {
+  static async getCart(id) {
     const path = "/carts/" + id;
     try {
       const response = await axios.get(path);
@@ -22,7 +22,7 @@ class Cart {
       return { error: error.message };
     }
   }
-  async removeGameFromCart(sgId, cId) {
+  static async removeGameFromCart(sgId, cId) {
     //specific game id, cart id
     const path = "/game-remove/" + sgId + cId;
     try {
@@ -32,7 +32,7 @@ class Cart {
       return { error: error.message };
     }
   }
-  async removeAllGamesFromCart(id) {
+  static async removeAllGamesFromCart(id) {
     const path = "/remove-all/" + id;
     try {
       const response = await axios.post(path);

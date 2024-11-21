@@ -1,5 +1,5 @@
-class Order {
-  async getOrder(id) {
+export class Order {
+  static async getOrder(id) {
     const path = "/orders/" + id;
     try {
       const response = await axios.get(path);
@@ -8,7 +8,7 @@ class Order {
       return { error: error.message };
     }
   }
-  async createOrder(cartId) {
+  static async createOrder(cartId) {
     const path = "createOrder/" + cartId;
     try {
       const response = await axios.post(path);

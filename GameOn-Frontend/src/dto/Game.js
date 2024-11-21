@@ -1,4 +1,6 @@
-class Game {
+import axios from "axios";
+
+export class Game {
   constructor(picture, name, description, price, quantity, category) {
     this.picture = picture;
     this.name = name;
@@ -8,7 +10,7 @@ class Game {
     this.category = category;
   }
   async createGame() {
-    path = "/games";
+    const path = "/games";
     try {
       const response = await axios.post(path, this);
       return response.data;
@@ -16,8 +18,8 @@ class Game {
       return { error: error.message };
     }
   }
-  async deleteGame(name) {
-    path = "/games/" + name;
+  static async deleteGame(name) {
+    const path = "/games/" + name;
     try {
       const response = await axios.delete(path);
       return response.data;
@@ -25,8 +27,8 @@ class Game {
       return { error: error.message };
     }
   }
-  async findAllGames() {
-    path = "/games";
+  static async findAllGames() {
+    const path = "/games";
     try {
       const response = await axios.get(path);
       return response.data;
@@ -34,8 +36,8 @@ class Game {
       return { error: error.message };
     }
   }
-  async findGameByName(name) {
-    path = "/games/" + name;
+  static async findGameByName(name) {
+    const path = "/games/" + name;
     try {
       const response = await axios.get(path);
       return response.data;
@@ -43,8 +45,8 @@ class Game {
       return { error: error.message };
     }
   }
-  async findGameByCategory(category) {
-    path = "/games/category/" + category;
+  static async findGameByCategory(category) {
+    const path = "/games/category/" + category;
     try {
       const response = await axios.get(path);
       return response.data;
@@ -52,8 +54,8 @@ class Game {
       return { error: error.message };
     }
   }
-  async updateGamePrice(name, price) {
-    path = "/games/updatePrice";
+  static async updateGamePrice(name, price) {
+    const path = "/games/updatePrice";
     try {
       const response = await axios.post(path, { name, price });
       return response.data;
@@ -61,8 +63,8 @@ class Game {
       return { error: error.message };
     }
   }
-  async updateGameQuantity(name, quantity) {
-    path = "games/updateQuantity";
+  static async updateGameQuantity(name, quantity) {
+    const path = "games/updateQuantity";
     try {
       const response = await axios.post(path, { name, quantity });
       return response.data;

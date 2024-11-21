@@ -1,4 +1,4 @@
-class GameWishlist {
+export class GameWishlist {
   constructor(gameName, customerEmail) {
     this.gameName = gameName;
     this.customerEmail = customerEmail;
@@ -12,7 +12,7 @@ class GameWishlist {
       return { error: error.message };
     }
   }
-  async removeGameFromWishlist() {
+  static async removeGameFromWishlist() {
     const path = "/wishlist-remove";
     try {
       const response = await axios.delete(path, {
@@ -26,7 +26,7 @@ class GameWishlist {
       return { error: error.message };
     }
   }
-  async getAllGamesFromWishlist(customerEmail) {
+  static async getAllGamesFromWishlist(customerEmail) {
     const path = "/wishlist-get-all/" + customerEmail;
     try {
       const response = await axios.get(path);
