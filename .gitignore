@@ -52,3 +52,6 @@ GameOn-Backend/.gradle/buildOutputCleanup/buildOutputCleanup.lock
 GameOn-Backend/.gradle/buildOutputCleanup/outputFiles.bin
 GameOn-Backend/bin/main/application.properties
 GameOn-Backend/.settings/org.eclipse.buildship.core.prefs
+
+#Frontend
+GameOn-Frontend/node_modules
