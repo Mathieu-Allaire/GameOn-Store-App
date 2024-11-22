@@ -209,7 +209,7 @@ public class GameController {
      * @param name the name of the category to delete
      * @return the HTTP response status
      */
-    @DeleteMapping("/categories/{name}")
+    @PostMapping("/categories/{name}")
     public ResponseEntity<?> deleteCategory(@PathVariable String name){
         try{
             gameService.deleteCategory(name);
