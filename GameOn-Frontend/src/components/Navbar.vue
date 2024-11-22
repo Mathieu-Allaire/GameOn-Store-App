@@ -11,7 +11,7 @@
                 <div class="dropdown-content">
                     <RouterLink to="/manage/games">Games</RouterLink>
                     <RouterLink to="/manage/categories">Categories</RouterLink>
-                    <RouterLink to="/manage/staff">Staff</RouterLink>
+                    <RouterLink to="/manage/employee">Staff</RouterLink>
                 </div>
             </li>
         </ul>
