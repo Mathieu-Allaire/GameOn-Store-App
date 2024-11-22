@@ -1,4 +1,5 @@
 <template>
+<div>
     <button @click="addCategory">add category</button>
     <button @click="addGame">add game</button>
     <button @click="addGame2">add game 2</button>
@@ -7,6 +8,7 @@
     <button @click="update">update</button>
 
     <main>{{ description_to_display }}</main>
+    </div>
 </template>
 
 <script>
@@ -52,5 +54,9 @@ export default {
             await Category.deleteCategory("Action");
         },
     },
+  async mounted() {
+    console.log("mounted");
+
+  }
 };
 </script>
