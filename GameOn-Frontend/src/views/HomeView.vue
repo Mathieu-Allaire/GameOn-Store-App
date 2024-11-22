@@ -1,48 +1,55 @@
 <template>
-    <button @click="addCategory">add category</button>
-    <button @click="addGame">add game</button>
-    <button @click="deleteCategory">delete category</button>
-    <button @click="deleteGame">delete game</button>
-    <button @click="update">update</button>
-
-    <main>{{ description_to_display }}</main>
+    <ul class="gameGrid">
+        <li class="game" v-for="gameResponse in gameResponses" :key="gameResponse.name">
+            <MainPageGame :game-response="gameResponse"/>
+        </li>
+    </ul>
 </template>
 
 <script>
-import axios from "axios";
+import MainPageGame from "../components/MainPageGame.vue";
 import { Game } from "../dto/Game";
-import { Category } from "../dto/Category";
 import { GameResponseDTO } from "../dto/GameResponseDTO";
 
-//Example use without error handling
-//Add category, add game, update. Then you can clear your database with the delete buttons
-
 export default {
+    name: "HomeView",
+    components: {
+        MainPageGame,
+    },
     data() {
         return {
-            description_to_display: "tbd",
+            gameResponses: [],
         };
     },
-    methods: {
-        addGame() {
-            const game = new Game("url", "GTA", "Fun game", 30, 23, "Action"); //DTO
-            game.createGame(); //Send to server
-        },
-        addCategory() {
-            const category = new Category("Action"); //DTO
-            category.createCategory(); //Send request to server
-        },
-        async update() {
-            const response = await Game.findGameByName("GTA"); //Fetch from server
-            const gameResponseDto = new GameResponseDTO(response); //Cast to an object (not necessary)
-            this.description_to_display = gameResponseDto.description; //Get attributes from response
-        },
-        async deleteGame() {
-            await Game.deleteGame("GTA");
-        },
-        async deleteCategory() {
-            await Category.deleteCategory("Action");
-        },
+    async mounted() {
+        const response = await Game.findAllGames();
+        this.gameResponses = response.map(response => new GameResponseDTO(response));
+        console.log("Games: ");
+        console.log(this.gameResponses);
     },
 };
 </script>
+
+<style scoped>
+.gameGrid {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    left : 0;
+    top:0;
+    height:100vh;
+    flex-flow: row;
+    width:100vw;
+    list-style: none;
+
+}
+.game{
+    display: flex;
+    object-fit: contain;
+    width: 100px;
+    min-height: 0;
+    min-width: 0;
+}
+
+
+</style>

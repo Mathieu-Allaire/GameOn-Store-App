@@ -8,15 +8,9 @@ import Logo from './components/Logo.vue'
 </script>
 
 <template>
-  
-    <Navbar />
- 
-  
     <RouterView />
-
- 
-  <Logo />
-
+    <Logo />
+    <Navbar />
 </template>
 
 <style>
@@ -24,11 +18,9 @@ import Logo from './components/Logo.vue'
 
 /* Ensure body has no margin to prevent unexpected spacing */
 body {
-  margin: 0;
-  padding: 0;
-}
-.navbarHeight{
-  height:10vh;
+  margin: 0px;
+  padding: 0px;
+
 }
 
 </style>
