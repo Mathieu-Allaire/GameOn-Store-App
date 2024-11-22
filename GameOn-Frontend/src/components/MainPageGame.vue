@@ -1,5 +1,5 @@
 <template>
-    <img :src="gameResponse.picture" :alt="gameResponse.name"/>
+    <img :src="gameResponse.picture" :alt="gameResponse.name" @click="goToGamePage" style="cursor: pointer;"/>
 </template>
 
 <script>
@@ -12,6 +12,12 @@ export default {
       type: GameResponseDTO,
       required: true
     },
+  },
+  methods: {
+    async goToGamePage() {
+      console.log("Go to game page");
+
+    }
   }
 }
 

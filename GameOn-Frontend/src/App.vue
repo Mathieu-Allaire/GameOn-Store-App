@@ -8,7 +8,7 @@ import Logo from './components/Logo.vue'
 </script>
 
 <template>
-    <RouterView />
+    <RouterView style="position:absolute; top:10vh"/>
     <Logo />
     <Navbar />
 </template>
