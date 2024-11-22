@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.Date;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -493,7 +494,70 @@ public class AccountServiceTests {
 
     }
 
+    @Test
+    public void ValidLogInEmployee(){
+        //Arrange 
+        //Create an employee
+        Employee employeeRole = new Employee(true);
+        String preSetPassword = "GameOn123!";
+        Person bob = new Person(VALID_EMAIL, VALID_NAME, preSetPassword, employeeRole);
+        String encryptedPassword = bob.getEncryptedPassword(preSetPassword);
+        bob.setPassword(encryptedPassword);
+        
+        when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
+
+        //Act : find employee
+        List<String> response = accountService.logIn(VALID_EMAIL, preSetPassword);
+
+        //Assert
+        assertNotNull(response);
+        assertEquals(bob.getEmail(), response.get(0));
+        assertEquals("2", response.get(1));
+    }
+
+    @Test
+    public void ValidLogInCustomer(){
+        //Arrange simulates creation customer
+        Cart cart = new Cart();
+        Customer customerRole = new Customer(VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS, cart);
+        Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, customerRole);
+        String encryptedPassword = bob.getEncryptedPassword(VALID_PASSWORD);
+        bob.setPassword(encryptedPassword); // this simulates the create customer
+        
+        when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
+
+        //Act : see if it logged in
+        List<String> response = accountService.logIn(VALID_EMAIL, VALID_PASSWORD);
+
+        //Assert
+        assertNotNull(response);
+        assertEquals(bob.getEmail(), response.get(0));
+        assertEquals("1", response.get(1));
+    }
+
+    @Test
+    public void InvalidLogInCustomer(){
+        //Arrange simulates creation customer
+        Cart cart = new Cart();
+        Customer customerRole = new Customer(VALID_CARD_NUM, VALID_DATE, VALID_BILLING_ADDRESS, cart);
+        Person bob = new Person(VALID_EMAIL, VALID_NAME, VALID_PASSWORD, customerRole);
+        String encryptedPassword = bob.getEncryptedPassword(VALID_PASSWORD);
+        bob.setPassword(encryptedPassword); // this simulates the create customer
+        
+        when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
+
+        //Case when wrong password
+        try {
+            List<String> response = accountService.logIn(VALID_EMAIL, "hell324243o");
+         } catch (Exception e) {
+         assertEquals("Incorrect password", e.getMessage());
+         }
+    }
+
+
     
+
+
 
 
 
