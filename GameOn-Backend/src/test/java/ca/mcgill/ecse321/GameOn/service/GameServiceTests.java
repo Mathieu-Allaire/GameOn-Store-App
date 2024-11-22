@@ -259,13 +259,12 @@ public class GameServiceTests {
         // Arrange
         Game game = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
         when(gameMockRepo.findGameByName(VALID_GAME_NAME)).thenReturn(game);
-        doNothing().when(gameMockRepo).delete(any(Game.class));
-
+        when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
         // Act
         service.deleteGame(VALID_GAME_NAME);
 
         // Assert
-        verify(gameMockRepo, times(1)).delete(game);
+        assertEquals(GameStatus.Deleted, game.getGameStatus());
     }
 
     @Test void testDeleteInvalidGame(){
