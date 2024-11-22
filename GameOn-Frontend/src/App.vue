@@ -8,9 +8,9 @@ import Logo from './components/Logo.vue'
 </script>
 
 <template>
-    <RouterView style="position:absolute; top:10vh"/>
+    <RouterView style="position:absolute; top:50px"/>
     <Logo />
-    <Navbar />
+    <Navbar style="height: 50px"/>
 </template>
 
 <style>
