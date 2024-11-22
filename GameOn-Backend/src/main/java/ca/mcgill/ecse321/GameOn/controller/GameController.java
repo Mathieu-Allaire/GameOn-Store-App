@@ -76,7 +76,7 @@ public class GameController {
      * @return the HTTP response status
      * @Author Neeshal Imrit
      */
-    @DeleteMapping("/games/{name}")
+    @PostMapping("/games/{name}")
     public ResponseEntity<?> deleteGame(@PathVariable String name){
         try{
             gameService.deleteGame(name);

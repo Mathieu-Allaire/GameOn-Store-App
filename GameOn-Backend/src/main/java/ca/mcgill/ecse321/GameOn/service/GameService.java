@@ -185,7 +185,8 @@ public class GameService {
         if (game == null) {
             throw new IllegalArgumentException("Game does not exist");
         }
-        gameRepository.delete(game);
+        game.setGameStatus(GameStatus.Deleted);
+        gameRepository.save(game);
     }
 
     /**

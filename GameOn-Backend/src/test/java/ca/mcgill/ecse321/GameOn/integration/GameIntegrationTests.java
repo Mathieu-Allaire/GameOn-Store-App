@@ -540,4 +540,16 @@ public class GameIntegrationTests {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
+    @Test
+    @Order(30)
+    public void testDeleteGame(){
+        // Arrange
+        String url = "/games/" + GAME_NAME;
+
+        // Act
+        ResponseEntity<?> response = client.postForEntity(url, null, String.class);
+        // Assert
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
 }

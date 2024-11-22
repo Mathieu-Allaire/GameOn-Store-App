@@ -31,7 +31,7 @@ public class Game
   private boolean isInStock;
 
   //Game State Machines
-  public enum GameStatus { Available, OutOfStock, Unavailable }
+  public enum GameStatus { Available, OutOfStock, Unavailable, Deleted }
   private GameStatus gameStatus;
 
   //Game Associations
