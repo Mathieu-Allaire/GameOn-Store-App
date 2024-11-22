@@ -1,110 +1,113 @@
 package ca.mcgill.ecse321.GameOn.dto;
 
-import ca.mcgill.ecse321.GameOn.model.Customer;
-import ca.mcgill.ecse321.GameOn.model.Manager;
 import ca.mcgill.ecse321.GameOn.model.Review;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotBlank;
+
 
 public class ReviewDto {
 
-    //@NotBlank(message = "The description must not be empty")
     private String description;
-
-    //@Min(value = 0, message = "The number of stars must be greater than or equal to 0")
-    //@Max(value = 5, message = "The maximum number of stars allowed is 5")
     private int stars;
-
-    //Min(value = 0, message = "The number of likes must be positive")
     private int likes;
-
-    //@Min(value = 0, message = "The number of dislikes must be positive")
     private int dislikes;
-
     private String reply;
 
-    //@NotBlank(message = "The customer is invalid")
-    private Customer customer;
 
-    //@NotBlank(message = "The manager is invalid")
-    private Manager manager;
+    private Long customerId;
 
-    public ReviewDto(){}
 
-    public ReviewDto(Review model) {
-        this.description = model.getDescription();
-        this.stars = model.getStars();
-        this.likes = model.getLikes();
-        this.dislikes = model.getDislikes();
-        this.reply = model.getReply();
-    }
+    private Long managerId;
 
-    public ReviewDto(String description, int stars, int likes, int dislikes, String reply, Customer customer, Manager manager) {
+    // Default constructor for deserialization
+    public ReviewDto() {}
+
+    // Full constructor
+    public ReviewDto(String description, int stars, int likes, int dislikes, String reply, Long customerId, Long managerId) {
         this.description = description;
         this.stars = stars;
         this.likes = likes;
         this.dislikes = dislikes;
         this.reply = reply;
-        this.customer = customer;
-        this.manager = manager;
-
+        this.customerId = customerId;
+        this.managerId = managerId;
     }
 
+    public ReviewDto(Review review) {
+        this.description = review.getDescription();
+        this.stars = review.getStars();
+        this.likes = review.getLikes();
+        this.dislikes = review.getDislikes();
+        this.reply = review.getReply();
+        this.customerId = review.getReviewAuthor().getId();
+        this.managerId = review.getManager().getId();
+    }
+
+    // Getters and setters
     public String getDescription() {
         return description;
-    }
-
-    public int getStars() {
-        return stars;
-    }
-
-    public int getLikes() {
-        return likes;
-    }
-
-    public int getDislikes() {
-        return dislikes;
-    }
-
-    public String getReply() {
-        return reply;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-    public Manager getManager() {
-        return manager;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
+    public int getStars() {
+        return stars;
+    }
+
     public void setStars(int stars) {
         this.stars = stars;
+    }
+
+    public int getLikes() {
+        return likes;
     }
 
     public void setLikes(int likes) {
         this.likes = likes;
     }
 
+    public int getDislikes() {
+        return dislikes;
+    }
+
     public void setDislikes(int dislikes) {
         this.dislikes = dislikes;
+    }
+
+    public String getReply() {
+        return reply;
     }
 
     public void setReply(String reply) {
         this.reply = reply;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setManager(Manager manager) {
-        this.manager = manager;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
+    public Long getManagerId() {
+        return managerId;
+    }
+
+    public void setManagerId(Long managerId) {
+        this.managerId = managerId;
+    }
+
+    @Override
+    public String toString() {
+        return "ReviewDto{" +
+                "description='" + description + '\'' +
+                ", stars=" + stars +
+                ", likes=" + likes +
+                ", dislikes=" + dislikes +
+                ", reply='" + reply + '\'' +
+                ", customerId=" + customerId +
+                ", managerId=" + managerId +
+                '}';
+    }
 }
-

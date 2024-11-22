@@ -1,14 +1,8 @@
 package ca.mcgill.ecse321.GameOn.service;
 
 import ca.mcgill.ecse321.GameOn.exception.GameOnException;
-import ca.mcgill.ecse321.GameOn.model.Review;
-import ca.mcgill.ecse321.GameOn.model.Customer;
-import ca.mcgill.ecse321.GameOn.model.Manager;
-import ca.mcgill.ecse321.GameOn.model.Category;
-import ca.mcgill.ecse321.GameOn.model.Game;
-import ca.mcgill.ecse321.GameOn.model.Cart;
-import ca.mcgill.ecse321.GameOn.repository.ReviewRepository;
-import ca.mcgill.ecse321.GameOn.repository.GameRepository;
+import ca.mcgill.ecse321.GameOn.model.*;
+import ca.mcgill.ecse321.GameOn.repository.*;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -34,10 +28,25 @@ public class ReviewServiceTests {
     private ReviewRepository reviewRepoMock;
 
     @Mock
+    private CustomerRepository customerRepository;
+
+    @Mock
+    private PersonRepository personRepository;
+
+    @Mock
+    private ManagerRepository managerRepository;
+
+    @Mock
+    private CartRepository cartRepository;
+
+    @Mock
     private GameRepository gameRepoMock;
 
     @InjectMocks
     private ReviewService reviewService;
+
+    @InjectMocks
+    private AccountService accountService;
 
     //Attributes for Game object
     private static final String VALID_PICTURE = "url";
@@ -51,18 +60,27 @@ public class ReviewServiceTests {
     private static final String VALID_CATEGORY_NAME = "testCategory";
 
     //Attributes for Customer Object
+    private static final String VALID_CUSTOMER_EMAIL = "hello@gmail.com";
+    private static final String VALID_CUSTOMER_NAME = "Hel Lo";
+    private static final String VALID_CUSTOMER_PASSWORD = "123456789";
     private static final int VALID_CARD_NUM = 123;
     private static final Date VALID_CARD_DATE = Date.valueOf("2025-09-02");
     private static final String VALID_BILLING_ADDRESS = "23 frjjrfngr";
-    //Also needs cart as parameter, cart does not need parameters
+
+    //Attributes for Manager Object
+    private static final String VALID_MANAGER_EMAIL = "yeeter@gmail.com";
+    private static final String VALID_MANAGER_NAME = "Yeeter the Second";
 
     //Attributes for Review Object
     private static final String VALID_REVIEW_DESCRIPTION = "Great game!";
     private static final int VALID_STARS = 5;
     private static final int VALID_LIKES = 10;
     private static final int VALID_DISLIKES = 2;
-    //Needs customer as parameter
-    //Needs manager as parameter
+
+    private static int VALID_CUSTOMER_ID = 10;
+    private static int VALID_MANAGER_ID = 20;
+
+
 
     //Extra things to test
     private static final int VALID_REVIEW_ID = 1;
@@ -163,15 +181,23 @@ public class ReviewServiceTests {
     @Test
     public void testPostValidReview() {
         // Arrange
-        Cart cart = new Cart();
-        Customer customer = new Customer(VALID_CARD_NUM,VALID_CARD_DATE,VALID_BILLING_ADDRESS,cart);
-        Manager manager = new Manager();
+        when(personRepository.save(any(Person.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+        when(cartRepository.save(any(Cart.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+        when(customerRepository.save(any(Customer.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+        when(personRepository.findPersonByEmail(VALID_CUSTOMER_EMAIL)).thenReturn(null);
 
-        // Whenever we save gameRepositoy.save(game) -> it will return game
-        when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+        Person createdCustomer = accountService.createCustomer(VALID_CUSTOMER_EMAIL,VALID_CUSTOMER_NAME,VALID_CUSTOMER_PASSWORD,VALID_CARD_NUM,VALID_CARD_DATE,VALID_BILLING_ADDRESS);
+        Person createdManager = accountService.createManager(VALID_MANAGER_EMAIL,VALID_MANAGER_NAME);
+        Customer customer = (Customer) createdCustomer.getRole(0);
+        customer.setId((long)VALID_CUSTOMER_ID);
+        Manager manager = (Manager) createdManager.getRole(0);
+        manager.setId((long)VALID_MANAGER_ID);
+
+        when(customerRepository.findCustomerById(VALID_CUSTOMER_ID)).thenReturn(customer);
+        when(managerRepository.findManagerById(VALID_MANAGER_ID)).thenReturn(manager);
 
         // Act
-        Review review = reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, customer, manager);
+        Review review = reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, (long) customer.getId(), manager.getId());
 
         // Assert
         assertNotNull(review);
@@ -200,7 +226,7 @@ public class ReviewServiceTests {
 
         // Assert
         GameOnException ex = assertThrows(GameOnException.class, () -> {
-            reviewService.postReview(INVALID_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, customer, manager);
+            reviewService.postReview(INVALID_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, customer.getId(), manager.getId());
         });
         assertEquals("The review has an empty description", ex.getMessage());
     }
@@ -223,7 +249,7 @@ public class ReviewServiceTests {
 
         // Assert
         GameOnException ex = assertThrows(GameOnException.class, () -> {
-            reviewService.postReview(VALID_REVIEW_DESCRIPTION, INVALID_STARS, VALID_LIKES, VALID_DISLIKES, customer, manager);
+            reviewService.postReview(VALID_REVIEW_DESCRIPTION, INVALID_STARS, VALID_LIKES, VALID_DISLIKES, customer.getId(), manager.getId());
         });
         assertEquals("The number of stars must be between 0 and 5", ex.getMessage());
 
@@ -246,7 +272,7 @@ public class ReviewServiceTests {
 
         // Assert
         GameOnException ex = assertThrows(GameOnException.class, () -> {
-            reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, INVALID_LIKES, VALID_DISLIKES, customer, manager);
+            reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, INVALID_LIKES, VALID_DISLIKES, customer.getId(), manager.getId());
         });
         assertEquals("The number of likes must be non-negative", ex.getMessage());
     }
@@ -268,7 +294,7 @@ public class ReviewServiceTests {
 
         // Assert
         GameOnException ex = assertThrows(GameOnException.class, () -> {
-            reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, INVALID_DISLIKES, customer, manager);
+            reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, INVALID_DISLIKES, customer.getId(), manager.getId());
         });
         assertEquals("The number of dislikes must be non-negative", ex.getMessage());
     }
@@ -282,17 +308,29 @@ public class ReviewServiceTests {
     @Test
     public void testPostInvalidReviewWithInvalidAuthor() {
         // Arrange
-        new Cart();
-        Customer customer = null;
-        Manager manager = new Manager();
+        when(personRepository.save(any(Person.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+        when(cartRepository.save(any(Cart.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+        when(customerRepository.save(any(Customer.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+        when(personRepository.findPersonByEmail(VALID_CUSTOMER_EMAIL)).thenReturn(null);
+
+        Person createdCustomer = accountService.createCustomer(VALID_CUSTOMER_EMAIL,VALID_CUSTOMER_NAME,VALID_CUSTOMER_PASSWORD,VALID_CARD_NUM,VALID_CARD_DATE,VALID_BILLING_ADDRESS);
+        Person createdManager = accountService.createManager(VALID_MANAGER_EMAIL,VALID_MANAGER_NAME);
+        Customer customer = (Customer) createdCustomer.getRole(0);
+        customer.setId(null);
+        Manager manager = (Manager) createdManager.getRole(0);
+        manager.setId((long)VALID_MANAGER_ID);
+
+        when(customerRepository.findCustomerById(VALID_CUSTOMER_ID)).thenReturn(customer);
+        when(managerRepository.findManagerById(VALID_MANAGER_ID)).thenReturn(manager);
+
 
         when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
         // Assert
         GameOnException ex = assertThrows(GameOnException.class, () -> {
-            reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, customer, manager);
+            reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, customer.getId(), manager.getId());
         });
-        assertEquals("The author is invalid", ex.getMessage());
+        assertEquals("The author id is null", ex.getMessage());
     }
 
 
@@ -305,17 +343,28 @@ public class ReviewServiceTests {
     @Test
     public void testPostInvalidReviewWithInvalidManager() {
         // Arrange
-        Cart cart = new Cart();
-        Customer customer = new Customer(VALID_CARD_NUM,VALID_CARD_DATE,VALID_BILLING_ADDRESS,cart);
-        Manager manager = null;
+        when(personRepository.save(any(Person.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+        when(cartRepository.save(any(Cart.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+        when(customerRepository.save(any(Customer.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+        when(personRepository.findPersonByEmail(VALID_CUSTOMER_EMAIL)).thenReturn(null);
+
+        Person createdCustomer = accountService.createCustomer(VALID_CUSTOMER_EMAIL,VALID_CUSTOMER_NAME,VALID_CUSTOMER_PASSWORD,VALID_CARD_NUM,VALID_CARD_DATE,VALID_BILLING_ADDRESS);
+        Person createdManager = accountService.createManager(VALID_MANAGER_EMAIL,VALID_MANAGER_NAME);
+        Customer customer = (Customer) createdCustomer.getRole(0);
+        customer.setId((long)VALID_CUSTOMER_ID);
+        Manager manager = (Manager) createdManager.getRole(0);
+        manager.setId(null);
+
+        when(customerRepository.findCustomerById(VALID_CUSTOMER_ID)).thenReturn(customer);
+
 
         when(reviewRepoMock.save(any(Review.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
         // Assert
         GameOnException ex = assertThrows(GameOnException.class, () -> {
-            reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, customer, manager);
+            reviewService.postReview(VALID_REVIEW_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, customer.getId(), manager.getId());
         });
-        assertEquals("The manager is invalid", ex.getMessage());
+        assertEquals("The manager id is null", ex.getMessage());
     }
 
     /**
