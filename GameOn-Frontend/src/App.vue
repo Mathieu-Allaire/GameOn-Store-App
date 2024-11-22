@@ -12,11 +12,16 @@ import Logo from './components/Logo.vue'
 </template>
 
 <style>
-/* Remove logo styles if previously added here */
 
 /* Ensure body has no margin to prevent unexpected spacing */
 body {
   margin: 0;
   padding: 0;
 }
+
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
+
 </style>

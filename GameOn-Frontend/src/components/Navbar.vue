@@ -60,7 +60,7 @@ import { RouterLink } from 'vue-router'
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #050505;
+  background-color: #333;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;

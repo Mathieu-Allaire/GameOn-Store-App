@@ -62,7 +62,7 @@
   
   <style scoped>
   .manage-categories {
-    padding: 40px;
+    padding: 140px;
   }
   
   h1 {
@@ -74,7 +74,7 @@
     color: #ff0000;
     font-size: 1.5em; /* Increase font size */
   }
-  
+
   .columns {
     display: flex;
     gap: 40px;
