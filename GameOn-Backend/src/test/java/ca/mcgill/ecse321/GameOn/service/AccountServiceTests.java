@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.Date;
-import java.util.List;
+
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -507,12 +507,11 @@ public class AccountServiceTests {
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
 
         //Act : find employee
-        List<String> response = accountService.logIn(VALID_EMAIL, preSetPassword);
+        Integer response = accountService.logIn(VALID_EMAIL, preSetPassword);
 
         //Assert
         assertNotNull(response);
-        assertEquals(bob.getEmail(), response.get(0));
-        assertEquals("2", response.get(1));
+        assertEquals(2, response);
     }
 
     @Test
@@ -527,12 +526,11 @@ public class AccountServiceTests {
         when(personRepository.findPersonByEmail(VALID_EMAIL)).thenReturn(bob);
 
         //Act : see if it logged in
-        List<String> response = accountService.logIn(VALID_EMAIL, VALID_PASSWORD);
+        Integer response = accountService.logIn(VALID_EMAIL, VALID_PASSWORD);
 
         //Assert
         assertNotNull(response);
-        assertEquals(bob.getEmail(), response.get(0));
-        assertEquals("1", response.get(1));
+        assertEquals(1, response);
     }
 
     @Test
@@ -548,7 +546,7 @@ public class AccountServiceTests {
 
         //Case when wrong password
         try {
-            List<String> response = accountService.logIn(VALID_EMAIL, "hell324243o");
+            Integer response = accountService.logIn(VALID_EMAIL, "hell324243o");
          } catch (Exception e) {
          assertEquals("Incorrect password", e.getMessage());
          }

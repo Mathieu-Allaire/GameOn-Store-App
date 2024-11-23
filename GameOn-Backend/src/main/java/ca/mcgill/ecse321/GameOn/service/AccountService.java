@@ -2,7 +2,7 @@ package ca.mcgill.ecse321.GameOn.service;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.List;
+
 
 import ca.mcgill.ecse321.GameOn.exception.GameOnException;
 import ca.mcgill.ecse321.GameOn.model.*;
@@ -256,8 +256,8 @@ public class AccountService {
     }
 
     
-    public List<String> logIn(String email, String password){
-        List<String> response;
+    public Integer logIn(String email, String password){
+        
 
         if (email == null || email.trim().length() == 0 || email.contains(" ") || email.contains("@") == false || email.contains(".") == false) {
             throw new IllegalArgumentException("Email is invalid");
@@ -297,8 +297,7 @@ public class AccountService {
         if (x == 0) {
             throw new IllegalArgumentException("Incorrect password");
         }
-        response = List.of(person.getEmail(), String.valueOf(x));
-        return response;
+        return x;
     }
 
 

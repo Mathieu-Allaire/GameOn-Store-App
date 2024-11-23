@@ -1,6 +1,6 @@
 package ca.mcgill.ecse321.GameOn.controller;
 
-import java.util.List;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -123,7 +123,7 @@ public class AccountController {
     @GetMapping("/login/{email}/{password}")
     public ResponseEntity<?> logIn(@PathVariable String email, @PathVariable String password){
         try {
-            List<String> response = accountService.logIn(email, password);
+            Integer response = accountService.logIn(email, password);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
