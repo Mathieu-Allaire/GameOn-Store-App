@@ -19,6 +19,9 @@ public class Category
   //------------------------
   // MEMBER VARIABLES
   //------------------------
+  // Category can either be available or unavailable
+  public enum CategoryStatus {AVAILABLE, UNAVAILABLE}
+  private CategoryStatus status;
 
   //Category Attributes
   @Id
@@ -36,6 +39,7 @@ public class Category
   {
     name = aName;
     games = new ArrayList<Game>();
+    status = CategoryStatus.AVAILABLE;
   }
 
   protected Category(){
@@ -45,6 +49,19 @@ public class Category
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setStatus(CategoryStatus aStatus)
+  {
+    boolean wasSet = false;
+    status = aStatus;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public CategoryStatus getStatus()
+  {
+    return status;
+  }
 
   public boolean setName(String aName)
   {
