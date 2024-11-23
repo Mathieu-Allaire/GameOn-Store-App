@@ -47,6 +47,7 @@ export default {
   },
   methods: {
     createEmployee() {
+      //Verify if email and name are not empty
       if (this.newEmployee.email && this.newEmployee.name) {
         // Add new employee to the list
         const newId = this.employees.length + 1;
@@ -67,6 +68,8 @@ export default {
   },
 };
 </script>
+
+
 
 <style scoped>
 .employee-view {

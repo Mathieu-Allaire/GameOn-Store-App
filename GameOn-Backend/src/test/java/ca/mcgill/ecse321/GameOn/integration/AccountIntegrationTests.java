@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 
+
 import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
 import ca.mcgill.ecse321.GameOn.repository.CustomerRepository;
 import ca.mcgill.ecse321.GameOn.repository.EmployeeRepository;
@@ -195,6 +196,38 @@ public class AccountIntegrationTests {
 
     }
 
+    @Test
+    @Order(8)
+    public void LogInCustomerTest(){
+        // Read a customer who does not exist
+        String url = "/login/" + VALID_EMAIL + "/" + VALID_PASSWORD;
+
+        // Act
+        ResponseEntity<?> response = client.getForEntity(url, Integer.class);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Integer whoIsLoggedIn = (Integer) response.getBody();
+        assertEquals(1, whoIsLoggedIn); // 1 is Customer, 2 is Employee , 3 is manager
+
+    }
+
+    @Test
+    @Order(9)
+    public void InvalidLogInCustomerTest(){
+        // Read a customer who does not exist
+        String url = "/login/" + VALID_EMAIL + "/" + "wrongPassword123";
+
+        // Act
+        ResponseEntity<?> response = client.getForEntity(url, String.class);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(response.getBody(), "Incorrect password"); //Make sure that the system outputs an error message
+
+    }
     
     
 }

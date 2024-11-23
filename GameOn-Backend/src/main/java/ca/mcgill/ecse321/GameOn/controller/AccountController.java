@@ -1,5 +1,7 @@
 package ca.mcgill.ecse321.GameOn.controller;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -113,4 +115,18 @@ public class AccountController {
         }
     }
 
+    /**
+     * Return the email and if the user is logged in
+     * @param email The primary key of the Employee to find.
+     * @return The employee with the given email.
+     */
+    @GetMapping("/login/{email}/{password}")
+    public ResponseEntity<?> logIn(@PathVariable String email, @PathVariable String password){
+        try {
+            Integer response = accountService.logIn(email, password);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
