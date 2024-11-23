@@ -74,11 +74,15 @@ public class ReviewIntegrationTests {
 
     @AfterAll
     public void clearDatabase() {
+        for (Customer customer : customerRepo.findAll()) {
+            customer.setCart(null); // Break the relationship by setting the cart reference to null
+            customerRepo.save(customer); // Save changes to persist the update
+        }
         reviewRepo.deleteAll();
         personRepo.deleteAll();
+        cartRepo.deleteAll();
         customerRepo.deleteAll();
         managerRepo.deleteAll();
-        cartRepo.deleteAll();
     }
 
 
