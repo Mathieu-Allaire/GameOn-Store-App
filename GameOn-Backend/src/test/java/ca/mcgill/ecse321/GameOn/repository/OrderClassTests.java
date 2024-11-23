@@ -56,7 +56,7 @@ public class OrderClassTests {
 
         
         // Create Order
-        OrderClass aOrderClass = new OrderClass(aCustomerDate, cart, aCustomer);
+        OrderClass aOrderClass = new OrderClass(aCustomerDate, aCustomer);
         aOrderClass = orderRepo.save(aOrderClass);
         
         int id = aOrderClass.getId();

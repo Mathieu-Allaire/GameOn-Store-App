@@ -25,8 +25,7 @@ public class OrderClass
   private Date purchaseDate;
 
   //Order Associations
-  @OneToOne
-  private Cart cart;
+
   @OneToMany
   private List<SpecificGame> orderGames;
   @ManyToOne
@@ -36,14 +35,14 @@ public class OrderClass
   // CONSTRUCTOR
   //------------------------
 
-  public OrderClass(Date aPurchaseDate, Cart aCart, Customer aOrderCustomer)
+  public OrderClass(Date aPurchaseDate, Customer aOrderCustomer)
   {
     purchaseDate = aPurchaseDate;
-    boolean didAddCart = setCart(aCart);
-    if (!didAddCart)
-    {
-      throw new RuntimeException("Unable to create order due to cart. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
+//    boolean didAddCart = setCart(aCart);
+//    if (!didAddCart)
+//    {
+//      throw new RuntimeException("Unable to create order due to cart. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+//    }
     orderGames = new ArrayList<SpecificGame>();
     boolean didAddOrderCustomer = setOrderCustomer(aOrderCustomer);
     if (!didAddOrderCustomer)
@@ -69,10 +68,10 @@ public class OrderClass
     return purchaseDate;
   }
   /* Code from template association_GetOne */
-  public Cart getCart()
-  {
-    return cart;
-  }
+//  public Cart getCart()
+//  {
+//    return cart;
+//  }
 
   /* Code from template association_GetOne */
   public Customer getOrderCustomer()
@@ -80,39 +79,41 @@ public class OrderClass
     return orderCustomer;
   }
   /* Code from template association_SetOneToOptionalOne */
-  public boolean setCart(Cart aNewCart)
-  {
-    boolean wasSet = false;
-    if (aNewCart == null)
-    {
+//  public boolean setCart(Cart aNewCart)
+//  {
+//    boolean wasSet = false;
+//    if (aNewCart == null)
+//    {
       //Unable to setCart to null, as order must always be associated to a cart
-      return wasSet;
-    }
-    
-    OrderClass existingOrderClass = aNewCart.getOrder();
-    if (existingOrderClass != null && !equals(existingOrderClass))
-    {
-      //Unable to setCart, the current cart already has a order, which would be orphaned if it were re-assigned
-      return wasSet;
-    }
-    
-    Cart anOldCart = cart;
-    cart = aNewCart;
-    cart.setOrder(this);
-
-    if (anOldCart != null)
-    {
-      anOldCart.setOrder(null);
-    }
-    wasSet = true;
-    return wasSet;
-  }
+//      return wasSet;
+//    }
+//
+//    OrderClass existingOrderClass = aNewCart.getOrder();
+//    if (existingOrderClass != null && !equals(existingOrderClass))
+//    {
+//      //Unable to setCart, the current cart already has a order, which would be orphaned if it were re-assigned
+//      return wasSet;
+//    }
+//
+//    Cart anOldCart = cart;
+//    cart = aNewCart;
+//    cart.setOrder(this);
+//
+//    if (anOldCart != null)
+//    {
+//      anOldCart.setOrder(null);
+//    }
+//    wasSet = true;
+//    return wasSet;
+//  }
 
   public List<SpecificGame> getOrderGames()
   {
     List<SpecificGame> newOrderGames = Collections.unmodifiableList(orderGames);
     return newOrderGames;
   }
+
+  public void setOrderGames(List<SpecificGame> aOrderGames) {this.orderGames = aOrderGames;}
 
   /* Code from template association_SetOneToMany */
   public boolean setOrderCustomer(Customer aOrderCustomer)
