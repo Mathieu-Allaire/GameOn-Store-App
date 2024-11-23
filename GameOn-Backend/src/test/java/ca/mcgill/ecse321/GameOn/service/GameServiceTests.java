@@ -93,22 +93,12 @@ public class GameServiceTests {
     public void TestDeleteCategory(){
         // Arrange
         Category category = new Category(VALID_CATEGORY_NAME);
-        Game game1 = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, category);
-        Game game2 = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, category);
-        category.addGame(game1);
-        category.addGame(game2);
-    
+        
         when(categoryMockRepo.findCategoryByName(VALID_CATEGORY_NAME)).thenReturn(category);
-        doNothing().when(categoryMockRepo).delete(any(Category.class));
-        doNothing().when(gameMockRepo).delete(any(Game.class));
-
-        // Act
+        when(categoryMockRepo.save(any(Category.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
+        
         service.deleteCategory(VALID_CATEGORY_NAME);
-
-        // Assert
-        verify(gameMockRepo, times(1)).delete(game1);
-        verify(gameMockRepo, times(1)).delete(game2);
-        verify(categoryMockRepo, times(1)).delete(category);
+        assertEquals(category.getStatus(), Category.CategoryStatus.UNAVAILABLE);
     }
 
     @Test
@@ -269,13 +259,12 @@ public class GameServiceTests {
         // Arrange
         Game game = new Game(VALID_URL, VALID_GAME_NAME, VALID_DESCRIPTION, VALID_PRICE, VALID_QUANTITY, VALID_CATEGORY);
         when(gameMockRepo.findGameByName(VALID_GAME_NAME)).thenReturn(game);
-        doNothing().when(gameMockRepo).delete(any(Game.class));
-
+        when(gameMockRepo.save(any(Game.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
         // Act
         service.deleteGame(VALID_GAME_NAME);
 
         // Assert
-        verify(gameMockRepo, times(1)).delete(game);
+        assertEquals(GameStatus.Deleted, game.getGameStatus());
     }
 
     @Test void testDeleteInvalidGame(){

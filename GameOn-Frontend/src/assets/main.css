@@ -1,0 +1,42 @@
+@import './base.css';
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: rgb(160, 233, 255);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+.light_green {
+  text-decoration:color-mix(in hsl shorter hue, color percentage, color percentage);
+  color: rgb(255, 236, 174);
+  transition: 0.4s;
+  padding: 15px;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 65%, 37%, 0.719);
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    place-items: center;
+  }
+
+  #app {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0 2rem;
+  }
+}

@@ -75,12 +75,9 @@ public class GameService {
             throw new IllegalArgumentException("Category does not exist");
         }
 
-        //The associated game to the category should be deleted first
-        for (Game game : category.getGames()) {
-            gameRepository.delete(game);
-        }
+        category.setStatus(Category.CategoryStatus.UNAVAILABLE);
 
-        categoryRepository.delete(category);
+        categoryRepository.save(category);
     }
 
     /**
@@ -162,6 +159,10 @@ public class GameService {
             throw new IllegalArgumentException("Category does not exist");
         }
 
+        if (category.getStatus() == Category.CategoryStatus.UNAVAILABLE) {
+            throw new IllegalArgumentException("Category does not exists");
+        }
+
         Game game = new Game(aPicture, aName, aDescription, aPrice, aQuantity, category);
         gameRepository.save(game);
 
@@ -184,7 +185,8 @@ public class GameService {
         if (game == null) {
             throw new IllegalArgumentException("Game does not exist");
         }
-        gameRepository.delete(game);
+        game.setGameStatus(GameStatus.Deleted);
+        gameRepository.save(game);
     }
 
     /**
