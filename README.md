@@ -57,3 +57,16 @@ Joel Boyer | 23| <ul><li>PurchaseGame Service and DTOs </li> <li>PurchaseGameSer
 Joseph Feghaly | 24| <ul><li>PurchaseGameService </li> <li>PurchaseGameIntegrationTests</li> <li>PurchaseGameController</li></ul>|
 ---
 [Deliverable 2 report](https://github.com/McGill-ECSE321-Fall2024/project-group-3/wiki/Deliverable-2)
+
+# Deliverable 3
+## Individual Effort
+Person | Hours | Tasks Done|
+--- | --- |---|
+Camilo Berdugo | 20| <ul><li>Manage Employees Interface and Implementation</li> <li>Log In Page Interface and Implementation with Luis</li> </ul>|
+Neeshal Imrit | 20| <ul><li>Employee Games Interface and Implementation</li> <li>Wiki on how to start backend/frotend</li></ul>|
+Luis Jarquin | 20| <ul><li>CSS style Implemented for app.vue </li> <li>Register Page Interface and Implementation </li> <li>Log In Page Interface and Implementation with Camilo</li> </ul>|
+Mathieu Allaire | 20| <ul><li>Wishlist Page Interface and Implementation </li> <li>Game Page Interface and Implementation </li></ul>|
+Joel Boyer | 20| <ul><li>Manage Games Page Interface and Implementation </li> <li>Main Page Interface and Implementation</li> </ul>|
+Joseph Feghaly | 20| <ul><li>Staff's Order Page Interface and Implementation </li> <li>Customer's Order Page Interface and Implementation</li>|
+---
+[Deliverable 3 report](https://github.com/McGill-ECSE321-Fall2024/project-group-3/wiki/Deliverable-3)

@@ -5,18 +5,11 @@ import java.time.LocalDate;
 
 import ca.mcgill.ecse321.GameOn.exception.GameOnException;
 import ca.mcgill.ecse321.GameOn.model.*;
-import ca.mcgill.ecse321.GameOn.repository.CartRepository;
+import ca.mcgill.ecse321.GameOn.repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
-
-import ca.mcgill.ecse321.GameOn.repository.CustomerRepository;
-
-import ca.mcgill.ecse321.GameOn.repository.EmployeeRepository;
-
 
 
 import jakarta.transaction.Transactional;
@@ -34,6 +27,8 @@ public class AccountService {
     private CustomerRepository customerRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private ManagerRepository managerRepository;
     @Autowired
     private CartRepository cartRepository;
 
@@ -105,6 +100,7 @@ public class AccountService {
 
     }
 
+
     /**
      * This method will find a Person with role customer
      * @param email
@@ -160,6 +156,33 @@ public class AccountService {
 
         return employee;
     }
+    @Transactional
+    public Person createManager(String aEmail, String aName){
+        //Make sure we got a correct email
+        if (aEmail == null || aEmail.trim().length() == 0 || aEmail.contains(" ") || aEmail.contains("@") == false || aEmail.contains(".") == false) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Email is invalid");
+        }
+        //Make sure the name is not empty
+        if (aName == null || aName.trim().length() == 0) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Name is invalid");
+        }
+
+        //Make sure no repeated emails
+        if (personRepository.findPersonByEmail(aEmail) != null) {
+            throw new GameOnException(HttpStatus.CONFLICT, "Email is already taken");
+        }
+
+        Manager managerRole = new Manager();
+        managerRepository.save(managerRole);
+
+        String genericPassword = "GameOn123!";
+        Person manager = new Person(aEmail, aName, genericPassword, managerRole);
+        String encryptedPassword = manager.getEncryptedPassword(genericPassword);
+        manager.setPassword(encryptedPassword); // this sets the generic password into an encrypted password
+        personRepository.save(manager);
+
+        return manager;
+    }
     /**
      * This method will find a Person with role employee
      * @param email
@@ -180,6 +203,23 @@ public class AccountService {
         }
     
         return employee;
+
+    }
+    public Person findManagerByEmail(String email){
+        if (email == null || email.trim().length() == 0 || email.contains(" ") || email.contains("@") == false || email.contains(".") == false) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Email is invalid");
+        }
+
+        Person manager = personRepository.findPersonByEmail(email);
+        if (manager == null) {
+            throw new GameOnException(HttpStatus.NOT_FOUND, "Manager not found");
+        }
+
+        if(personRepository.findPersonByEmail(email).getRole(0).getClass() != Manager.class){
+            throw new GameOnException(HttpStatus.NOT_FOUND, "No Manager with this email");
+        }
+
+        return manager;
 
     }
     /**

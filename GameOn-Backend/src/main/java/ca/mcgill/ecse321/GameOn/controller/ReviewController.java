@@ -3,10 +3,7 @@ package ca.mcgill.ecse321.GameOn.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,9 +11,6 @@ import java.util.stream.Collectors;
 import ca.mcgill.ecse321.GameOn.dto.ReviewDto;
 import ca.mcgill.ecse321.GameOn.service.ReviewService;
 import ca.mcgill.ecse321.GameOn.model.Review;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import jakarta.validation.Valid;
 
 /**
  * This class represents the Review Controller, which handles the HTTP
@@ -39,21 +33,18 @@ public class ReviewController{
      * @author Mathieu Allaire
      */
     @PostMapping("/reviews")
-    public ResponseEntity<?> postReview(@Valid @RequestBody ReviewDto reviewDto) {
-        try {
-            Review review = reviewService.postReview(
+    @ResponseStatus(HttpStatus.CREATED)
+    public ReviewDto postReview(@RequestBody ReviewDto reviewDto) {
+        Review review = reviewService.postReview(
                     reviewDto.getDescription(),
                     reviewDto.getStars(),
                     reviewDto.getLikes(),
                     reviewDto.getDislikes(),
-                    reviewDto.getCustomer(),
-                    reviewDto.getManager()
-            );
-            ReviewDto response = new ReviewDto(review);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
-        }
+                    reviewDto.getCustomerId(),
+                    reviewDto.getManagerId()
+        );
+        return new ReviewDto(review);
+
     }
 
 
@@ -85,14 +76,10 @@ public class ReviewController{
      * @author Mathieu Allaire
      */
     @GetMapping("/reviews/{id}")
-    public ResponseEntity<?> findReviewById(@PathVariable int id) {
-        try {
-            Review review = reviewService.findReviewById(id);
-            ReviewDto response = new ReviewDto(review);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    @ResponseStatus(HttpStatus.OK)
+    public ReviewDto findReviewById(@PathVariable int id) {
+        Review review = reviewService.findReviewById(id);
+        return new ReviewDto(review);
     }
 
     /**
@@ -121,10 +108,54 @@ public class ReviewController{
      * @return The updated review with the incremented like count.
      * @author Mathieu Allaire
      */
-    @PostMapping("/reviews/{id}/like")
+    @PostMapping("/reviews/{id}/addLike")
     public ResponseEntity<?> likeReview(@PathVariable int id) {
         try {
             Review review = reviewService.likeReview(id);
+            ReviewDto response = new ReviewDto(review);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/reviews/{id}/addDislike")
+    public ResponseEntity<?> dislikeReview(@PathVariable int id) {
+        try {
+            Review review = reviewService.dislikeReview(id);
+            ReviewDto response = new ReviewDto(review);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/reviews/{id}/updateLikes")
+    public ResponseEntity<?> updateLikes(@PathVariable int id, @RequestBody int likes) {
+        try {
+            Review review = reviewService.setLikesReview(id, likes);
+            ReviewDto response = new ReviewDto(review);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/reviews/{id}/updateDislikes")
+    public ResponseEntity<?> updateDislikes(@PathVariable int id, @RequestBody int dislikes) {
+        try {
+            Review review = reviewService.setDislikesReview(id, dislikes);
+            ReviewDto response = new ReviewDto(review);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/reviews/{id}/updateStars")
+    public ResponseEntity<?> updateStars(@PathVariable int id, @RequestBody int stars) {
+        try {
+            Review review = reviewService.setStarsReview(id, stars);
             ReviewDto response = new ReviewDto(review);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {

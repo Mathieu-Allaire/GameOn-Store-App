@@ -56,10 +56,6 @@ GameOn-Backend/.gradle/buildOutputCleanup/buildOutputCleanup.lock
 GameOn-Backend/.gradle/buildOutputCleanup/outputFiles.bin
 GameOn-Backend/bin/main/application.properties
 GameOn-Backend/.settings/org.eclipse.buildship.core.prefs
-GameOn-Backend/bin/main/ca/mcgill/ecse321/GameOn/model/Cart.class
-GameOn-Backend/bin/main/ca/mcgill/ecse321/GameOn/model/Cart.class
-GameOn-Backend/bin/main/ca/mcgill/ecse321/GameOn/model/Employee.class
-GameOn-Backend/bin/main/ca/mcgill/ecse321/GameOn/model/Game$GameStatus.class
-GameOn-Frontend/package-lock.json
-GameOn-Frontend/package.json
-GameOn-Frontend/package-lock.json
+
+#Frontend
+GameOn-Frontend/node_modules

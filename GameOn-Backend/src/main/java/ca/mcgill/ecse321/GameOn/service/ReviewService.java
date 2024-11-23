@@ -2,6 +2,8 @@ package ca.mcgill.ecse321.GameOn.service;
 import java.util.List;
 
 import ca.mcgill.ecse321.GameOn.exception.GameOnException;
+import ca.mcgill.ecse321.GameOn.repository.CustomerRepository;
+import ca.mcgill.ecse321.GameOn.repository.ManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,10 @@ public class ReviewService {
     private ReviewRepository reviewRepo;
     @Autowired
     private GameRepository gameRepo;
+    @Autowired
+    private CustomerRepository customerRepo;
+    @Autowired
+    private ManagerRepository managerRepo;
 
     /**
      * Posts a new review with the specified details and saves it to the repository.
@@ -31,6 +37,7 @@ public class ReviewService {
      * @throws IllegalArgumentException if any parameters are invalid, or if the game does not exist.
      * @author Mathieu Allaire
      */
+    @Transactional
     public List<Review> getAllReviewsforGame(String gameName){
         if (gameName == null || gameName.trim().isEmpty()) {
             throw new GameOnException(HttpStatus.BAD_REQUEST, "The name is invalid");
@@ -56,7 +63,9 @@ public class ReviewService {
      * @throws IllegalArgumentException if any parameters are invalid.
      * @author Mathieu Allaire
      */
-    public Review postReview(String aDescription, int aStars, int aLikes, int aDislikes, Customer aReviewAuthor, Manager aManager) {
+    @Transactional
+    public Review postReview(String aDescription, int aStars, int aLikes, int aDislikes, Long aReviewAuthor, Long aManager) {
+
         if (aDescription == null || aDescription.trim().isEmpty()) {
             throw new GameOnException(HttpStatus.BAD_REQUEST, "The review has an empty description");
         }
@@ -70,12 +79,25 @@ public class ReviewService {
             throw new GameOnException(HttpStatus.BAD_REQUEST, "The number of dislikes must be non-negative");
         }
         if (aReviewAuthor == null) {
-            throw new GameOnException(HttpStatus.BAD_REQUEST, "The author is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The author id is null");
         }
         if (aManager == null) {
-            throw new GameOnException(HttpStatus.BAD_REQUEST, "The manager is invalid");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The manager id is null");
         }
-        Review review = new Review(aDescription, aStars, aLikes, aDislikes, aReviewAuthor, aManager);
+
+        Customer customer = customerRepo.findCustomerById(aReviewAuthor.intValue());
+        Manager manager = managerRepo.findManagerById(aManager.intValue());
+
+        if (customer == null) {
+
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "No author with this id exists");
+        }
+        if (manager == null) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "No manager with this id exists");
+        }
+
+        Review review = new Review(aDescription, aStars, aLikes, aDislikes, customer, manager);
+
 
         reviewRepo.save(review);
         return review;
@@ -89,6 +111,7 @@ public class ReviewService {
      * @throws IllegalArgumentException if no review with the given ID exists.
      * @author Mathieu Allaire
      */
+    @Transactional
     public Review findReviewById(int id) {
         if (id < 0) {
             throw new GameOnException(HttpStatus.BAD_REQUEST, "The review ID must be non-negative.");
@@ -118,6 +141,79 @@ public class ReviewService {
             throw new GameOnException(HttpStatus.NOT_FOUND, "There is no review with ID " + id + ".");
         }
         review.setLikes(review.getLikes() + 1);
+        reviewRepo.save(review);
+        return review;
+    }
+    @Transactional
+    public Review dislikeReview(int id) {
+        if (id < 0) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The review ID must be non-negative.");
+        }
+        Review review = findReviewById(id);
+        if (review == null) {
+            throw new GameOnException(HttpStatus.NOT_FOUND, "There is no review with ID " + id + ".");
+        }
+        review.setLikes(review.getDislikes() + 1);
+        reviewRepo.save(review);
+        return review;
+    }
+
+    /**
+     * Increments the like count of a given review and saves the updated review.
+     *
+     * @param id The id of the review to be liked.
+     * @param likes The number of likes to set the review to.
+     * @return The review with the specified ID with an additional like.
+     * @throws IllegalArgumentException if the review does not exist.
+     * @author Mathieu Allaire
+     */
+    @Transactional
+    public Review setLikesReview(int id, int likes) {
+        if (id < 0) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The review ID must be non-negative.");
+        }
+        Review review = findReviewById(id);
+        if (review == null) {
+            throw new GameOnException(HttpStatus.NOT_FOUND, "There is no review with ID " + id + ".");
+        }
+        if (likes < 0){
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The number of likes must be non-negative");
+        }
+        review.setLikes(likes);
+        reviewRepo.save(review);
+        return review;
+    }
+
+    @Transactional
+    public Review setDislikesReview(int id, int dislikes) {
+        if (id < 0) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The review ID must be non-negative.");
+        }
+        Review review = findReviewById(id);
+        if (review == null) {
+            throw new GameOnException(HttpStatus.NOT_FOUND, "There is no review with ID " + id + ".");
+        }
+        if (dislikes < 0){
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The number of dislikes must be non-negative");
+        }
+        review.setDislikes(dislikes);
+        reviewRepo.save(review);
+        return review;
+    }
+
+    @Transactional
+    public Review setStarsReview(int id, int stars) {
+        if (id < 0) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The review ID must be non-negative.");
+        }
+        Review review = findReviewById(id);
+        if (review == null) {
+            throw new GameOnException(HttpStatus.NOT_FOUND, "There is no review with ID " + id + ".");
+        }
+        if (stars < 0 || stars > 5) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "The number of stars must be between 0 and 5");
+        }
+        review.setStars(stars);
         reviewRepo.save(review);
         return review;
     }

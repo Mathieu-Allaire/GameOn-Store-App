@@ -14,6 +14,7 @@
 
 <script setup>
 
+
 </script>
 
 <style scoped>
@@ -21,6 +22,13 @@ form {
   display: flex;
   flex-direction: column;
   gap: 1em;
+}
+h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1em;
+  color: #04050a;
+  font-family: 'Doto', sans-serif;
 }
 label {
   font-weight: bold;
