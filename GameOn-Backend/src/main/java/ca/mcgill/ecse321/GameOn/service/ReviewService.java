@@ -65,7 +65,6 @@ public class ReviewService {
      */
     @Transactional
     public Review postReview(String aDescription, int aStars, int aLikes, int aDislikes, Long aReviewAuthor, Long aManager) {
-
         if (aDescription == null || aDescription.trim().isEmpty()) {
             throw new GameOnException(HttpStatus.BAD_REQUEST, "The review has an empty description");
         }

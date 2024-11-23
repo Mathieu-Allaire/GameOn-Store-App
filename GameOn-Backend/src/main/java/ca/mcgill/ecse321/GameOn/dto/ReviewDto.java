@@ -4,7 +4,7 @@ import ca.mcgill.ecse321.GameOn.model.Review;
 
 
 public class ReviewDto {
-
+    private int id;
     private String description;
     private int stars;
     private int likes;
@@ -21,7 +21,8 @@ public class ReviewDto {
     public ReviewDto() {}
 
     // Full constructor
-    public ReviewDto(String description, int stars, int likes, int dislikes, String reply, Long customerId, Long managerId) {
+    public ReviewDto(int id,String description, int stars, int likes, int dislikes, String reply, Long customerId, Long managerId) {
+        this.id = id;
         this.description = description;
         this.stars = stars;
         this.likes = likes;
@@ -32,6 +33,7 @@ public class ReviewDto {
     }
 
     public ReviewDto(Review review) {
+        this.id = review.getId();
         this.description = review.getDescription();
         this.stars = review.getStars();
         this.likes = review.getLikes();
@@ -42,6 +44,10 @@ public class ReviewDto {
     }
 
     // Getters and setters
+    public int getId() {return id;}
+
+    public void setId(int id) {this.id = id;}
+
     public String getDescription() {
         return description;
     }
@@ -101,6 +107,7 @@ public class ReviewDto {
     @Override
     public String toString() {
         return "ReviewDto{" +
+                "id=" + id +
                 "description='" + description + '\'' +
                 ", stars=" + stars +
                 ", likes=" + likes +
