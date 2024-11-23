@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.GameOn.service;
 import java.sql.Date;
 import java.time.LocalDate;
 
+
 import ca.mcgill.ecse321.GameOn.exception.GameOnException;
 import ca.mcgill.ecse321.GameOn.model.*;
 import ca.mcgill.ecse321.GameOn.repository.*;
@@ -254,8 +255,9 @@ public class AccountService {
         }
     }
 
-    /* Log in will be implemented later!
-    public boolean logIn(String email, String password){
+    
+    public Integer logIn(String email, String password){
+        
 
         if (email == null || email.trim().length() == 0 || email.contains(" ") || email.contains("@") == false || email.contains(".") == false) {
             throw new IllegalArgumentException("Email is invalid");
@@ -282,20 +284,21 @@ public class AccountService {
                 asciiEncryptedPassword += ",";
             }
         }
-
+        int x = 0; // Verifies who is logged in
         if (person.getPassword().equals(asciiEncryptedPassword)) {
             if (person.getRole(0).getClass() == Customer.class) {
-                GameOnApplication.LoggedInAsCustomer = true;
+                x = 1; // Customer
             } else if (person.getRole(0).getClass() == Employee.class) {
-                GameOnApplication.LoggedInAsEmployee = true;
-            } else {
-                GameOnApplication.LoggedInAsAdmin = true;
+                x = 2;// Employee
+            } else if (person.getRole(0).getClass() == Manager.class){
+                x = 3; // Manager
             }
-            return true;
         }
-
-        return false;
-    }*/
+        if (x == 0) {
+            throw new IllegalArgumentException("Incorrect password");
+        }
+        return x;
+    }
 
 
 }

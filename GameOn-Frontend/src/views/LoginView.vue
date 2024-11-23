@@ -13,9 +13,19 @@
 </template>
 
 <script setup>
+import axios from "axios";
+import { RouterLink } from "vue-router";
 
+const axiosClient = axios.create({
+	// NOTE: it's baseURL, not baseUrl
+	baseURL: "http://localhost:8080"
+});
+
+<!-- session storage to store the list -->
 
 </script>
+
+
 
 <style scoped>
 form {
