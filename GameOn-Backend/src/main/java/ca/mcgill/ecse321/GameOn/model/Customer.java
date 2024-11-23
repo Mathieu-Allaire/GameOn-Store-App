@@ -48,6 +48,7 @@ public class Customer extends Role
     CustomerWish = new ArrayList<WishlistLink>();
     customerOrderClass = new ArrayList<OrderClass>();
     customerReview = new ArrayList<Review>();
+    if (cart != null) {cart.setCustomer(this);}
   }
 
   protected Customer() {
@@ -56,7 +57,7 @@ public class Customer extends Role
   //------------------------
   // INTERFACE
   //------------------------
-
+  public void setOrders(List<OrderClass> orders) {this.customerOrderClass = orders;}
   public void setCardNum(int aCardNum)
   {
     cardNum = aCardNum;
@@ -175,9 +176,9 @@ public class Customer extends Role
 
   
   /* Code from template association_AddManyToOne */
-  public OrderClass addCustomerOrder(int aId, Date aPurchaseDate, Cart aCart)
+  public OrderClass addCustomerOrder(int aId, Date aPurchaseDate)
   {
-    return new OrderClass(aPurchaseDate, aCart, this);
+    return new OrderClass(aPurchaseDate, this);
   }
 
   public boolean addCustomerOrder(OrderClass aCustomerOrderClass)

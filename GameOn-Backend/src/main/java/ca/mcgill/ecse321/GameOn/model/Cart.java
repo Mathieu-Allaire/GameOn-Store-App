@@ -90,32 +90,32 @@ public class Cart
   }
 
   /* Code from template association_SetOptionalOneToOne */
-  public boolean setOrder(OrderClass aNewOrderClass)
-  {
-    boolean wasSet = false;
-    if (orderClass != null && !orderClass.equals(aNewOrderClass) && equals(orderClass.getCart()))
-    {
-      //Unable to setOrder, as existing order would become an orphan
-      return wasSet;
-    }
-
-    orderClass = aNewOrderClass;
-    Cart anOldCart = aNewOrderClass != null ? aNewOrderClass.getCart() : null;
-
-    if (!this.equals(anOldCart))
-    {
-      if (anOldCart != null)
-      {
-        anOldCart.orderClass = null;
-      }
-      if (orderClass != null)
-      {
-        orderClass.setCart(this);
-      }
-    }
-    wasSet = true;
-    return wasSet;
-  }
+//  public boolean setOrder(OrderClass aNewOrderClass)
+//  {
+//    boolean wasSet = false;
+//    if (orderClass != null && !orderClass.equals(aNewOrderClass) && equals(orderClass.getCart()))
+//    {
+//      //Unable to setOrder, as existing order would become an orphan
+//      return wasSet;
+//    }
+//
+//    orderClass = aNewOrderClass;
+//    Cart anOldCart = aNewOrderClass != null ? aNewOrderClass.getCart() : null;
+//
+//    if (!this.equals(anOldCart))
+//    {
+//      if (anOldCart != null)
+//      {
+//        anOldCart.orderClass = null;
+//      }
+//      if (orderClass != null)
+//      {
+//        orderClass.setCart(this);
+//      }
+//    }
+//    wasSet = true;
+//    return wasSet;
+//  }
 
   /* Code from template association_AddUnidirectionalMany */
   public boolean addSpecificGame(SpecificGame aSpecificGame)

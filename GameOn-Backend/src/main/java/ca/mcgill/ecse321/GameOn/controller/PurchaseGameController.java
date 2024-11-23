@@ -1,7 +1,10 @@
 package ca.mcgill.ecse321.GameOn.controller;
 
 import ca.mcgill.ecse321.GameOn.dto.CartResponseDto;
+import ca.mcgill.ecse321.GameOn.dto.CartToOrderDto;
 import ca.mcgill.ecse321.GameOn.dto.OrderResponseDto;
+import ca.mcgill.ecse321.GameOn.dto.RemoveAllGamesFromCartRequestDto;
+import ca.mcgill.ecse321.GameOn.dto.RemoveFromCartRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.SpecificGameResponseDto;
 import ca.mcgill.ecse321.GameOn.model.Cart;
 import ca.mcgill.ecse321.GameOn.model.OrderClass;
@@ -9,7 +12,6 @@ import ca.mcgill.ecse321.GameOn.model.SpecificGame;
 import ca.mcgill.ecse321.GameOn.service.PurchaseGameService;
 import jakarta.validation.Valid;
 import ca.mcgill.ecse321.GameOn.dto.AddToCartRequestDto;
-import ca.mcgill.ecse321.GameOn.dto.SpecificGameInCartDto;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,25 +98,15 @@ public class PurchaseGameController {
 
     /**
      * Remove spefific game from cart
-     * @param specificGameInCartDto
+     * @param removeFromCartRequestDto
      * @return the http status
      */
-    @PostMapping("/game-remove/{dto}") //done 
-    public ResponseEntity<?> removeGameFromCart(@Valid @RequestBody SpecificGameInCartDto specificGameInCartDto){
+    @PostMapping("/game-remove") //done 
+    public ResponseEntity<?> removeGameFromCart(@Valid @RequestBody RemoveFromCartRequestDto removeFromCartRequestDto){
         try{
-            purchaseGameService.removeSpecificGameFromCart(specificGameInCartDto.getSpecificGameId(), specificGameInCartDto.getCartId());
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PostMapping("/game-remove/{sgid}/{cid}") //done 
-    public ResponseEntity<?> removeGameFromCart(@PathVariable("sgId") int sgId, @PathVariable("cId") int cId){
-        try{
-            SpecificGameInCartDto specificGameInCartDto = new SpecificGameInCartDto(sgId, cId);
-            purchaseGameService.removeSpecificGameFromCart(specificGameInCartDto.getSpecificGameId(), specificGameInCartDto.getCartId());
-            return new ResponseEntity<>(HttpStatus.OK);
+            Cart cart = purchaseGameService.removeSpecificGameFromCart(removeFromCartRequestDto.getSpecificGameId(),removeFromCartRequestDto.getCartId());
+            CartResponseDto response = new CartResponseDto(cart);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -122,14 +114,15 @@ public class PurchaseGameController {
 
     /**
      * Remove all games from cart
-     * @param cartId
+     * @param removeAllGamesFromCartRequestDto
      * @return the http status
      */
-    @PostMapping("/remove-all/{id}")
-    public ResponseEntity<?> removeAllGamesFromCart(@PathVariable("id") int cartId){
+    @PostMapping("/remove-all")
+    public ResponseEntity<?> removeAllGamesFromCart(@Valid @RequestBody RemoveAllGamesFromCartRequestDto removeAllGamesFromCartRequestDto){
         try{
-            purchaseGameService.removeAllGamesFromCart(cartId);
-            return new ResponseEntity<>(HttpStatus.OK);
+            Cart cart = purchaseGameService.removeAllGamesFromCart(removeAllGamesFromCartRequestDto.getCartId());
+            CartResponseDto response = new CartResponseDto(cart);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -137,13 +130,17 @@ public class PurchaseGameController {
 
     /**
      * Create an order from a cart
-     * @param cartId
+     * @param cartToOrderDto
      * @return a ResponseEntity containing the OrderResponseDto or an error message
      */
-    @PostMapping("/createOrder/{cartId}")
-    public ResponseEntity<?> createOrder(@PathVariable int cartId){
+    @PostMapping("/createOrder")
+    public ResponseEntity<?> createOrder(@RequestBody @Valid CartToOrderDto cartToOrderDto){
         try{
+            int cartId = cartToOrderDto.getCartId();
             OrderClass orderClass = purchaseGameService.createOrderFromCart(cartId);
+            if (orderClass == null) {
+                return new ResponseEntity<>("Order could not be created", HttpStatus.BAD_REQUEST);
+            }
             OrderResponseDto response = new OrderResponseDto(orderClass);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
