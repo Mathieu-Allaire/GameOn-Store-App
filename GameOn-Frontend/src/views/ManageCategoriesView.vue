@@ -1,150 +1,166 @@
 <template>
-    <div class="manage-categories">
-      <h1>Category Management System</h1>
-      <div class="columns">
-        <div class="column">
-          <h2>Categories</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="category in categories" :key="category.id">
-                <td>{{ category.name }}</td>
-                <td><button class="remove-button" @click="removeCategory(category.id)">Remove</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="column">
-          <h2>Create Category</h2>
-          <form @submit.prevent="createCategory">
-            <label for="name">Name</label>
-            <input id="name" v-model="newCategory.name" type="text" required>
-            <button type="submit">Create Category</button>
-          </form>
+  <div class="category-view">
+    <h1>Manage Categories</h1>
+    <div class="category-container">
+      <div class="create-category">
+        <h2>Create Category</h2>
+        <form @submit.prevent="createCategory">
+          <input type="text" id="name" v-model="newCategory.name" placeholder="Enter category name" required />
+          <button type="submit">Create</button>
+        </form>
+      </div>
+
+      <div class="delete-category">
+        <h2>Delete Category</h2>
+        <div class="category-list">
+          <h3>List Categories</h3>
+          <ul>
+            <li v-for="category in categories" :key="category.name">
+              {{ category.name }}
+              <button @click="deleteCategory(category.name)">Delete</button>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue';
-  
-  const categories = ref([
-    { id: 1, name: 'Category 1' },
-    { id: 2, name: 'Category 2' },
-    { id: 3, name: 'Category 3' },
-  ]);
-  
-  const newCategory = ref({
-    name: ''
-  });
-  
-  const createCategory = () => {
-    const category = { ...newCategory.value, id: Date.now() };
-    categories.value.push(category);
-    newCategory.value = {
-      name: ''
-    };
-  };
-  
-  const removeCategory = (id) => {
-    const categoryIndex = categories.value.findIndex(category => category.id === id);
-    if (categoryIndex !== -1) {
-      categories.value.splice(categoryIndex, 1);
-    }
-  };
-  </script>
-  
-  <style scoped>
-  .manage-categories {
-    padding: 140px;
-  }
-  
-  h1 {
-    color: #2f3c53;
-    font-size: 2em; /* Increase font size */
-  }
-  
-  h2 {
-    color: #ff0000;
-    font-size: 1.5em; /* Increase font size */
-  }
+  </div>
+</template>
 
-  .columns {
-    display: flex;
-    gap: 40px;
-  }
-  
-  .column {
-    flex: 1;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #645656;
-    min-width: 300px; /* Ensure columns have a minimum width */
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  
-  th, td {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: left;
-  }
-  
-  th {
-    background-color:#645656;
-    color: white;
-    text-align: left;
-    font-size: 1.5em; /* Increase font size */
-    padding: 10px 30px; /* Increase padding */
-  }
-  
-  button {
-    padding: 10px 20px; /* Increase padding */
-    font-size: 1em; /* Increase font size */
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
-  .remove-button {
-    background-color: #f44336; /* Red background */
-  }
-  
-  .remove-button:hover {
-    background-color: #d32f2f; /* Darker red on hover */
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    margin-top: 20px;
-  }
-  
-  label {
-    font-weight: bold;
-  }
-  
-  input {
-    padding: 0.5em;
-    border-radius: 0.5em;
-    border: 1px solid #ccc;
-    font-size: 1em;
-  }
-  </style>
+<script>
+export default {
+  data() {
+    return {
+      newCategory: {
+        name: "",
+      },
+      categories: [
+        // Example data; replace with real data from API
+        { name: "Action" },
+        { name: "Adventure" },
+      ],
+    };
+  },
+  methods: {
+    createCategory() {
+      if (this.newCategory.name) {
+        // Add new category to the list
+        this.categories.push({
+          ...this.newCategory,
+        });
+
+        // Clear the form
+        this.newCategory.name = "";
+      }
+    },
+    deleteCategory(name) {
+      // Find the index of the category to delete
+      const index = this.categories.findIndex((category) => category.name === name);
+
+      // Remove the category from the list
+      this.categories.splice(index, 1);
+    },
+  },
+};
+</script>
+
+<style scoped>
+.manage-categories {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3em;
+  margin-bottom: 40px;
+}
+
+.category-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+}
+
+.create-category,
+.delete-category {
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+form label {
+  margin-top: 30px;
+  font-size: 1.5em;
+}
+
+form input {
+  margin-bottom: 30px;
+  padding: 15px;
+  font-size: 1.5em;
+  width: 100%;
+  max-width: 400px;
+}
+
+button {
+  padding: 10px 30px;
+  font-size: 1.5em;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.category-list ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.category-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 1.5em;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.category-list button {
+  background-color: #dc3545;
+  padding: 10px 20px;
+  font-size: 1em;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+form button {
+  padding: 15px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+
+.category-list button:hover {
+  background-color: #a71d2a;
+}
+</style>
