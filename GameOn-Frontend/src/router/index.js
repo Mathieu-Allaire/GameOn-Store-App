@@ -15,6 +15,17 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
     },
     {
+      path: '/manage/employee',
+      name: 'manage-employee',
+      component: () => import('../views/ManageEmployeeView.vue'),
+    },
+    {
+      path: '/main-page/:gameName',
+      name: 'game-information',
+      component: () => import('../views/GameView.vue'),
+    },
+
+    {
       path: '/register',
       name: 'register',
       component: () => import('../views/RegisterView.vue'),
