@@ -364,6 +364,7 @@ public class PurchaseGameIntegrationTests {
         assertFalse(responseBody.getSpecificGameIds().isEmpty()); // Ensure the order contains games
         assertNotNull(responseBody.getPurchaseDate()); // Ensure the purchase date is set
         assertNotNull(responseBody.getId());
+        assertTrue(responseBody.getPrice() > 0);
     }
     
 

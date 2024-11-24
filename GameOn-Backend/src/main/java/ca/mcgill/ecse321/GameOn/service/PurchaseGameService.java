@@ -198,7 +198,12 @@ public class PurchaseGameService {
 
         OrderClass orderClass = new OrderClass(aPurchaseDate, aCustomer);
         List<SpecificGame> copiedGames = new ArrayList<>(cart.getSpecificGames());
+        double price = 0;
+        for (SpecificGame specificGame : copiedGames) {
+            price += specificGame.getGame().getPrice();
+        }
         orderClass.setOrderGames(copiedGames);
+        orderClass.setPrice(price);
         orderClass = orderRepository.save(orderClass);
         cart.removeAllGamesFromCart();
         cartRepository.save(cart);

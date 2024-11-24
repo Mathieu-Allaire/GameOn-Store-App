@@ -23,13 +23,14 @@ public class OrderClass
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private Date purchaseDate;
-
+  private double price = 0;
   //Order Associations
 
   @OneToMany
   private List<SpecificGame> orderGames;
   @ManyToOne
   private Customer orderCustomer;
+
 
   //------------------------
   // CONSTRUCTOR
@@ -66,6 +67,13 @@ public class OrderClass
   public Date getPurchaseDate()
   {
     return purchaseDate;
+  }
+  public double getPrice(){
+    return this.price;
+  }
+
+  public void setPrice(double aPrice) {
+    this.price = aPrice;
   }
   /* Code from template association_GetOne */
 //  public Cart getCart()
@@ -114,7 +122,7 @@ public class OrderClass
   }
 
   public void setOrderGames(List<SpecificGame> aOrderGames) {this.orderGames = aOrderGames;}
-
+  
   /* Code from template association_SetOneToMany */
   public boolean setOrderCustomer(Customer aOrderCustomer)
   {
