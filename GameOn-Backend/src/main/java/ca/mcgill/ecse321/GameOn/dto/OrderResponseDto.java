@@ -12,15 +12,17 @@ public class OrderResponseDto {
     private int id;
     private Date purchaseDate;
     private List<String> specificGameNames;
+    private List<Integer> specificGameIds;
 
     @SuppressWarnings("unused")
-    private OrderResponseDto() {
-    }
+    private OrderResponseDto() {}
 
     public OrderResponseDto(OrderClass aOrderClass) {
         this.specificGameNames = new ArrayList<>();
+        this.specificGameIds = new ArrayList<>();
         for (SpecificGame specificGame : aOrderClass.getOrderGames()) {
             specificGameNames.add(specificGame.getGame().getName());
+            specificGameIds.add(specificGame.getId());
         }
         this.id = aOrderClass.getId();
         this.purchaseDate = aOrderClass.getPurchaseDate();
@@ -32,7 +34,10 @@ public class OrderResponseDto {
     public Date getPurchaseDate() {
         return purchaseDate;
     }
-
+    public List<String> getSpecificGameNames(){
+        return specificGameNames;
+    }
+    public List<Integer> getSpecificGameIds() {return specificGameIds;}
     public void setPurchaseDate(Date purchaseDate) {
         this.purchaseDate = purchaseDate;
     }

@@ -144,7 +144,7 @@ public class PurchaseGameServiceTests {
         String aBillingAddress = "434 Waterloo Street";
         Customer aCustomer = new Customer(aCardNum, aCardExpiryDate, aBillingAddress, aCart);
 
-        OrderClass aOrderClass = new OrderClass(aDate, aCart, aCustomer);
+        OrderClass aOrderClass = new OrderClass(aDate, aCustomer);
 
         when(orderRepository.findOrderById(id)).thenReturn(aOrderClass);
 
@@ -154,7 +154,6 @@ public class PurchaseGameServiceTests {
         //Assert
         assertNotNull(orderClass);
         assertEquals(aOrderClass.getPurchaseDate(), orderClass.getPurchaseDate());
-        assertEquals(aOrderClass.getCart().getId(), orderClass.getCart().getId());
         assertEquals(aOrderClass.getOrderCustomer().getCardNum(), orderClass.getOrderCustomer().getCardNum());
         assertEquals(aOrderClass.getOrderCustomer().getCardExpiryDate(), orderClass.getOrderCustomer().getCardExpiryDate());
         assertEquals(aOrderClass.getOrderCustomer().getBillingAddress(), orderClass.getOrderCustomer().getBillingAddress());
@@ -392,11 +391,10 @@ public class PurchaseGameServiceTests {
 
         //Assert
         assertNotNull(orderClass);
-        assertEquals(aCart.getId(), orderClass.getCart().getId());
         assertEquals(aCustomer.getCardNum(), orderClass.getOrderCustomer().getCardNum());
         assertEquals(aCustomer.getCardExpiryDate(), orderClass.getOrderCustomer().getCardExpiryDate());
         assertEquals(aCustomer.getBillingAddress(), orderClass.getOrderCustomer().getBillingAddress());
-        assertEquals(aCart.getSpecificGames().size(), orderClass.getCart().getSpecificGames().size());
+        //assertEquals(aCart.getSpecificGames().size(), orderClass.getCart().getSpecificGames().size());
     }
     @Test
     public void testCreateOrderFromInvalidCart() {

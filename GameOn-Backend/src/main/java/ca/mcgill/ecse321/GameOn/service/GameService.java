@@ -300,7 +300,7 @@ public class GameService {
      * Method to approve a game request.
      * This changes the game status to available.
      * 
-     * @param aGameRequestid
+     * @param aGameRequestId
      * @throws IllegalArgumentException if game or manager is invalid
      */
     public void approveGameRequest(Integer aGameRequestId){

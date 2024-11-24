@@ -54,6 +54,8 @@ public class WishlistIntegrationTests {
     private CategoryRepository categoryRepository;
     @Autowired
     private PersonRepository personRepo;
+    @Autowired
+    private CartRepository cartRepository;
     
     //Attributes for game
     private static final String GAME_NAME2 = "Test Game 2";
@@ -77,10 +79,18 @@ public class WishlistIntegrationTests {
 
     @AfterAll
     public void clearDatabase() {
-        wishlistLinkRepo.deleteAll();
-        gameRepository.deleteAll();
-        categoryRepository.deleteAll();
-        personRepo.deleteAll();
+        // Step 1: Break the relationship between Customer and Cart
+        for (Customer customer : customerRepo.findAll()) {
+            customer.setCart(null); // Remove the reference to the Cart
+            customerRepo.save(customer); // Save changes to persist the update
+        }
+
+        // Step 2: Delete in the correct order
+        wishlistLinkRepo.deleteAll(); // Clear wishlist links
+        gameRepository.deleteAll();   // Clear games
+        categoryRepository.deleteAll(); // Clear categories
+        cartRepository.deleteAll();   // Clear carts
+        personRepo.deleteAll();       // Clear persons
         customerRepo.deleteAll();
     }
 

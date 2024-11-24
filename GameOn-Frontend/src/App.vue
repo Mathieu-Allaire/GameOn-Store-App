@@ -3,21 +3,25 @@
 import { RouterView } from 'vue-router'
 import Navbar from './components/Navbar.vue'
 import Logo from './components/Logo.vue'
+//axios.defaults.baseURL = "http://localhost:8080";
+sessionStorage.setItem("LoggedIn", "0");
 </script>
 
 <template>
-  <Navbar />
-  <RouterView />
-  <Logo />
+    <RouterView style="position:absolute; top:50px"/>
+    <Logo />
+    <Navbar style="height: 50px"/>
 </template>
 
 <style>
 
 /* Ensure body has no margin to prevent unexpected spacing */
 body {
-  margin: 0;
-  padding: 0;
+  margin: 0px;
+  padding: 0px;
+
 }
+
 
 * {
   font-family: 'Roboto', sans-serif;
