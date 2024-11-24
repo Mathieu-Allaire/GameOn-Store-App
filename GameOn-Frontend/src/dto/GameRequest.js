@@ -14,6 +14,15 @@ export class GameRequest {
       return { error: error.message };
     }
   }
+  static async findAllGameRequests() {
+    const path = "/games/requests";
+    try {
+      const response = await axios.get(path);
+      return response.data;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
   static async approveGameRequest(gameRequestId) {
     const path = "games/request/approve";
     try {

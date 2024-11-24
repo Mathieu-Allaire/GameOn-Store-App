@@ -12,14 +12,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="game in games" :key="game.id">
-              <td>{{ game.name }}</td>
+            <tr v-for="gameResponse in gameResponses" :key="gameResponse.name">
+              <td>{{ gameResponse.name }}</td>
               <td><button class="remove-button" @click="removeGame(game.id)">Remove</button></td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="column">
+      <!-- <div class="column">
         <h2>Game Requests</h2>
         <table>
           <thead>
@@ -36,52 +36,74 @@
           </tbody>
         </table>
       </div>
-      <div class="column">
+      <div class="column" >
         <h2>Create Game</h2>
         <form @submit.prevent="createGame">
           <label for="name">Name</label>
           <input id="name" v-model="newGame.name" type="text" required>
-          
+
           <label for="quantity">Quantity</label>
           <input id="quantity" v-model="newGame.quantity" type="number" required>
-          
+
           <label for="price">Price</label>
           <input id="price" v-model="newGame.price" type="number" step="0.01" required>
-          
+
           <label for="pictureUrl">Picture URL</label>
           <input id="pictureUrl" v-model="newGame.pictureUrl" type="url" required>
-          
+
           <label for="description">Description</label>
           <textarea id="description" v-model="newGame.description" required></textarea>
-          
+
           <button type="submit">Create Game</button>
         </form>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
+<script>
 
-const games = ref([
-  { id: 1, name: 'Game 1' },
-  { id: 2, name: 'Game 2' },
-  { id: 3, name: 'Game 3' },
-]);
+import { Game } from "../dto/Game";
+import { GameResponseDTO } from "../dto/GameResponseDTO";
 
-const gameRequests = ref([
-  { id: 4, name: 'Game Request 1' },
-  { id: 5, name: 'Game Request 2' },
-]);
+import { GameRequest } from "../dto/GameRequest";
+import { GameRequestResponseDto } from "../dto/GameRequestResponseDto";
 
-const newGame = ref({
-  name: '',
-  quantity: 0,
-  price: 0.00,
-  pictureUrl: '',
-  description: ''
-});
+export default {
+  name: "ManageGamesView",
+  components: {
+
+  },
+  data() {
+    return {
+      gameResponses:[],
+      gameRequestResponses : [],
+    }
+  },
+  async mounted() {
+    var response = await Game.findAllGames();
+    this.gameResponses = response.map(response => new GameResponseDTO(response));
+    console.log("Games: ");
+    console.log(this.gameResponses);
+
+    var response = await GameRequest.findAllGameRequests();
+    this.gameRequestResponses = response.map(response => new GameRequestResponseDto(response));
+    console.log("Games Requests: ");
+    console.log(this.gameRequestResponses);
+  },
+  methods: {
+    removeGame() {
+      this.gameResponses.del
+      const gameIndex = games.value.findIndex(game => game.id === id);
+      if (gameIndex !== -1) {
+        games.value.splice(gameIndex, 1);
+      }
+    }
+
+
+  },
+}
+
 
 const approveRequest = (id) => {
   const requestIndex = gameRequests.value.findIndex(request => request.id === id);
@@ -103,12 +125,6 @@ const createGame = () => {
   };
 };
 
-const removeGame = (id) => {
-  const gameIndex = games.value.findIndex(game => game.id === id);
-  if (gameIndex !== -1) {
-    games.value.splice(gameIndex, 1);
-  }
-};
 </script>
 
 <style scoped>
