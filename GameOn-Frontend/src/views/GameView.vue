@@ -46,7 +46,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "http://localhost:8080" // Update with your backend's base URL
+  baseURL: "http://localhost:8087" // Update with your backend's base URL
 });
 
 export default {
