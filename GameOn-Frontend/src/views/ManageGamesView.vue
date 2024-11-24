@@ -14,7 +14,7 @@
           <tbody>
             <tr v-for="gameResponse in gameResponses" :key="gameResponse.name">
               <td>{{ gameResponse.name }}</td>
-              <td><button class="remove-button" @click="removeGame(game.id)">Remove</button></td>
+              <td><button class="remove-button" @click="deleteGame(gameResponse.name)">Remove</button></td>
             </tr>
           </tbody>
         </table>
@@ -81,26 +81,25 @@ export default {
     }
   },
   async mounted() {
-    var response = await Game.findAllGames();
-    this.gameResponses = response.map(response => new GameResponseDTO(response));
+    const gameResponses = await Game.findAllGames();
+    this.gameResponses = gameResponses.map(gameResponses => new GameResponseDTO(gameResponses));
     console.log("Games: ");
     console.log(this.gameResponses);
 
-    var response = await GameRequest.findAllGameRequests();
-    this.gameRequestResponses = response.map(response => new GameRequestResponseDto(response));
+    const gameRequestResponse = await GameRequest.findAllGameRequests();
+    this.gameRequestResponses = gameRequestResponse.map(gameRequestResponse => new GameRequestResponseDto(gameRequestResponse));
     console.log("Games Requests: ");
     console.log(this.gameRequestResponses);
   },
   methods: {
-    removeGame() {
-      this.gameResponses.del
-      const gameIndex = games.value.findIndex(game => game.id === id);
-      if (gameIndex !== -1) {
-        games.value.splice(gameIndex, 1);
+    async deleteGame(gameName) {
+      const response = await Game.deleteGame(gameName);
+      if (response.error) {
+        console.log("Error deleting game: ", response.error);
+      } else {
+        this.myArray = this.myArray.filter(game => game.name !== gameName);
       }
     }
-
-
   },
 }
 
