@@ -7,7 +7,6 @@
       <label for="password">Password</label>
       <input id="password" v-model="password" type="password" required>
       <button type="submit">Login</button>
-      <button v-if="role === '0'" @click="handleButtonClick">TEST</button>
       <label>Don't have an account? <RouterLink to="/register">Register</RouterLink></label>
     </form>
   </div>
@@ -47,6 +46,7 @@ export default {
         console.log("Login successful, role:", this.role);
 
         sessionStorage.setItem('LoggedIn', this.role); // Store role in sessionStorage
+        sessionStorage.setItem('Email', this.email); // Store email in sessionStorage
 
         this.$router.push('/'); // Go to main page
       }
