@@ -3,8 +3,8 @@
 import { RouterView } from 'vue-router'
 import Navbar from './components/Navbar.vue'
 import Logo from './components/Logo.vue'
-
 //axios.defaults.baseURL = "http://localhost:8080";
+sessionStorage.setItem("LoggedIn", "0");
 </script>
 
 <template>

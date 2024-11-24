@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.Date;
+
+import ca.mcgill.ecse321.GameOn.model.Customer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -17,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 
 
 import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
@@ -60,11 +63,17 @@ public class AccountIntegrationTests {
 
     @AfterAll
     public void clearDatabase() {
-        personRepo.deleteAll();
-        employeeRepository.deleteAll();
-        customerRepo.deleteAll();
-        cartRepository.deleteAll();
-        
+        // Step 1: Break relationships in the Customer entity
+        for (Customer customer : customerRepo.findAll()) {
+            customer.setCart(null); // Break the relationship by setting the cart reference to null
+            customerRepo.save(customer); // Save changes to persist the update
+        }
+
+        // Step 2: Delete entries in the correct order
+        personRepo.deleteAll(); // Assuming it has no dependencies
+        employeeRepository.deleteAll(); // Assuming it has no dependencies
+        cartRepository.deleteAll(); // Now delete cart entries
+        customerRepo.deleteAll(); // Finally, delete customers
     }
     @Test
     @Order(1)
@@ -195,6 +204,38 @@ public class AccountIntegrationTests {
 
     }
 
+    @Test
+    @Order(8)
+    public void LogInCustomerTest(){
+        // Read a customer who does not exist
+        String url = "/login/" + VALID_EMAIL + "/" + VALID_PASSWORD;
+
+        // Act
+        ResponseEntity<?> response = client.getForEntity(url, Integer.class);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Integer whoIsLoggedIn = (Integer) response.getBody();
+        assertEquals(1, whoIsLoggedIn); // 1 is Customer, 2 is Employee , 3 is manager
+
+    }
+
+    @Test
+    @Order(9)
+    public void InvalidLogInCustomerTest(){
+        // Read a customer who does not exist
+        String url = "/login/" + VALID_EMAIL + "/" + "wrongPassword123";
+
+        // Act
+        ResponseEntity<?> response = client.getForEntity(url, String.class);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(response.getBody(), "Incorrect password"); //Make sure that the system outputs an error message
+
+    }
     
     
 }

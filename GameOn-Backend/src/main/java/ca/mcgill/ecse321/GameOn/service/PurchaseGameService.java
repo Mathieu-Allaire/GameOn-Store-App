@@ -1,7 +1,7 @@
 package ca.mcgill.ecse321.GameOn.service;
 
 
-import ca.mcgill.ecse321.GameOn.model.*;
+
 import ca.mcgill.ecse321.GameOn.model.OrderClass;
 
 import ca.mcgill.ecse321.GameOn.exception.GameOnException;
@@ -20,6 +20,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -110,7 +112,7 @@ public class PurchaseGameService {
 
         Game game = gameRepository.findGameByName(aGameName);
         if (game == null) {
-            throw new GameOnException(HttpStatus.NOT_FOUND, "There are no game with the ID: " + aGameName + ".");
+            throw new GameOnException(HttpStatus.NOT_FOUND, "There are no game with the name: " + aGameName + ".");
         }
         if (game.getQuantity() == 0) {
             throw new GameOnException(HttpStatus.CONFLICT, "This game is out of stock.");
@@ -130,7 +132,7 @@ public class PurchaseGameService {
      * @throws IllegalArgumentException if inputs are invalid
      */
     @Transactional
-    public void removeSpecificGameFromCart(int specificGameId, int cartId) {
+    public Cart removeSpecificGameFromCart(int specificGameId, int cartId) {
         if (cartId < 0) {
             throw new GameOnException(HttpStatus.BAD_REQUEST, "Cart ID is invalid.");
         }
@@ -146,7 +148,7 @@ public class PurchaseGameService {
             throw new GameOnException(HttpStatus.NOT_FOUND, "This game is not in the cart.");
         }
         cart.removeSpecificGame(specificGame);
-        cartRepository.save(cart);
+        return cartRepository.save(cart);
     }
 
      /**
@@ -155,7 +157,7 @@ public class PurchaseGameService {
      * @throws IllegalArgumentException if id is negative
      */
     @Transactional
-    public void removeAllGamesFromCart(int id) {
+    public Cart removeAllGamesFromCart(int id) {
         if (id < 0) {
             throw new GameOnException(HttpStatus.BAD_REQUEST, "Cart ID is invalid.");
         }
@@ -169,7 +171,7 @@ public class PurchaseGameService {
         }
 
         cart.removeAllGamesFromCart();
-        cartRepository.save(cart);
+        return cartRepository.save(cart);
     }
     /**
      * Method to create an order from a cart after a transaction
@@ -194,7 +196,9 @@ public class PurchaseGameService {
             gameRepository.save(game);
         }
 
-        OrderClass orderClass = new OrderClass(aPurchaseDate, cart, aCustomer);
+        OrderClass orderClass = new OrderClass(aPurchaseDate, aCustomer);
+        List<SpecificGame> copiedGames = new ArrayList<>(cart.getSpecificGames());
+        orderClass.setOrderGames(copiedGames);
         orderClass = orderRepository.save(orderClass);
         cart.removeAllGamesFromCart();
         cartRepository.save(cart);
