@@ -13,6 +13,7 @@ public class OrderResponseDto {
     private Date purchaseDate;
     private List<String> specificGameNames;
     private List<Integer> specificGameIds;
+    private double price;
 
     @SuppressWarnings("unused")
     private OrderResponseDto() {}
@@ -26,11 +27,15 @@ public class OrderResponseDto {
         }
         this.id = aOrderClass.getId();
         this.purchaseDate = aOrderClass.getPurchaseDate();
+        this.price = aOrderClass.getPrice();
     }
 
     public int getId() {
         return id;
     }
+
+    public double getPrice() {return this.price;}
+    
     public Date getPurchaseDate() {
         return purchaseDate;
     }
