@@ -1,5 +1,8 @@
 package ca.mcgill.ecse321.GameOn.dto;
 import ca.mcgill.ecse321.GameOn.model.Game;
+import ca.mcgill.ecse321.GameOn.model.Review;
+
+import java.util.List;
 
 public class GameResponseDTO {
     private String picture;
@@ -8,6 +11,7 @@ public class GameResponseDTO {
     private int price;
     private int quantity;
     private String category;
+    private List<Review> reviews;
 
     protected GameResponseDTO() {
     }
@@ -19,6 +23,7 @@ public class GameResponseDTO {
         this.price = game.getPrice();
         this.quantity = game.getQuantity();
         this.category = game.getCategory().getName();
+        this.reviews = game.getReviews();
     }
 
     public String getCategory() {
@@ -44,4 +49,5 @@ public class GameResponseDTO {
     public int getQuantity() {
         return quantity;
     }
+    public List<Review> getReviews(){return reviews;}
 }

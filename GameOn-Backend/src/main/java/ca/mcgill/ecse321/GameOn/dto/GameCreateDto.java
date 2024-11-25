@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.GameOn.dto;
 import jakarta.validation.constraints.NotBlank;
-
+import java.util.*;
+import ca.mcgill.ecse321.GameOn.model.Review;
 
 public class GameCreateDto {
     @NotBlank(message = "The picture must not be empty")
@@ -15,6 +16,7 @@ public class GameCreateDto {
     private int quantity;
     @NotBlank(message = "The category must not be empty")
     private String category;
+    private List<Review> reviews;
 
     public GameCreateDto() {
     }
@@ -26,6 +28,7 @@ public class GameCreateDto {
         this.price = price;
         this.quantity = quantity;
         this.category = category;
+        this.reviews = new ArrayList<Review>();
     }
 
     public String getPicture() {
@@ -51,4 +54,5 @@ public class GameCreateDto {
     public int getQuantity() {
         return quantity;
     }
+    public List<Review> getReviews() {return reviews;}
 }
