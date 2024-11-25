@@ -19,7 +19,7 @@
           </tbody>
         </table>
       </div>
-      <!-- <div class="column">
+      <div class="column">
         <h2>Game Requests</h2>
         <table>
           <thead>
@@ -29,8 +29,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="request in gameRequests" :key="request.id">
-              <td>{{ request.name }}</td>
+            <tr v-for="gameRequestResponse in gameRequestResponses" :key="request.email">
+              <td>{{ gameRequestResponse.name }}</td>
               <td><button @click="approveRequest(request.id)">Approve</button></td>
             </tr>
           </tbody>
@@ -40,23 +40,26 @@
         <h2>Create Game</h2>
         <form @submit.prevent="createGame">
           <label for="name">Name</label>
-          <input id="name" v-model="newGame.name" type="text" required>
+          <input id="name" v-model="gameToAdd.name" type="text" required>
 
           <label for="quantity">Quantity</label>
-          <input id="quantity" v-model="newGame.quantity" type="number" required>
+          <input id="quantity" v-model="gameToAdd.quantity" type="number" required>
+
+          <label for="category">Category</label>
+          <input id="category" v-model="gameToAdd.category" type="text" required>
 
           <label for="price">Price</label>
-          <input id="price" v-model="newGame.price" type="number" step="0.01" required>
+          <input id="price" v-model="gameToAdd.price" type="number" step="0.01" required>
 
           <label for="pictureUrl">Picture URL</label>
-          <input id="pictureUrl" v-model="newGame.pictureUrl" type="url" required>
+          <input id="pictureUrl" v-model="gameToAdd.picture" type="url" required>
 
           <label for="description">Description</label>
-          <textarea id="description" v-model="newGame.description" required></textarea>
+          <textarea id="description" v-model="gameToAdd.description" required></textarea>
 
-          <button type="submit">Create Game</button>
+          <button type="submit" >Create Game</button>
         </form>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
@@ -76,33 +79,43 @@ export default {
   },
   data() {
     return {
+      gameToAdd : new Game(),
       gameResponses:[],
       gameRequestResponses : [],
     }
   },
-  async mounted() {
-    const gameResponses = await Game.findAllGames();
-    this.gameResponses = gameResponses.map(gameResponses => new GameResponseDTO(gameResponses));
-    console.log("Games: ");
-    console.log(this.gameResponses);
-
-    const gameRequestResponse = await GameRequest.findAllGameRequests();
-    console.log("DATA");
-    console.log(gameRequestResponse.data);
-    this.gameRequestResponses = gameRequestResponse.map(gameRequestResponse => new GameRequestResponseDto(gameRequestResponse));
-    console.log("Games Requests: ");
-    console.log(this.gameRequestResponses);
-  },
   methods: {
+    async updateGames() {
+      const gameResponses = await Game.findAllGames();
+      this.gameResponses = gameResponses.map(gameResponses => new GameResponseDTO(gameResponses));
+      console.log("Games: ");
+      console.log(this.gameResponses);
+    },
+    async updateGameRequests() {
+      const gameRequestResponse = await GameRequest.findAllGameRequests();
+      this.gameRequestResponses = gameRequestResponse.map(gameRequestResponse => new GameRequestResponseDto(gameRequestResponse));
+      console.log("Games Requests: ");
+      console.log(this.gameRequestResponses);
+    },
     async deleteGame(gameName) {
       const response = await Game.deleteGame(gameName);
       if (response.error) {
         console.log("Error deleting game: ", response.error);
       } else {
-        this.myArray = this.myArray.filter(game => game.name !== gameName);
+        updateGames();
       }
     },
+    async createGame() {
+      console.log('Game to Add:', this.gameToAdd);
+      await this.gameToAdd.createGame();
+      await this.updateGames();
+    }
   },
+  async mounted() {
+    await this.updateGames();
+    await this.updateGameRequests();
+  },
+
 }
 
 
@@ -114,17 +127,6 @@ const approveRequest = (id) => {
   }
 };
 
-const createGame = () => {
-  const game = { ...newGame.value, id: Date.now() };
-  games.value.push(game);
-  newGame.value = {
-    name: '',
-    quantity: 0,
-    price: 0.00,
-    pictureUrl: '',
-    description: ''
-  };
-};
 
 </script>
 
