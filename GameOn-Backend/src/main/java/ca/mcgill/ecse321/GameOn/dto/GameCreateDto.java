@@ -28,7 +28,7 @@ public class GameCreateDto {
         this.price = price;
         this.quantity = quantity;
         this.category = category;
-        this.reviews = new ArrayList<Review>();
+        this.reviews = reviews;
     }
 
     public String getPicture() {
