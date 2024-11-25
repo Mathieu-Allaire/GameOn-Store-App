@@ -21,7 +21,7 @@ public class GameCreateDto {
     public GameCreateDto() {
     }
 
-    public GameCreateDto(String picture, String name, String description, int price, int quantity, String category) {
+    public GameCreateDto(String picture, String name, String description, int price, int quantity, String category, List<Review> reviews) {
         this.picture = picture;
         this.name = name;
         this.description = description;
