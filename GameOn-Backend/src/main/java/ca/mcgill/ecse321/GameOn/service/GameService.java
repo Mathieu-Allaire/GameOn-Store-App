@@ -241,6 +241,7 @@ public class GameService {
         return category.getGames();
     }
 
+  
 
     /**
      * Method create a game request for a game.
@@ -294,6 +295,17 @@ public class GameService {
         gameRequestRepository.save(gameRequest);
 
         return gameRequest;
+    }
+
+
+    /**
+     * Method to get all game requests.
+     *
+     * @return List<GameRequests>
+     */
+    public Iterable<GameRequest> getAllGameRequests(){
+        System.out.println("Finding all requests");
+        return gameRequestRepository.findAll();
     }
 
     /**

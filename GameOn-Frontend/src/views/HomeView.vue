@@ -36,11 +36,12 @@ export default {
     margin: 0 0;
     padding: 0 0;
     flex-wrap: wrap;
+
     position: relative;
     left : 0;
     top:0;
     height:auto;
-    flex-flow: row;
+
     width:100%;
     list-style: none;
 
