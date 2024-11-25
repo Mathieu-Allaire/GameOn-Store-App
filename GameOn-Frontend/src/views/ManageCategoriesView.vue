@@ -116,61 +116,70 @@ export default {
 }
 
 
-.manage-categories {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 60px;
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-  min-height: 100vh;
-}
-
 h1 {
-  font-size: 3em;
-  margin-bottom: 40px;
+  font-size: 2.5em; /* Slightly reduce for better scaling */
+  margin-bottom: 20px;
+  text-align: center; /* Ensure proper alignment */
 }
 
 .category-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 20px; /* Replaces manual margin for consistent spacing */
   width: 100%;
-  max-width: 800px;
 }
 
-.create-category,
+
 .delete-category {
   width: 100%;
-  margin-bottom: 40px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for better separation */
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.create-category {
+  display: flex;
+  flex-direction: column; /* Stack the items vertically */
+  justify-content: center; /* Center items vertically */
+  align-items: center; /* Center items horizontally */
+  width: 100%; /* Ensures the container spans the full width */
+  margin-bottom: 40px; /* Maintain space between sections */
+  text-align: center; /* Center text inside */
+}
+
+.create-category h2 {
+  margin-bottom: 20px; /* Add spacing between the heading and the input field */
 }
 
 form {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: column; /* Keep the input and button stacked */
+  align-items: center; /* Center them horizontally */
+  gap: 10px; /* Add consistent spacing between input and button */
+  width: 100%;
+  max-width: 400px; /* Optional: Limit form width for better layout */
 }
 
-form label {
-  margin-top: 30px;
-  font-size: 1.5em;
-}
 
-form input {
-  margin-bottom: 30px;
-  padding: 15px;
-  font-size: 1.5em;
+input {
+  padding: 10px;
+  font-size: 1.2em;
   width: 100%;
   max-width: 400px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 button {
-  padding: 10px 30px;
-  font-size: 1.5em;
+  padding: 12px 20px;
+  font-size: 1em;
   background-color: #007bff;
-  color: white;
+  color: #fff;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth hover effect */
 }
 
 button:hover {
@@ -180,44 +189,62 @@ button:hover {
 .category-list ul {
   list-style: none;
   padding: 0;
-  width: 100%;
+  margin: 0;
 }
 
 .category-list li {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
-  font-size: 1.5em;
-  padding: 10px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 1em;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
 }
 
 .category-list button {
   background-color: #dc3545;
-  padding: 10px 20px;
-  font-size: 1em;
   color: white;
-  border: none;
+  font-size: 0.9em;
+  padding: 8px 12px;
+  border-radius: 4px;
   cursor: pointer;
-}
-form button {
-  padding: 15px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.error {
-  color: red;
-  margin-top: -80px; /* Adjust margin to position the error message closer to the input */
-  margin-bottom: 10px; /* Ensure there is space between the error message and the button */
+  transition: background-color 0.3s ease;
 }
 
 .category-list button:hover {
   background-color: #a71d2a;
+}
+
+.error {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .category-view {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  button {
+    font-size: 0.9em;
+    padding: 10px 15px;
+  }
+
+  input {
+    font-size: 1em;
+  }
+
+  .category-list li {
+    font-size: 0.9em;
+  }
 }
 </style>
