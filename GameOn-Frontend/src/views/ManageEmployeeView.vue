@@ -6,9 +6,9 @@
         <h2>Create Employee</h2>
         <form @submit.prevent="createEmployee">
           <label for="email">Email:</label>
-          <input type="email" id="email" v-model="newEmployee.email" placeholder="Enter employee email" required />
+          <input type="email" id="email" v-model="email" placeholder="Enter employee email" required />
           <label for="name">Name:</label>
-          <input type="text" id="name" v-model="newEmployee.name" placeholder="Enter employee name" required />
+          <input type="text" id="name" v-model="name" placeholder="Enter employee name" required />
           <button type="submit">Create</button>
         </form>
       </div>
@@ -19,9 +19,9 @@
         <div class="employee-list">
           <h3>List Employees</h3>
           <ul>
-            <li v-for="employee in employees" :key="employee.id">
+            <li v-for="employee in employees" :key="employee.email">
               {{ employee.name }} ({{ employee.email }})
-              <button @click="deactivateEmployee(employee.id)">Deactivate</button>
+              <button @click="deactivateEmployee(employee.email)">Deactivate</button>
             </li>
           </ul>
         </div>
@@ -31,40 +31,82 @@
 </template>
 
 <script>
+import axios from "axios";
+
+const axiosClient = axios.create({
+  // NOTE: it's baseURL, not baseUrl
+  baseURL: "http://localhost:8080"
+});
+
 export default {
+  
   data() {
     return {
-      newEmployee: {
-        email: "",
-        name: "",
-      },
-      employees: [
-        // Example data; replace with real data from API
-        { id: 1, name: "John Doe", email: "john.doe@example.com" },
-        { id: 2, name: "Jane Smith", email: "jane.smith@example.com" },
-      ],
-    };
+      employees: [],
+      email: "",
+      name: "",
+    }
   },
-  methods: {
-    createEmployee() {
-      //Verify if email and name are not empty
-      if (this.newEmployee.email && this.newEmployee.name) {
-        // Add new employee to the list
-        const newId = this.employees.length + 1;
-        this.employees.push({
-          id: newId,
-          ...this.newEmployee,
-        });
 
-        // Clear the form
-        this.newEmployee.email = "";
-        this.newEmployee.name = "";
+  async created() {
+        // Retrieve employees
+        try {
+          const response = await axiosClient.get("/employee");
+          this.employees = response.data;
+        } catch (error) {
+          console.error(error);
+        }
+    },
+
+  methods: {
+    async createEmployee() {
+      //Create employee 
+      const newEmployee = {
+        email: this.email,
+        name: this.name,
+      };
+      try {
+        const response = await axiosClient.post("/employee", newEmployee);
+        console.log("Employee created:", this.name);
+        // Add employee to the list
+        this.employees.push(newEmployee);
+        this.clearInput();
+      } catch (error) {
+        console.error(error);
       }
     },
-    deactivateEmployee(id) {
-      // Remove employee from the list
-      this.employees = this.employees.filter((employee) => employee.id !== id);
+    async deactivateEmployee(email) {
+      // Deactivate employee
+      const response = await axiosClient.put(`/employee/deactivate/${email}`);
+      this.employees = this.employees.filter((employee) => employee.email !== email);
     },
+    clearInput() {
+      this.email = "";
+      this.name = "";
+    },
+    async loadEmployees() {
+      // Retrieve employees
+      try {
+        const response = await axiosClient.get("/employee");
+        this.employees = response.data;
+
+        response.forEach((employee) => {
+          this.employees.push(
+            {
+              email: employee.email,
+              name: employee.name,
+            }
+          );
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async mounted() {
+      await this.loadEmployees();
+    },
+
   },
 };
 </script>
