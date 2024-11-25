@@ -20,6 +20,11 @@ const router = createRouter({
       component: () => import('../views/ManageEmployeeView.vue'),
     },
     {
+      path : '/manage/requests',
+      name : 'manage-requests',
+      component : () => import('../views/ManageGameRequestView.vue'),
+    },
+    {
       path: "/register",
       name: "register",
       component: () => import("../views/RegisterView.vue"),

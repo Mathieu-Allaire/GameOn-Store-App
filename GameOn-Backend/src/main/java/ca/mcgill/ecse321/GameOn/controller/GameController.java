@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import ca.mcgill.ecse321.GameOn.dto.ErrorResponseDTO;
 import ca.mcgill.ecse321.GameOn.dto.GameResponseDTO;
 import ca.mcgill.ecse321.GameOn.dto.GameCreateDto;
 import ca.mcgill.ecse321.GameOn.service.GameService;
@@ -64,7 +64,8 @@ public class GameController {
             GameResponseDTO response = new GameResponseDTO(game);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+            ErrorResponseDTO errorResponse = new ErrorResponseDTO(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }
 
@@ -81,6 +82,16 @@ public class GameController {
         try{
             gameService.deleteGame(name);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("gamesStatus/{name}")
+    public ResponseEntity<?> updateGameStatus(@PathVariable String name){
+        try{
+            gameService.UpdateGameStatusAvailable(name);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
         }
@@ -104,6 +115,21 @@ public class GameController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/games/gameRequests")
+    public ResponseEntity<?> findAllGameRequests() {
+        List<GameRequestResponseDto> dtos = new ArrayList<>();
+        try{
+            for (GameRequest g : gameService.getAllGameRequests()) {
+                dtos.add(new GameRequestResponseDto(g));
+            }
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    
 
     /**
      * Retrieves a game by name

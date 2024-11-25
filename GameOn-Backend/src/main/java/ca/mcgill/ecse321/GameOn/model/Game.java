@@ -32,6 +32,7 @@ public class Game
 
   //Game State Machines
   public enum GameStatus { Available, OutOfStock, Unavailable, Deleted }
+  @Enumerated(EnumType.STRING)
   private GameStatus gameStatus;
 
   //Game Associations

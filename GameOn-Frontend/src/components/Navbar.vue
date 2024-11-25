@@ -7,7 +7,7 @@
 
             <li v-if="state.loggedIn === '0'"><RouterLink to="/login">Sign In</RouterLink></li>
             <li v-if="state.loggedIn === '0'"><RouterLink to="/register">Sign Up</RouterLink></li>
-            <li v-if="['2', '3'].includes(state.loggedIn)" class="dropdown">
+            <li v-if="['3'].includes(state.loggedIn)" class="dropdown">
                 <a href="javascript:void(0)" class="dropbtn">Manage</a>
                 <div class="dropdown-content">
                     <RouterLink to="/manage/games">Games</RouterLink>
@@ -15,6 +15,7 @@
                     <RouterLink to="/manage/employee">Staff</RouterLink>
                 </div>
             </li>
+            <li v-if="state.loggedIn === '2'"><RouterLink to="/manage/requests">Game Request</RouterLink></li>
             <li><RouterLink to="/debug">DEBUG</RouterLink></li>
             <li v-if="['1','2', '3'].includes(state.loggedIn)"><button @click="logout" class="logout-btn">Logout</button></li>
             <li><button @click="whoisLogged" class="logout-btn">Who</button></li>
