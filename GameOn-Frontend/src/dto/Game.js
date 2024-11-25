@@ -21,7 +21,7 @@ export class Game {
   static async deleteGame(name) {
     const path = "/games/" + name;
     try {
-      const response = await axios.delete(path);
+      const response = await axios.post(path);
       return response.data;
     } catch (error) {
       return { error: error.message };

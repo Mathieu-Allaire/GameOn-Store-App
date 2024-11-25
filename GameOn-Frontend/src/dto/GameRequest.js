@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export class GameRequest {
   constructor(employeeEmail, requestedGameName, requestType) {
     this.employeeEmail = employeeEmail;
@@ -20,6 +22,7 @@ export class GameRequest {
       const response = await axios.get(path);
       return response.data;
     } catch (error) {
+      console.log(error.message);
       return { error: error.message };
     }
   }

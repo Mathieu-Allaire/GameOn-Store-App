@@ -87,6 +87,8 @@ export default {
     console.log(this.gameResponses);
 
     const gameRequestResponse = await GameRequest.findAllGameRequests();
+    console.log("DATA");
+    console.log(gameRequestResponse.data);
     this.gameRequestResponses = gameRequestResponse.map(gameRequestResponse => new GameRequestResponseDto(gameRequestResponse));
     console.log("Games Requests: ");
     console.log(this.gameRequestResponses);
@@ -99,7 +101,7 @@ export default {
       } else {
         this.myArray = this.myArray.filter(game => game.name !== gameName);
       }
-    }
+    },
   },
 }
 

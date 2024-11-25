@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export class Order {
   static async getOrder(id) {
     const path = "/orders/" + id;

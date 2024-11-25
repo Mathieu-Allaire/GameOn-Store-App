@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export class SpecificGame {
   constructor(specificGameId, cartId) {
     this.cartId = cartId;
