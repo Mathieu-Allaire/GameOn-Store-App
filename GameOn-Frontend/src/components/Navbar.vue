@@ -15,12 +15,23 @@
                 </div>
             </li>
             <li><RouterLink to="/debug">DEBUG</RouterLink></li>
+            <li> <SearchBar/> </li>
         </ul>
     </nav>
 </template>
 
-<script setup>
+<script >
 import { RouterLink } from "vue-router";
+import SearchBar  from "./SearchBar.vue";
+
+export default {
+  name:"Navbar",
+  components: {
+    SearchBar
+  }
+
+}
+
 </script>
 
 <style scoped>

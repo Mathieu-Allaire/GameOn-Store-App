@@ -41,7 +41,6 @@ export default {
     left : 0;
     top:0;
     height:auto;
-
     width:100%;
     list-style: none;
 
