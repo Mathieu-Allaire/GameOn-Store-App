@@ -134,7 +134,7 @@ public class GameIntegrationTests {
 
         // Assert
         assertNotNull(response);
-        assertEquals(HttpStatus.IM_USED, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test

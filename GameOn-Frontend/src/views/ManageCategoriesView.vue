@@ -8,6 +8,7 @@
           <input type="text" id="name" v-model="newCategory.name" placeholder="Enter category name" required />
           <button type="submit">Create</button>
         </form>
+        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
       </div>
 
       <div class="delete-category">
@@ -27,43 +28,94 @@
 </template>
 
 <script>
+import { Category } from "../dto/Category";
+
 export default {
   data() {
     return {
       newCategory: {
         name: "",
       },
-      categories: [
-        // Example data; replace with real data from API
-        { name: "Action" },
-        { name: "Adventure" },
-      ],
+      categories: [],
+      errorMessage: "",
     };
   },
   methods: {
     createCategory() {
       if (this.newCategory.name) {
-        // Add new category to the list
-        this.categories.push({
-          ...this.newCategory,
-        });
+        // Check if the category already exists
+        const existingCategory = this.categories.find(category => category.name === this.newCategory.name);
+        if (existingCategory) {
+          this.errorMessage = "Category already exists.";
+          return;
+        }
 
-        // Clear the form
-        this.newCategory.name = "";
+        // Add new category to the list
+        try {
+          this.addCategory(this.newCategory.name);
+          this.newCategory.name = "";
+          this.errorMessage = ""; // Clear any previous error message
+        } catch (error) {
+          console.error(error);
+          this.errorMessage = error.message || "Failed to create category. Please try again.";
+        }
       }
     },
-    deleteCategory(name) {
+    async deleteCategory(name) {
       // Find the index of the category to delete
       const index = this.categories.findIndex((category) => category.name === name);
 
       // Remove the category from the list
+      await Category.deleteCategory(name);
       this.categories.splice(index, 1);
     },
+    addCategory(name) {
+      const category = new Category(name); // DTO
+      const response = category.createCategory(); // Send request to server
+      this.categories.push({ name }); // Add to local list
+    },
+    async loadCategories() {
+      try {
+        const response = await Category.findAllCategories();
+        if (response.error) {
+          this.errorMessage = response.error;
+        } else {
+          response.forEach(category => {
+            this.categories.push({ name: category.name });
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        this.errorMessage = error.message || "Failed to load categories. Please try again.";
+      }
+    },
+  },
+  async mounted() {
+    // Create two categories by default
+    await this.loadCategories();
   },
 };
 </script>
 
 <style scoped>
+.category-view {
+  position: absolute !important;
+  top: calc(50% + 30px) !important; /* Adjust offset based on the navbar height */
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional shadow */
+  border-radius: 8px; /* Optional rounded corners */
+  width: 80%; /* Optional: Adjust width for responsiveness */
+  max-width: 600px;
+}
+
+
 .manage-categories {
   display: flex;
   flex-direction: column;
@@ -159,6 +211,11 @@ form button {
   cursor: pointer;
 }
 
+.error {
+  color: red;
+  margin-top: -80px; /* Adjust margin to position the error message closer to the input */
+  margin-bottom: 10px; /* Ensure there is space between the error message and the button */
+}
 
 .category-list button:hover {
   background-color: #a71d2a;

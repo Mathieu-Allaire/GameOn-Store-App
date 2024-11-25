@@ -36,7 +36,7 @@ import jakarta.validation.Valid;
  *
  * @author Neeshal Imrit
  */
-@CrossOrigin(origins="*")
+@CrossOrigin(origins = "http://localhost:8087")
 @RestController
 public class GameController {
     @Autowired
@@ -198,7 +198,7 @@ public class GameController {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             if (e.getMessage().equalsIgnoreCase("Category already exists")) {
-                return new ResponseEntity<String>(e.getMessage(), HttpStatus.IM_USED);
+                return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
         }
