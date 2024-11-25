@@ -1,155 +1,224 @@
 <template>
   <main class="layout-container">
-    <!-- Left Section: Name, Picture, and Description -->
-    <div class="left-section">
-      <h1 >{{ gameDetails ? gameDetails.name : "Game Not Found" }}</h1>
-      <img
-          v-if="gameDetails.picture"
-          :src="gameDetails.picture"
-          alt="Game Image"
-          class="game-image"
-      />
-      <p class="game-description">{{ gameDetails.description }}</p>
+    <!-- Top Section: Title, Picture, Description, Price, Category -->
+    <div class="top-section">
+      <!-- Left: Picture -->
+      <div class="picture-container">
+        <img
+            v-if="gameDetails?.picture"
+            :src="gameDetails.picture"
+            :alt="gameDetails.name"
+            class="game-image"
+        />
+      </div>
 
+      <!-- Right: Title, Description, Price, Category -->
+      <div class="details-container">
+        <h1 class="game-title">{{ gameDetails ? gameDetails.name : "Game Not Found" }}</h1>
+        <p v-if="gameDetails?.description" class="game-description">
+          {{ gameDetails.description }}
+        </p>
+        <p v-if="gameDetails?.price" class="game-price">
+          Price: ${{ gameDetails.price }}
+        </p>
+        <p v-if="gameDetails?.category" class="game-category">
+          Category: {{ gameDetails.category }}
+        </p>
+      </div>
     </div>
 
-    <!-- Right Section: Placeholder Table -->
-    <div class="right-section">
-      <table class="placeholder-table">
+    <!-- Middle Section: Buttons -->
+    <div class="button-section">
+      <button class="action-button">Add to Wishlist</button>
+      <button class="action-button">Add to Cart</button>
+      <button class="buy-button">Buy</button>
+    </div>
+
+    <!-- Bottom Section: Reviews Table -->
+    <div class="reviews-section">
+      <table class="reviews-table">
         <thead>
         <tr>
-          <th>Column 1</th>
-          <th>Column 2</th>
+          <th>Reviewer</th>
+          <th>Review</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-          <td>Row 1, Col 1</td>
-          <td>Row 1, Col 2</td>
+          <td>John Doe</td>
+          <td>Great game!</td>
         </tr>
         <tr>
-          <td>Row 2, Col 1</td>
-          <td>Row 2, Col 2</td>
+          <td>Jane Smith</td>
+          <td>Could use some improvements.</td>
         </tr>
         </tbody>
       </table>
-      <!-- Placeholder Buttons -->
-      <div class="button-container">
-        <button class="placeholder-button">Placeholder Button 1</button>
-        <button class="placeholder-button">Placeholder Button 2</button>
-      </div>
     </div>
   </main>
 </template>
 
-<script>
-import axios from "axios";
 
-const axiosClient = axios.create({
-  baseURL: "http://localhost:8087" // Update with your backend's base URL
-});
+
+
+<script>
+import { Game } from "../dto/Game"; // Import the Game class
 
 export default {
-  name: "game-details",
+  name: "GameDetailsPage",
   data() {
     return {
-      gameDetails: null // Holds the game details fetched from the backend
+      gameDetails: null, // To hold game details
     };
   },
   async created() {
-    // Fetch game details dynamically using the route parameter
-    this.fetchGameDetails(this.$route.params.gameName);
-  },
-  methods: {
-    async fetchGameDetails(gameId) {
-      try {
-        const response = await axiosClient.get(`/games/${gameId}`);
-        this.gameDetails = response.data;
-      } catch (e) {
-        // Log the error and handle it appropriately
-        console.error("Error fetching game details:", e);
+    // Fetch game details by name from the route parameter
+    const gameName = this.$route.params.gameNameNoSpace; // Assuming your route is configured as `/game/:name`
+    try {
+      const response = await Game.findGameByName(gameName);
+      if (response.error) {
+        console.error(response.error);
+      } else {
+        this.gameDetails = response;
       }
+    } catch (error) {
+      console.error("Error fetching game details:", error.message);
     }
-  }
+  },
 };
 </script>
 
+
 <style>
-h1 {
-  text-align: center;
-  margin-bottom: 0;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center; /* Horizontal centering */
+  align-items: center; /* Vertical centering */
+  background-color: #f5f5f5; /* Optional: Light background */
+  overflow: hidden; /* Prevent scrolling if not needed */
 }
-/* Flexbox container for the layout */
+/* Center Content in the Layout */
 .layout-container {
   display: flex;
-  align-items: flex-start;
-  gap: 5em;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  gap: 2em; /* Add spacing between sections */
+  width: 100%;
+  margin: 0 auto; /* Center layout in the viewport */
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Left section: Name, Picture, Description */
-.left-section {
-  flex: 1;
+/* Top Section: Title, Picture, Description, Price, Category */
+.top-section {
+  display: flex;
+  align-items: flex-start; /* Align items vertically */
+  justify-content: space-between; /* Space out the picture and details */
+  gap: 2em; /* Space between picture and details */
+  width: 100%;
 }
 
-/* Game Image Styling */
+/* Picture Container */
+.picture-container {
+  flex: 2;
+  display: flex;
+  justify-content: center; /* Center the picture horizontally */
+  align-items: center; /* Center the picture vertically */
+}
+
 .game-image {
   max-width: 100%;
-  height: auto;
-  margin-top: 0px;
+  max-height: 300px;
+  border-radius: 10px;
+  object-fit: contain;
 }
 
-/* Game Description Styling */
+/* Details Container */
+.details-container {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1em; /* Space between details */
+}
+
+.game-title {
+  font-size: 2em;
+  font-weight: bold;
+  text-align: left; /* Center the title */
+}
+
 .game-description {
-  margin-top: 1em;
+  font-size: 1.2em;
 }
 
-/* Button Container Styling */
-.button-container {
-  margin-top: 1em;
+.game-price,
+.game-category {
+  font-size: 1.1em;
+  font-weight: bold;
 }
 
-/* Placeholder Button Styling */
-.placeholder-button {
-  margin-right: 1em;
-}
-
-/* Right section: Placeholder Table */
-.right-section {
-  flex: 1;
-}
-
-/* Placeholder Table Styling */
-.placeholder-table {
+/* Button Section */
+.button-section {
+  display: flex;
+  justify-content: center; /* Center buttons horizontally */
+  gap: 1em; /* Space between buttons */
   width: 100%;
+  margin: 2em;
+}
+
+.action-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.buy-button{
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: green;
+  color: white;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.buy-button:hover {
+  background-color: darkgreen;
+}
+
+.action-button:hover {
+  background-color: #0056b3;
+}
+
+/* Reviews Section */
+.reviews-section {
+  width: 100%;
+}
+
+.reviews-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.reviews-table th,
+.reviews-table td {
+  padding: 10px;
   border: 1px solid #ccc;
   text-align: left;
 }
 
-
-
-main {
-  padding: 20px;
-}
-
-h1 {
-  font-size: 2em;
-  margin-bottom: 20px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
-}
-
-td {
-  padding: 10px;
-  border: 1px solid #ccc;
-}
-
-img {
-  width: 100%;
-  max-width: 500px;
-  margin-top: 20px;
+.reviews-table th {
+  background-color: #f0f0f0;
 }
 </style>

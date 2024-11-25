@@ -48,7 +48,7 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue'),
     },
     {
-      path: "/main-page/:gameName",
+      path: "/home/:gameNameNoSpace",
       name: "Game Information",
       component: () => import("../views/GameView.vue"),
     },
