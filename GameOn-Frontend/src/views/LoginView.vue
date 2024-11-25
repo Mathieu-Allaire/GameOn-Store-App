@@ -14,6 +14,7 @@
 
 <script>
 import axios from "axios";
+import { setLoggedIn } from '../store/state';
 
 const axiosClient = axios.create({
   // NOTE: it's baseURL, not baseUrl
@@ -46,6 +47,7 @@ export default {
         console.log("Login successful, role:", this.role);
 
         sessionStorage.setItem('LoggedIn', this.role); // Store role in sessionStorage
+        setLoggedIn(this.role);
         sessionStorage.setItem('Email', this.email); // Store email in sessionStorage
 
         this.$router.push('/'); // Go to main page

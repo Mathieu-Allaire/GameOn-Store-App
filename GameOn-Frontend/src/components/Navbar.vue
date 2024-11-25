@@ -3,10 +3,11 @@
         <ul class="nav-links">
             <li><RouterLink to="/">Main Page</RouterLink></li>
             <li><RouterLink to="/about">About</RouterLink></li>
-            <li><RouterLink to="/home">Home</RouterLink></li>
-            <li><RouterLink to="/login">Sign In</RouterLink></li>
-            <li><RouterLink to="/register">Sign Up</RouterLink></li>
-            <li class="dropdown">
+            <li ><RouterLink to="/home">Home</RouterLink></li>
+
+            <li v-if="state.loggedIn === '0'"><RouterLink to="/login">Sign In</RouterLink></li>
+            <li v-if="state.loggedIn === '0'"><RouterLink to="/register">Sign Up</RouterLink></li>
+            <li v-if="['2', '3'].includes(state.loggedIn)" class="dropdown">
                 <a href="javascript:void(0)" class="dropbtn">Manage</a>
                 <div class="dropdown-content">
                     <RouterLink to="/manage/games">Games</RouterLink>
@@ -21,6 +22,7 @@
 
 <script setup>
 import { RouterLink } from "vue-router";
+import { state } from '../store/state';
 </script>
 
 <style scoped>
