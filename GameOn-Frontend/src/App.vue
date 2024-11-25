@@ -14,7 +14,6 @@ sessionStorage.setItem("LoggedIn", "0");
 </template>
 
 <style>
-/* Remove logos styles if previously added here */
 
 /* Ensure body has no margin to prevent unexpected spacing */
 body {
@@ -22,5 +21,11 @@ body {
   padding: 0px;
 
 }
+
+
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
 
 </style>

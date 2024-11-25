@@ -32,6 +32,10 @@ out/
 /dist/
 /nbdist/
 /.nb-gradle/
+node_modules/
+package-lock.json
+package.json
+*.class
 
 ### VS Code ###
 .vscode/

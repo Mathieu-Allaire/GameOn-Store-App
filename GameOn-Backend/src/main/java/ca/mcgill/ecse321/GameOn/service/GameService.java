@@ -1,6 +1,10 @@
 package ca.mcgill.ecse321.GameOn.service;
 
 import ca.mcgill.ecse321.GameOn.exception.GameOnException;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -87,7 +91,13 @@ public class GameService {
      */
     @Transactional
     public Iterable<Category> getAllCategories(){
-        return categoryRepository.findAll();
+        List<Category> availableCategories = new ArrayList<>();
+        for (Category category : categoryRepository.findAll()) {
+            if (category.getStatus() == Category.CategoryStatus.AVAILABLE) {
+                availableCategories.add(category);
+            }
+        }
+        return availableCategories;
     }
 
     /**
