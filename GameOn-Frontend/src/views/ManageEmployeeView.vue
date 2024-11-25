@@ -73,6 +73,7 @@ export default {
         this.clearInput();
       } catch (error) {
         console.error(error);
+        alert(error.response.data);
       }
     },
     async deactivateEmployee(email) {
