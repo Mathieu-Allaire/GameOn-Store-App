@@ -41,16 +41,22 @@
         <tr>
           <th>Reviewer</th>
           <th>Review</th>
+          <th>Stars</th>
+          <th>Likes</th>
+          <th>Dislikes</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>John Doe</td>
-          <td>Great game!</td>
+        <tr v-for="review in reviews" :key="review.id">
+          <td>{{ review.customerId || "Anonymous" }}</td>
+          <td>{{ review.description }}</td>
+          <td>{{ review.stars }}</td>
+          <td>{{ review.likes }}</td>
+          <td>{{ review.dislikes }}</td>
+          <td>{{ review.reply }}</td>
         </tr>
-        <tr>
-          <td>Jane Smith</td>
-          <td>Could use some improvements.</td>
+        <tr v-if="reviews.length === 0">
+          <td colspan="5" class="no-reviews">No reviews yet. Be the first to review this game!</td>
         </tr>
         </tbody>
       </table>
@@ -62,27 +68,34 @@
 
 
 <script>
-import { Game } from "../dto/Game"; // Import the Game class
+import { Game } from "../dto/Game";
+import { Review } from "../dto/Review"; // Import the Review class
 
 export default {
   name: "GameDetailsPage",
   data() {
     return {
       gameDetails: null, // To hold game details
+      reviews: [], // To hold reviews for the game
     };
   },
   async created() {
     // Fetch game details by name from the route parameter
     const gameName = this.$route.params.gameNameNoSpace; // Assuming your route is configured as `/game/:name`
     try {
-      const response = await Game.findGameByName(gameName);
-      if (response.error) {
-        console.error(response.error);
+      // Fetch game details
+      const gameResponse = await Game.findGameByName(gameName);
+      if (gameResponse.error) {
+        console.error(gameResponse.error);
       } else {
-        this.gameDetails = response;
+        this.gameDetails = gameResponse;
       }
+
+      // Fetch reviews for the game
+      const reviewsResponse = await Review.getAllReviewsForGame(gameName);
+      this.reviews = reviewsResponse;
     } catch (error) {
-      console.error("Error fetching game details:", error.message);
+      console.error("Error fetching data:", error.message);
     }
   },
 };
