@@ -3,10 +3,11 @@
         <ul class="nav-links">
             <li><RouterLink to="/">Main Page</RouterLink></li>
             <li><RouterLink to="/about">About</RouterLink></li>
-            <li><RouterLink to="/home">Home</RouterLink></li>
-            <li><RouterLink to="/login">Sign In</RouterLink></li>
-            <li><RouterLink to="/register">Sign Up</RouterLink></li>
-            <li class="dropdown">
+            <li ><RouterLink to="/home">Home</RouterLink></li>
+
+            <li v-if="state.loggedIn === '0'"><RouterLink to="/login">Sign In</RouterLink></li>
+            <li v-if="state.loggedIn === '0'"><RouterLink to="/register">Sign Up</RouterLink></li>
+            <li v-if="['2', '3'].includes(state.loggedIn)" class="dropdown">
                 <a href="javascript:void(0)" class="dropbtn">Manage</a>
                 <div class="dropdown-content">
                     <RouterLink to="/manage/games">Games</RouterLink>
@@ -15,12 +16,31 @@
                 </div>
             </li>
             <li><RouterLink to="/debug">DEBUG</RouterLink></li>
+            <li v-if="['1','2', '3'].includes(state.loggedIn)"><button @click="logout" class="logout-btn">Logout</button></li>
+            <li><button @click="whoisLogged" class="logout-btn">Who</button></li>
         </ul>
     </nav>
 </template>
 
 <script setup>
-import { RouterLink } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
+import { state } from '../store/state';
+
+const router = useRouter(); // Get the router instance
+
+function logout() {
+    state.loggedIn = '0'; // Update global state to logged out
+    sessionStorage.setItem('LoggedIn', '0'); // Update sessionStorage to logged out
+    sessionStorage.setItem('Email', ''); // Update sessionStorage to logged out
+    console.log(state.loggedIn);
+    router.push('/');
+}
+
+function whoisLogged() {
+    console.log(state.loggedIn);
+    console.log(sessionStorage.getItem('Email'));
+    
+}
 </script>
 
 <style scoped>

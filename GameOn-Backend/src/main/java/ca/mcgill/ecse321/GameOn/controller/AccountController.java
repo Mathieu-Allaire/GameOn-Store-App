@@ -21,6 +21,8 @@ import ca.mcgill.ecse321.GameOn.dto.EmployeeResponseDto;
 
 
 import jakarta.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -125,6 +127,19 @@ public class AccountController {
         try {
             Integer response = accountService.logIn(email, password);
             return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/employee")
+    public ResponseEntity<?> findAllEmployees(){
+        List<EmployeeResponseDto> dtos = new ArrayList<>();
+        try {
+            for (Person employee : accountService.getAllEmployees()) {
+                dtos.add(new EmployeeResponseDto(employee));
+            }
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
         }

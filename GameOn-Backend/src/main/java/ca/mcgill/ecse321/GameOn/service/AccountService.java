@@ -9,6 +9,10 @@ import ca.mcgill.ecse321.GameOn.model.*;
 import ca.mcgill.ecse321.GameOn.repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -143,7 +147,7 @@ public class AccountService {
 
         //Make sure no repeated emails
         if (personRepository.findPersonByEmail(aEmail) != null) {
-            throw new GameOnException(HttpStatus.CONFLICT, "Email is already taken");
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Email is already taken");
         }
 
         Employee employeeRole = new Employee(true);
@@ -253,6 +257,16 @@ public class AccountService {
         } catch (Exception e){
             return false;
         }
+    }
+
+    public Iterable<Person> getAllEmployees(){
+        List<Person> employees = new ArrayList<>();
+        for(Person person : personRepository.findAll()){
+            if(person.getRole(0).getClass() == Employee.class && ((Employee) person.getRole(0)).getIsEmployed()){
+                employees.add(person);
+            }
+        }
+        return employees;
     }
 
     
