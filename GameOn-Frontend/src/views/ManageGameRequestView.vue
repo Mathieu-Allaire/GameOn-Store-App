@@ -131,14 +131,10 @@
       async addGame(name, category, description, price, quantity, picture) {
         const game = new Game(picture, name, description, price, quantity, category);
         await game.createGame();
-        const gameRequest = new GameRequest("aemployee@yessir.com", name, "Create");
+        const gameRequest = new GameRequest(sessionStorage.getItem('Email'), name, "Create");
         await gameRequest.createGameRequest();
-        this.gamerequests.push({
-          requestedGameId: gameRequest.requestedGameId,
-          requestedGame: gameRequest.requestedGame,
-          requestedGameDescription: gameRequest.requestedGameDescription,
-          requestType: gameRequest.requestType,
-        });
+        this.gamerequests = [];
+        await this.loadGameRequests();
 
       },
       async archiveGame(name) {
