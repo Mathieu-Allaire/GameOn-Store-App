@@ -10,19 +10,19 @@ const router = createRouter({
       component: () => import('../views/MainPageView.vue'),
     },
     {
+      path: "/login",
+      name: "login",
+      component: () => import("../views/LoginView.vue"),
+     },
+    {
       path: '/manage/employee',
       name: 'manage-employee',
       component: () => import('../views/ManageEmployeeView.vue'),
     },
     {
-      path: '/login',
-      name: 'login',
-      component: () => import('../views/LoginView.vue'),
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: () => import('../views/RegisterView.vue'),
+      path: "/register",
+      name: "register",
+      component: () => import("../views/RegisterView.vue"),
     },
     {
       path: '/manage/games',
@@ -59,6 +59,6 @@ const router = createRouter({
     },
 
   ],
-});
+})
 
-export default router;
+export default router
