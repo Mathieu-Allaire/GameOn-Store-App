@@ -147,7 +147,7 @@
                 alert("Game already archived.");
                 return;
             }
-            const gameRequest = new GameRequest("aemployee@yessir.com", name, "Archive");
+            const gameRequest = new GameRequest(sessionStorage.getItem('Email'), name, "Archive");
             const response = await gameRequest.createGameRequest();
             this.games.splice(this.games.indexOf(game), 1);
             // Push the request to gamerequests if the response is successful
