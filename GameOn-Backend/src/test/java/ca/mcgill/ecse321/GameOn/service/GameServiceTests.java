@@ -297,7 +297,7 @@ public class GameServiceTests {
     @Test
     public void testGetAllGames(){
         // Arrange
-        when(gameMockRepo.findAll()).thenReturn(null);
+        when(gameMockRepo.findAll()).thenReturn(Collections.emptyList());
 
         // Act
         service.getAllGames();

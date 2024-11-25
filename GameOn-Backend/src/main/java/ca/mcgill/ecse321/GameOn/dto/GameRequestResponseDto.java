@@ -6,6 +6,9 @@ public class GameRequestResponseDto {
     private String requestType;
     private String requestedGame;
     private String requestedGameStatus;
+    private String requestedGameDescription;
+    private int requestedGameId;
+
 
     protected GameRequestResponseDto() {
     }
@@ -14,10 +17,20 @@ public class GameRequestResponseDto {
         this.requestType = gameRequest.getRequestType().toString();
         this.requestedGame = gameRequest.getRequestedGame().getName();
         this.requestedGameStatus = gameRequest.getRequestedGame().getGameStatus().toString();
+        this.requestedGameId = gameRequest.getId();
+        this.requestedGameDescription = gameRequest.getRequestedGame().getDescription();
     }
 
     public String getRequestType() {
         return requestType;
+    }
+
+    public String getRequestedGameDescription() {
+        return requestedGameDescription;
+    }
+
+    public int getRequestedGameId() {
+        return requestedGameId;
     }
 
     public String getRequestedGame() {

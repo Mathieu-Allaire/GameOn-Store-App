@@ -14,6 +14,7 @@
                     <RouterLink to="/manage/employee">Staff</RouterLink>
                 </div>
             </li>
+            <li><RouterLink to="/manage/requests">Game Request</RouterLink></li>
             <li><RouterLink to="/debug">DEBUG</RouterLink></li>
         </ul>
     </nav>
