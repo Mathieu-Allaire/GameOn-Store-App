@@ -29,36 +29,50 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="gameRequestResponse in gameRequestResponses" :key="request.email">
+            <tr v-for="gameRequestResponse in gameRequestResponses" :key="gameRequestResponse.email">
               <td>{{ gameRequestResponse.name }}</td>
-              <td><button @click="approveRequest(request.id)">Approve</button></td>
+              <td>
+                <button @click="approveGameRequest()">Approve</button>
+                <button @click="rejectGameRequest()">Reject</button>
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="column" >
-        <h2>Create Game</h2>
-        <form @submit.prevent="createGame">
-          <label for="name">Name</label>
-          <input id="name" v-model="gameToAdd.name" type="text" required>
+        <div v-if="!debug_is_manager">
+            <h2>Request Game </h2>
+            <form @submit.prevent="requestAddGame">
+            <label for="name">Game Name</label>
+            <input id="name" v-model="gameRequest.requestedGameName" type="text" required>
+            <button type="submit" >Request Game</button>
+            </form>
+        </div>
 
-          <label for="quantity">Quantity</label>
-          <input id="quantity" v-model="gameToAdd.quantity" type="number" required>
+        <div v-if="debug_is_manager">
+            <h2>Create Game </h2>
+            <form @submit.prevent="createGame">
+            <label for="name">Name</label>
+            <input id="name" v-model="gameToAdd.name" type="text" required>
 
-          <label for="category">Category</label>
-          <input id="category" v-model="gameToAdd.category" type="text" required>
+            <label for="quantity">Quantity</label>
+            <input id="quantity" v-model="gameToAdd.quantity" type="number" required>
 
-          <label for="price">Price</label>
-          <input id="price" v-model="gameToAdd.price" type="number" step="0.01" required>
+            <label for="category">Category</label>
+            <input id="category" v-model="gameToAdd.category" type="text" required>
 
-          <label for="pictureUrl">Picture URL</label>
-          <input id="pictureUrl" v-model="gameToAdd.picture" type="url" required>
+            <label for="price">Price</label>
+            <input id="price" v-model="gameToAdd.price" type="number" step="0.01" required>
 
-          <label for="description">Description</label>
-          <textarea id="description" v-model="gameToAdd.description" required></textarea>
+            <label for="pictureUrl">Picture URL</label>
+            <input id="pictureUrl" v-model="gameToAdd.picture" type="url" required>
 
-          <button type="submit" >Create Game</button>
-        </form>
+            <label for="description">Description</label>
+            <textarea id="description" v-model="gameToAdd.description" required></textarea>
+
+            <button type="submit" > Create Game</button>
+            </form>
+        </div>
       </div>
     </div>
   </div>
@@ -82,6 +96,9 @@ export default {
       gameToAdd : new Game(),
       gameResponses:[],
       gameRequestResponses : [],
+
+      gameRequest : new GameRequest(),
+      debug_is_manager: true
     }
   },
   methods: {
@@ -99,17 +116,30 @@ export default {
     },
     async deleteGame(gameName) {
       const response = await Game.deleteGame(gameName);
-      if (response.error) {
+      if (!response || response.error) {
         console.log("Error deleting game: ", response.error);
       } else {
-        updateGames();
+        await this.updateGames();
       }
     },
     async createGame() {
       console.log('Game to Add:', this.gameToAdd);
       await this.gameToAdd.createGame();
       await this.updateGames();
-    }
+    },
+    async getEmail() {
+      //i.e. user.session.getEmail
+      const DEBUG_EMAIL = "bobby@mail.com"
+      return DEBUG_EMAIL;
+    },
+    async requestAddGame() {
+      this.gameRequest.employeeEmail = await this.getEmail();
+      this.gameRequest.requestType = "Create";
+      console.log("Game Request: ", this.gameRequest);
+      await this.gameRequest.createGameRequest();
+      await this.updateGameRequests();
+    },
+
   },
   async mounted() {
     await this.updateGames();
