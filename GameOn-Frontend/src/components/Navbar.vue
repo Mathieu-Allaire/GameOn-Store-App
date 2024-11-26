@@ -17,34 +17,132 @@
             </li>
             <li v-if="state.loggedIn === '2'"><RouterLink to="/manage/requests">Game Request</RouterLink></li>
             <li><RouterLink to="/debug">DEBUG</RouterLink></li>
+
+            <li> <SearchBar @searchEvent="searchEvent"/> </li>
+            <li style="background-color: orange; cursor: pointer; color: black; border-radius: 1vw; padding:0.25vw; padding-left: 3vw; padding-right: 3vw;"
+            @click="displayCategories" @mouseleave="hideCategories"> Category
+                <div v-if="categoryClicked" class="categoryBox">
+                <ul  class="category-list" multiple>
+                    <li v-for="categoryResponse in categoryResonses" :key="categoryResponse.name"  class="category-item" @click="goToCategory(categoryResponse.name)">
+                        {{categoryResponse.name}}
+                    </li>
+                </ul>
+                </div>
+            </li>
+
             <li v-if="['1','2', '3'].includes(state.loggedIn)"><button @click="logout" class="logout-btn">Logout</button></li>
             <li><button @click="whoisLogged" class="logout-btn">Who</button></li>
+
         </ul>
     </nav>
 </template>
 
-<script setup>
+
+<script >
+
+import { mapActions } from "vuex";
 import { RouterLink, useRouter } from "vue-router";
 import { state } from '../store/state';
 
-const router = useRouter(); // Get the router instance
+import SearchBar from "./SearchBar.vue"
 
-function logout() {
-    state.loggedIn = '0'; // Update global state to logged out
-    sessionStorage.setItem('LoggedIn', '0'); // Update sessionStorage to logged out
-    sessionStorage.setItem('Email', ''); // Update sessionStorage to logged out
-    console.log(state.loggedIn);
-    router.push('/');
-}
+import { Category } from "../dto/Category"
+import { CategoryResponseDto } from "../dto/CategoryResponseDto"
 
-function whoisLogged() {
-    console.log(state.loggedIn);
-    console.log(sessionStorage.getItem('Email'));
-    
+export default {
+  setup() {
+    return { state };
+  },
+  name: "Navbar",
+  components: {
+    SearchBar
+  },
+  data() {
+    return {
+      categoryClicked:false,
+      categoryResonses : [],
+      category: ""
+    }
+  },
+  methods: {
+    whoisLogged() {
+       console.log(state.loggedIn);
+       console.log(sessionStorage.getItem('Email'));
+    },
+    logout() {
+        state.loggedIn = '0'; // Update global state to logged out
+        sessionStorage.setItem('LoggedIn', '0'); // Update sessionStorage to logged out
+        sessionStorage.setItem('Email', ''); // Update sessionStorage to logged out
+        console.log(state.loggedIn);
+        this.$router.push('/');
+    },
+    searchEvent(data) { //pass to app
+      console.log("NavBar received: ")
+      console.log(data)
+      this.$emit("searchEvent", data)
+      console.log("navbar transmitted")
+    },
+    displayCategories() {
+      this.updateCategories();
+      this.categoryClicked = true;
+
+    },
+    hideCategories() {
+      this.categoryClicked = false;
+    },
+    async updateCategories() {
+      const response = await Category.findAllCategories();
+      this.categoryResonses = response.map(response => new CategoryResponseDto(response));
+      console.log("Categories: ");
+      console.log(this.categoryResonses);
+    },
+    async goToCategory(c) {
+      console.log(c)
+      this.category = c;
+      await this.$router.push("/home");
+    },
+    ...mapActions(["updateSharedCategory"]),
+  },
+  async mounted() {
+    this.updateCategories();
+  },
+  watch: {
+      searchText: function () {
+          console.log("Updating search store");
+          this.$store.dispatch("updateSharedSearch", this.searchText);
+      },
+    category: function () {
+      console.log("Updating category store")
+      this.$store.dispatch("resetSearch",);
+      this.$store.dispatch("updateSharedCategory", this.category);
+    }
+  },
+
 }
 </script>
 
 <style scoped>
+.categoryBox{
+
+    display: block
+
+}
+.category-item{
+     display: block;
+}
+.category-item:hover {
+    color: white;
+}
+.category-list{
+    list-style: none; /* Removes default list style */
+    padding: 0;
+    margin: 0;
+    display: block;
+    flex-direction: column;
+    display:flex;
+    justify-content: center;
+}
+
 .navbar {
     background-color: #333;
     padding: 0; /* Remove padding to align to the top */
@@ -60,6 +158,7 @@ function whoisLogged() {
     gap: 1em;
     margin: 0;
     padding: 1em; /* Add padding to the nav links */
+
 }
 
 .nav-links li {

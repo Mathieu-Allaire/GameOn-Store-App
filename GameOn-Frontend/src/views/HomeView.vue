@@ -1,15 +1,18 @@
 <template>
     <ul class="gameGrid">
-        <li v-for="gameResponse in gameResponses" :key="gameResponse.name">
+        <li v-for="gameResponse in filteredGameResponses" :key="gameResponse.name">
             <MainPageGame :gameResponse="gameResponse"/>
         </li>
     </ul>
 </template>
 
 <script>
+import {mapState, mapGetters} from 'vuex'
+
 import MainPageGame from "../components/MainPageGame.vue";
 import { Game } from "../dto/Game";
 import { GameResponseDTO } from "../dto/GameResponseDTO";
+
 
 export default {
   name: "HomeView",
@@ -27,6 +30,24 @@ export default {
     console.log("Games: ");
     console.log(this.gameResponses);
   },
+  computed: {
+    filteredGameResponses() {
+      console.log("Shared category: "); console.log(this.sharedCategory)
+      console.log("Shared game: "); console.log(this.sharedSearch)
+      return this.gameResponses.filter(game =>
+        (this.sharedSearch === '' || !this.sharedSearch || game.name.toLowerCase().startsWith(this.sharedSearch.toLowerCase()))
+          && (  !this.sharedCategory || this.sharedCategory === '' || this.sharedCategory === game.category)
+      );
+    },
+    ...mapGetters(['getSharedSearch']), // Map Vuex getter
+    sharedSearch() {
+      return this.getSharedSearch; // Access the shared state
+    },
+    ...mapGetters(['getSharedCategory']), // Map Vuex getter
+    sharedCategory() {
+      return this.getSharedCategory; // Access the shared state
+    }
+  }
 };
 </script>
 
@@ -36,11 +57,11 @@ export default {
     margin: 0 0;
     padding: 0 0;
     flex-wrap: wrap;
+
     position: relative;
     left : 0;
     top:0;
     height:auto;
-    flex-flow: row;
     width:100%;
     list-style: none;
 

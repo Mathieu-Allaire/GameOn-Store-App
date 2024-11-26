@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +37,7 @@ import jakarta.validation.Valid;
  */
 @CrossOrigin(origins = "http://localhost:8087")
 @RestController
+
 public class GameController {
     @Autowired
     private GameService gameService;
@@ -61,6 +61,7 @@ public class GameController {
                 gameCreateDto.getQuantity(),
                 gameCreateDto.getCategory()
             );
+
             GameResponseDTO response = new GameResponseDTO(game);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -105,6 +106,7 @@ public class GameController {
      */
     @GetMapping("/games")
     public ResponseEntity<?> findAllGames() {
+        System.out.println("Finding all games");
         List<GameResponseDTO> dtos = new ArrayList<>();
         try{
             for (Game g : gameService.getAllGames()) {
@@ -292,6 +294,9 @@ public class GameController {
         }
     }
 
+
+
+
     /**
      * Create a game request
      * @param GameReqRequestDto the game request response DTO
@@ -311,7 +316,7 @@ public class GameController {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
         }
     }
-    
+
     /**
      * Approve a game request
      * @param gameRequestId the ID of the game request to approve
