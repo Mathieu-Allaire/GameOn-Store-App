@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export class GameWishlist {
   constructor(gameName, customerEmail) {
     this.gameName = gameName;

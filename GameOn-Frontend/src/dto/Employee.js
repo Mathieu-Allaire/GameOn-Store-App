@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export class Employee {
   constructor(email, name) {
     this.email = email;

@@ -1,6 +1,7 @@
 <template>
 <div>
     <button @click="addCategory">add category</button>
+    <button @click="addCategory2">add category2</button>
     <button @click="addGame">add game</button>
     <button @click="addGame2">add game 2</button>
     <button @click="deleteCategory">delete category</button>
@@ -40,6 +41,10 @@ export default {
         addCategory() {
             const category = new Category("Action"); //DTO
             category.createCategory(); //Send request to server
+        },
+        addCategory2(){
+          const category = new Category("2D");
+          category.createCategory();
         },
         async update() {
             const response = await Game.findGameByName("GTA"); //Fetch from server
