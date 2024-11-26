@@ -40,8 +40,8 @@ public class ReviewController{
                     reviewDto.getStars(),
                     reviewDto.getLikes(),
                     reviewDto.getDislikes(),
-                    reviewDto.getCustomerId(),
-                    reviewDto.getManagerId()
+                    reviewDto.getCustomerEmail(),
+                    reviewDto.getManagerEmail()
         );
         return new ReviewDto(review);
 

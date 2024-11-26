@@ -2,31 +2,26 @@ package ca.mcgill.ecse321.GameOn.service;
 import java.util.List;
 
 import ca.mcgill.ecse321.GameOn.exception.GameOnException;
-import ca.mcgill.ecse321.GameOn.repository.CustomerRepository;
-import ca.mcgill.ecse321.GameOn.repository.ManagerRepository;
+import ca.mcgill.ecse321.GameOn.model.*;
+import ca.mcgill.ecse321.GameOn.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
-
-import ca.mcgill.ecse321.GameOn.repository.ReviewRepository;
-import ca.mcgill.ecse321.GameOn.repository.GameRepository;
-import ca.mcgill.ecse321.GameOn.model.Review;
-import ca.mcgill.ecse321.GameOn.model.Game;
-import ca.mcgill.ecse321.GameOn.model.Customer;
-import ca.mcgill.ecse321.GameOn.model.Manager;
-
 @Service
 public class ReviewService {
     @Autowired
-    private ReviewRepository reviewRepo;
-    @Autowired
-    private GameRepository gameRepo;
+    private PersonRepository personRepo;
     @Autowired
     private CustomerRepository customerRepo;
     @Autowired
     private ManagerRepository managerRepo;
+    @Autowired
+    private ReviewRepository reviewRepo;
+    @Autowired
+    private GameRepository gameRepo;
+
 
     /**
      * Posts a new review with the specified details and saves it to the repository.
@@ -57,14 +52,14 @@ public class ReviewService {
      * @param aStars        The rating given in the review, between 0 and 5 stars.
      * @param aLikes        The initial number of likes for the review, must be non-negative.
      * @param aDislikes     The initial number of dislikes for the review, must be non-negative.
-     * @param aReviewAuthor The customer who authored the review.
-     * @param aManager      The manager responsible for approving or managing the review.
+     * @param customerEmail The customer who authored the review.
+     * @param managerEmail      The manager responsible for approving or managing the review.
      * @return The newly created review object.
      * @throws IllegalArgumentException if any parameters are invalid.
      * @author Mathieu Allaire
      */
     @Transactional
-    public Review postReview(String aDescription, int aStars, int aLikes, int aDislikes, Long aReviewAuthor, Long aManager) {
+    public Review postReview(String aDescription, int aStars, int aLikes, int aDislikes, String customerEmail, String managerEmail) {
         if (aDescription == null || aDescription.trim().isEmpty()) {
             throw new GameOnException(HttpStatus.BAD_REQUEST, "The review has an empty description");
         }
@@ -77,25 +72,36 @@ public class ReviewService {
         if (aDislikes < 0) {
             throw new GameOnException(HttpStatus.BAD_REQUEST, "The number of dislikes must be non-negative");
         }
-        if (aReviewAuthor == null) {
-            throw new GameOnException(HttpStatus.BAD_REQUEST, "The author id is null");
-        }
-        if (aManager == null) {
-            throw new GameOnException(HttpStatus.BAD_REQUEST, "The manager id is null");
-        }
 
-        Customer customer = customerRepo.findCustomerById(aReviewAuthor.intValue());
-        Manager manager = managerRepo.findManagerById(aManager.intValue());
-
+        if (customerEmail == null || customerEmail.trim().length() == 0 || customerEmail.contains(" ") || customerEmail.contains("@") == false || customerEmail.contains(".") == false) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Customer email is invalid");
+        }
+        //search customer
+        Person customer = personRepo.findPersonByEmail(customerEmail);
         if (customer == null) {
-
-            throw new GameOnException(HttpStatus.BAD_REQUEST, "No author with this id exists");
+            throw new GameOnException(HttpStatus.NOT_FOUND, "Customer not found " + customerEmail);
         }
+        //if the person is not a customer
+        if(personRepo.findPersonByEmail(customerEmail).getRole(0).getClass() != Customer.class){
+            throw new GameOnException(HttpStatus.NOT_FOUND, "No customer with this email");
+        }
+
+
+        if (managerEmail == null || managerEmail.trim().length() == 0 || managerEmail.contains(" ") || managerEmail.contains("@") == false || managerEmail.contains(".") == false) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Manager email is invalid");
+        }
+        //search manager
+        Person manager = personRepo.findPersonByEmail(managerEmail);
         if (manager == null) {
-            throw new GameOnException(HttpStatus.BAD_REQUEST, "No manager with this id exists");
+            throw new GameOnException(HttpStatus.NOT_FOUND, "Manager not found");
+        }
+        //if the person is not a customer
+        if(personRepo.findPersonByEmail(managerEmail).getRole(0).getClass() != Manager.class){
+            throw new GameOnException(HttpStatus.NOT_FOUND, "No manager with this email");
         }
 
-        Review review = new Review(aDescription, aStars, aLikes, aDislikes, customer, manager);
+
+        Review review = new Review(aDescription, aStars, aLikes, aDislikes, (Customer) customer.getRole(0), (Manager) manager.getRole(0));
 
 
         reviewRepo.save(review);
