@@ -190,6 +190,20 @@ public class GameController {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
         }
     }
+    @PostMapping("/games/addReview")
+    public ResponseEntity<?> addReview(@RequestParam String name, @RequestParam int review){
+        try{
+            //add review in gameService
+            Game game = gameService.addReview(name, review);
+            GameResponseDTO response = new GameResponseDTO(game);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            if (e.getMessage().equalsIgnoreCase("Game does not exist")) {
+                return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     /**
      * Update the quantity of a game

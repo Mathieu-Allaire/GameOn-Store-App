@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.GameOn.service;
 
 import ca.mcgill.ecse321.GameOn.exception.GameOnException;
+import ca.mcgill.ecse321.GameOn.model.*;
+import ca.mcgill.ecse321.GameOn.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,8 @@ public class GameService {
     private EmployeeRepository employeeRepository;
     @Autowired
     private ManagerRepository managerRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     /**
      * Method to create new category
@@ -446,7 +450,35 @@ public class GameService {
         game.setPrice(aPrice);
         game = gameRepository.save(game);
 
-        return game; 
+        return game;
+    }
+
+    @Transactional
+    public Game addReview(String aGame, int reviewId){
+        if (aGame == null) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Game is invalid");
+        }
+
+        if (reviewId <= 0) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Review Id must be greater than 0");
+        }
+
+        Game game = gameRepository.findGameByName(aGame);
+
+        if (game == null) {
+            throw new GameOnException(HttpStatus.NOT_FOUND, "Game does not exist");
+        }
+
+        Review review = reviewRepository.findReviewById(reviewId);
+
+        if (review == null) {
+            throw new GameOnException(HttpStatus.NOT_FOUND, "Review does not exist");
+        }
+
+        game.addReview(review);
+        game = gameRepository.save(game);
+
+        return game;
     }
 
     @Transactional

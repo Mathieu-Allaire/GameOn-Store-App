@@ -69,7 +69,7 @@ public class ReviewIntegrationTests {
     private static final int VALID_DISLIKES = 2;
 
     private static final String VALID_REPLY = "Thanks!";
-    public static int REVIEW_ID;
+    public static int REVIEW_ID = 1;
 
 
     @AfterAll
@@ -95,7 +95,7 @@ public class ReviewIntegrationTests {
         Manager manager = (Manager) createdManager.getRole(0);
 
         // Arrange
-        ReviewDto review = new ReviewDto(VALID_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, null , customer.getId(),manager.getId());
+        ReviewDto review = new ReviewDto(REVIEW_ID,VALID_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, null , customer.getId(),manager.getId());
 
         // Act
         ResponseEntity<ReviewDto> response = client.postForEntity("/reviews", review, ReviewDto.class);
