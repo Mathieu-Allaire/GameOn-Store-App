@@ -19,8 +19,8 @@
             <li style="background-color: orange; cursor: pointer; color: black; border-radius: 1vw; padding:0.25vw; padding-left: 3vw; padding-right: 3vw;"
             @click="displayCategories" @mouseleave="hideCategories"> Category
                 <div v-if="categoryClicked" class="categoryBox">
-                <ul  class="category-list">
-                    <li v-for="categoryResponse in categoryResonses" :key="categoryResponse.name"  class="category-item">
+                <ul  class="category-list" multiple>
+                    <li v-for="categoryResponse in categoryResonses" :key="categoryResponse.name"  class="category-item" @click="goToCategory(categoryResponse.name)">
                         {{categoryResponse.name}}
                     </li>
                 </ul>
@@ -32,6 +32,8 @@
 
 <script >
 import { RouterLink } from "vue-router";
+import { mapActions } from "vuex";
+
 import SearchBar from "./SearchBar.vue"
 
 import { Category } from "../dto/Category"
@@ -46,7 +48,8 @@ export default {
   data() {
     return {
       categoryClicked:false,
-      categoryResonses : []
+      categoryResonses : [],
+      category: ""
     }
   },
   methods: {
@@ -59,6 +62,7 @@ export default {
     displayCategories() {
       this.updateCategories();
       this.categoryClicked = true;
+
     },
     hideCategories() {
       this.categoryClicked = false;
@@ -68,10 +72,27 @@ export default {
       this.categoryResonses = response.map(response => new CategoryResponseDto(response));
       console.log("Categories: ");
       console.log(this.categoryResonses);
-    }
+    },
+    async goToCategory(c) {
+      console.log(c)
+      this.category = c;
+      await this.$router.push("/home");
+    },
+    ...mapActions(["updateSharedCategory"]),
   },
   async mounted() {
     this.updateCategories();
+  },
+  watch: {
+      searchText: function () {
+          console.log("Updating search store");
+          this.$store.dispatch("updateSharedSearch", this.searchText);
+      },
+    category: function () {
+      console.log("Updating category store")
+      this.$store.dispatch("resetSearch",);
+      this.$store.dispatch("updateSharedCategory", this.category);
+    }
   },
 }
 </script>

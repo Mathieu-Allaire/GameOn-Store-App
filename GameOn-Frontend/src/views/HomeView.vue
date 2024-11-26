@@ -32,13 +32,20 @@ export default {
   },
   computed: {
     filteredGameResponses() {
+      console.log("Shared category: "); console.log(this.sharedCategory)
+      console.log("Shared game: "); console.log(this.sharedSearch)
       return this.gameResponses.filter(game =>
-        this.sharedData === '' || !this.sharedData || game.name.toLowerCase().startsWith(this.sharedData.toLowerCase())
+        (this.sharedSearch === '' || !this.sharedSearch || game.name.toLowerCase().startsWith(this.sharedSearch.toLowerCase()))
+          && (  !this.sharedCategory || this.sharedCategory === '' || this.sharedCategory === game.category)
       );
     },
-    ...mapGetters(['getSharedData']), // Map Vuex getter
-    sharedData() {
-      return this.getSharedData; // Access the shared state
+    ...mapGetters(['getSharedSearch']), // Map Vuex getter
+    sharedSearch() {
+      return this.getSharedSearch; // Access the shared state
+    },
+    ...mapGetters(['getSharedCategory']), // Map Vuex getter
+    sharedCategory() {
+      return this.getSharedCategory; // Access the shared state
     }
   }
 };
