@@ -2,7 +2,6 @@
     <nav class="navbar">
         <ul class="nav-links">
             <li><RouterLink to="/">Main Page</RouterLink></li>
-            <li><RouterLink to="/about">About</RouterLink></li>
             <li ><RouterLink to="/home">Home</RouterLink></li>
 
             <li v-if="state.loggedIn === '0'"><RouterLink to="/login">Sign In</RouterLink></li>
@@ -16,7 +15,6 @@
                 </div>
             </li>
             <li v-if="state.loggedIn === '2'"><RouterLink to="/manage/requests">Game Request</RouterLink></li>
-            <li><RouterLink to="/debug">DEBUG</RouterLink></li>
 
             <li> <SearchBar @searchEvent="searchEvent"/> </li>
             <li style="background-color: orange; cursor: pointer; color: black; border-radius: 1vw; padding:0.25vw; padding-left: 3vw; padding-right: 3vw;"
@@ -31,7 +29,7 @@
             </li>
 
             <li v-if="['1','2', '3'].includes(state.loggedIn)"><button @click="logout" class="logout-btn">Logout</button></li>
-            <li><button @click="whoisLogged" class="logout-btn">Who</button></li>
+            <li v-if="['10'].includes(state.loggedIn)"><button @click="whoisLogged" class="who-btn">Who</button></li>
 
         </ul>
     </nav>
