@@ -4,23 +4,6 @@
     <div class="game-container">
       <!-- Left Column -->
       <div class="column">
-<<<<<<< HEAD
-        <h2>Games</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="gameResponse in gameResponses" :key="gameResponse.name">
-              <td>{{ gameResponse.name }}</td>
-              <td><button class="remove-button" @click="deleteGame(gameResponse.name)">Remove</button></td>
-            </tr>
-          </tbody>
-        </table>
-=======
         <!-- Create Game Section -->
         <div class="create-game">
           <h2>Create Game</h2>
@@ -35,65 +18,10 @@
           </form>
           <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
         </div>
->>>>>>> main
       </div>
 
       <!-- Right Column -->
       <div class="column">
-<<<<<<< HEAD
-        <h2>Game Requests</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="gameRequestResponse in gameRequestResponses" :key="gameRequestResponse.email">
-              <td>{{ gameRequestResponse.name }}</td>
-              <td>
-                <button @click="approveGameRequest()">Approve</button>
-                <button @click="rejectGameRequest()">Reject</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="column" >
-        <div v-if="!debug_is_manager">
-            <h2>Request Game </h2>
-            <form @submit.prevent="requestAddGame">
-            <label for="name">Game Name</label>
-            <input id="name" v-model="gameRequest.requestedGameName" type="text" required>
-            <button type="submit" >Request Game</button>
-            </form>
-        </div>
-
-        <div v-if="debug_is_manager">
-            <h2>Create Game </h2>
-            <form @submit.prevent="createGame">
-            <label for="name">Name</label>
-            <input id="name" v-model="gameToAdd.name" type="text" required>
-
-            <label for="quantity">Quantity</label>
-            <input id="quantity" v-model="gameToAdd.quantity" type="number" required>
-
-            <label for="category">Category</label>
-            <input id="category" v-model="gameToAdd.category" type="text" required>
-
-            <label for="price">Price</label>
-            <input id="price" v-model="gameToAdd.price" type="number" step="0.01" required>
-
-            <label for="pictureUrl">Picture URL</label>
-            <input id="pictureUrl" v-model="gameToAdd.picture" type="url" required>
-
-            <label for="description">Description</label>
-            <textarea id="description" v-model="gameToAdd.description" required></textarea>
-
-            <button type="submit" > Create Game</button>
-            </form>
-=======
         <!-- Update Game Section -->
         <div class="update-game">
           <h2>Update Game Price and Quantity</h2>
@@ -145,7 +73,6 @@
               </li>
             </ul>
           </div>
->>>>>>> main
         </div>
       </div>
     </div>
@@ -153,87 +80,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-
-import { Game } from "../dto/Game";
-import { GameResponseDTO } from "../dto/GameResponseDTO";
-
-import { GameRequest } from "../dto/GameRequest";
-import { GameRequestResponseDto } from "../dto/GameRequestResponseDto";
-
-export default {
-  name: "ManageGamesView",
-  components: {
-
-  },
-  data() {
-    return {
-      gameToAdd : new Game(),
-      gameResponses:[],
-      gameRequestResponses : [],
-
-      gameRequest : new GameRequest(),
-      debug_is_manager: true
-    }
-  },
-  methods: {
-    async updateGames() {
-      const gameResponses = await Game.findAllGames();
-      this.gameResponses = gameResponses.map(gameResponses => new GameResponseDTO(gameResponses));
-      console.log("Games: ");
-      console.log(this.gameResponses);
-    },
-    async updateGameRequests() {
-      const gameRequestResponse = await GameRequest.findAllGameRequests();
-      this.gameRequestResponses = gameRequestResponse.map(gameRequestResponse => new GameRequestResponseDto(gameRequestResponse));
-      console.log("Games Requests: ");
-      console.log(this.gameRequestResponses);
-    },
-    async deleteGame(gameName) {
-      const response = await Game.deleteGame(gameName);
-      if (!response || response.error) {
-        console.log("Error deleting game: ", response.error);
-      } else {
-        await this.updateGames();
-      }
-    },
-    async createGame() {
-      console.log('Game to Add:', this.gameToAdd);
-      await this.gameToAdd.createGame();
-      await this.updateGames();
-    },
-    async getEmail() {
-      //i.e. user.session.getEmail
-      const DEBUG_EMAIL = "bobby@mail.com"
-      return DEBUG_EMAIL;
-    },
-    async requestAddGame() {
-      this.gameRequest.employeeEmail = await this.getEmail();
-      this.gameRequest.requestType = "Create";
-      console.log("Game Request: ", this.gameRequest);
-      await this.gameRequest.createGameRequest();
-      await this.updateGameRequests();
-    },
-
-  },
-  async mounted() {
-    await this.updateGames();
-    await this.updateGameRequests();
-  },
-
-}
-
-
-const approveRequest = (id) => {
-  const requestIndex = gameRequests.value.findIndex(request => request.id === id);
-  if (requestIndex !== -1) {
-    const approvedGame = gameRequests.value.splice(requestIndex, 1)[0];
-    games.value.push(approvedGame);
-  }
-};
-
-
-=======
 import { Game } from "../dto/Game";
 import { GameResponseDTO } from "../dto/GameResponseDTO";
 import { GameRequest } from "../dto/GameRequest";
@@ -416,7 +262,6 @@ export default {
     await this.loadGames();
   },
 };
->>>>>>> main
 </script>
 <style scoped>
 .game-view {

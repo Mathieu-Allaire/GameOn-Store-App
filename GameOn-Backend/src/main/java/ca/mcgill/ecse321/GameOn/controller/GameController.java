@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,13 +35,9 @@ import jakarta.validation.Valid;
  *
  * @author Neeshal Imrit
  */
-<<<<<<< HEAD
-
-=======
 @CrossOrigin(origins = "http://localhost:8087")
->>>>>>> main
 @RestController
-@CrossOrigin(origins="*")
+
 public class GameController {
     @Autowired
     private GameService gameService;
@@ -319,25 +314,6 @@ public class GameController {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-
-    /**
-     * Retrieves all game requests
-     * @return a list of game request response DTOs
-     */
-    @GetMapping("/games/requests")
-    public ResponseEntity<?> findAllGameRequests(){
-        System.out.println("Finding all requests");
-        List<GameRequestResponseDto> dtos = new ArrayList<>();
-        try{
-            for (GameRequest g : gameService.getAllGameRequests()) {
-                dtos.add(new GameRequestResponseDto(g));
-            }
-            return new ResponseEntity<>(dtos, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.NOT_FOUND);
         }
     }
 

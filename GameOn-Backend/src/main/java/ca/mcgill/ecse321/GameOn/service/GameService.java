@@ -322,17 +322,6 @@ public class GameService {
         return gameRequest;
     }
 
-
-    /**
-     * Method to get all game requests.
-     *
-     * @return List<GameRequests>
-     */
-    public Iterable<GameRequest> getAllGameRequests(){
-        System.out.println("Finding all requests");
-        return gameRequestRepository.findAll();
-    }
-
     /**
      * Method to approve a game request.
      * This changes the game status to available.
