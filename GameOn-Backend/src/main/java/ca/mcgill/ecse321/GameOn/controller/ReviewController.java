@@ -20,6 +20,7 @@ import ca.mcgill.ecse321.GameOn.model.Review;
  *
  * @author Mathieu Allaire
  */
+@CrossOrigin(origins = "http://localhost:8087")
 @RestController
 public class ReviewController{
     @Autowired

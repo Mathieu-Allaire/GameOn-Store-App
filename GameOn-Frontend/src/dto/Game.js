@@ -81,4 +81,27 @@ export class Game {
       return { error: error.message };
     }
   }
+
+  // Add review to a game
+  static async addReview(name, review) {
+    const path = "http://localhost:8087/home/game/addReview";
+    try {
+      const response = await axios.post(path, null, { params: { name, review } });
+      return response.data; // Return the updated game response
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
+  // Get reviews of a game
+  static async getReviews(name) {
+    const path = "http://localhost:8087/home/game/reviews";
+    try {
+      const response = await axios.get(path, { params: { name } });
+      console.log("Reviews response:", response);
+      return response.data; // Return the list of reviews
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
 }

@@ -1,3 +1,4 @@
+
 <template>
   <main class="layout-container">
     <!-- Top Section: Title, Picture, Description, Price, Category -->
@@ -33,7 +34,7 @@
       <button class="action-button">Add to Cart</button>
     </div>
 
-    <div class="add-review-section">
+    <div v-if="['1'].includes(state.loggedIn)" class="add-review-section">
       <h2>Write a Review</h2>
       <form @submit.prevent="postReview" class="review-form">
         <div class="form-container">
@@ -70,7 +71,7 @@
         </div>
       </form>
     </div>
-    <div>
+    <div v-else>
       <h2>You must be a logged in customer to write a review.</h2>
       <div><RouterLink to="/login">Sign In</RouterLink></div>
       <div><RouterLink to="/register">Sign Up</RouterLink></div>
@@ -90,15 +91,18 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="review in reviews" :key="review.id">
-          <td>{{ review.customerId}}</td>
+        <tr v-for="review in reviewsOfGame" :key="review.id">
+          <td>{{ review.customerEmail || 'Anonymous' }}</td> <!-- Default to "Anonymous" if no email -->
           <td>{{ review.description }}</td>
           <td>{{ review.stars }}</td>
           <td>{{ review.likes }}</td>
           <td>{{ review.dislikes }}</td>
-          <td>{{ review.reply }}</td>
+          <td>
+            <button class="reply-button" @click="replyToReview(review.id)">Reply</button>
+            <p>{{ review.reply || 'No reply yet' }}</p> <!-- Show reply if available -->
+          </td>
         </tr>
-        <tr v-if="reviews.length === 0">
+        <tr v-if="reviewsOfGame.length === 0">
           <td colspan="6" class="no-reviews">No reviews yet. Be the first to review this game!</td>
         </tr>
         </tbody>
@@ -108,6 +112,12 @@
 </template>
 
 <script>
+import axios from "axios";
+
+const axiosClient = axios.create({
+  // NOTE: it's baseURL, not baseUrl
+  baseURL: "http://localhost:8087"
+});
 import { state } from '../store/state'; // Ensure the correct path to the state file
 import { Game } from "../dto/Game";
 import { Review } from "../dto/Review"; // Import the Review class
@@ -123,61 +133,99 @@ export default {
   data() {
     return {
       gameDetails: null, // To hold game details
-      reviews: [], // To hold reviews for the game
+      reviewsOfGame: [], // To hold reviews for the game
       role: '',
       newReview: {
         description: '',
-        stars: null,
+        stars: 0,
         likes: 0, // Optional, you can add a default value
         dislikes: 0, // Optional, you can add a default value
-        customerId: state.loggedInUserId || null, // Assume user is logged in
+        reply: '',
+        customerEmail: '',
+        managerEmail: 'manager@manager.com'
       },
     };
+
+  },
+  watch: {
+    gameDetails: {
+      immediate: true, // Trigger immediately when the watcher is registered
+      handler(newVal) {
+        if (newVal && newVal.name) {
+          this.fetchReviewsForGame(newVal.name);
+        }
+      }
+    }
   },
   async created() {
     // Retrieve the role from sessionStorage
     this.role = state.loggedIn; // Update local role
+    const storedEmail = sessionStorage.getItem('Email')
+    const storedName = sessionStorage.getItem('Name')
+
+
+    if (storedEmail){
+      this.newReview.customerEmail = storedEmail;
+    }
     // Fetch game details by name from the route parameter
-    const gameName = this.$route.params.gameNameNoSpace; // Assuming your route is configured as `/game/:name`
+
     try {
-      // Fetch game details
+      const gameName = this.$route.params.gameNameNoSpace;
       const gameResponse = await Game.findGameByName(gameName);
+
       if (gameResponse.error) {
         console.error(gameResponse.error);
       } else {
-        this.gameDetails = gameResponse;
+        this.gameDetails = gameResponse; // This will trigger the watcher
       }
-
-      // Fetch reviews for the game
-      //const reviewsResponse = await Review.getAllReviewsForGame(gameName);
-      //this.reviews = reviewsResponse;
     } catch (error) {
-      console.error("Error fetching data:", error.message);
+      console.error("Error fetching game details:", error);
+    }
+
+    try {
+      const reviewsReponse = await Game.getReviews(this.gameDetails.name);
+      if(reviewsReponse.error){
+        console.error(reviewsReponse.error);
+      }
+      else{
+        this.reviewsOfGame = reviewsReponse;
+        //console.log("Reviews for Game:", this.reviewsOfGame);
+      }
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
     }
   },
-  methods:{
-    async postReview() {
-      this.newReview.id = uuidv4();
-      this.newReview.likes = 0;
-      this.newReview.dislikes = 0;
-      this.newReview.reply = null;
-      //this.gameDetails.name; // Ensure the game name is available
+  methods: {
+    async fetchReviewsForGame(gameName) {
       try {
-        const response = await Review.createReview(this.newReview);
-        if (response.error) {
-          console.error(response.error);
+        const reviewsResponse = await Game.getReviews(gameName);
+        if (reviewsResponse.error) {
+          console.error(reviewsResponse.error);
         } else {
-          // Add the new review to the list of reviews
-          this.reviews.unshift(response);
-          // Reset the form
-          this.newReview.description = '';
-          this.newReview.stars = null;
+          this.reviewsOfGame = reviewsResponse;
+          //console.log("Fetched reviews:", this.reviewsOfGame);
         }
       } catch (error) {
-        console.error("Error posting review:", error.message);
+        console.error("Error fetching reviews:", error);
       }
+
+  },
+    async postReview() {
+      try {
+        // Post review
+        //this.newReview.customerEmail = this.storedEmail;
+        const reviewInstance = new Review(this.newReview);
+        const result = await reviewInstance.postReview();
+        const game = await Game.addReview(this.gameDetails.name, this.newReview); // Game name is "Chess", review is 5 stars
+        //console.log("Review added successfully:", game);
+        // Update reviews and reset form
+        this.newReview.description = '';
+        this.newReview.stars = null;
+      }catch (error){
+        console.error("Error adding review:", error);
       }
     },
+
     async replyToReview(reviewId) {
       const replyText = prompt("Enter your reply:");
 
@@ -188,7 +236,7 @@ export default {
             console.error(response.error);
           } else {
             alert("Reply added successfully!");
-            const updatedReview = this.reviews.find((review) => review.id === reviewId);
+            const updatedReview = this.reviewsOfGame.find((review) => review.id === reviewId);
             if (updatedReview) {
               updatedReview.reply = replyText; // Update the reply in the review
             }
@@ -198,7 +246,8 @@ export default {
         }
       }
     }
-};
+  }
+  };
 </script>
 
 
