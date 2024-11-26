@@ -12,6 +12,7 @@
 
 
 <script>
+import { mapActions, mapMutations, mapState } from 'vuex';
 
 export default {
   name: "SearchBar",
@@ -20,20 +21,28 @@ export default {
   },
   data() {
     return {
-      searchText : ""
+      searchText:""
     };
   },
   methods: {
     async onSearch() {
-      if (this.searchText === "") {
-        await this.$router.push("/home")
-      }
-      else {
-        await this.$router.push("/home/" + this.searchText)
-      }
-      window.location.reload();
+      console.log("searchText (search bar):")
+      console.log(this.sharedData)
+      await this.$router.push("/home")
+    },
+
+    ...mapActions(['updateSharedData']),
+    udpateSearch() {
+
     }
   },
+  watch: {
+    searchText: function () {
+      console.log("Updating store")
+      this.$store.dispatch('updateSharedData', this.searchText);
+    }
+  }
+
 };
 
 </script>

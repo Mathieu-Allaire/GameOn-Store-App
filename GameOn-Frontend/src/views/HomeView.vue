@@ -4,11 +4,10 @@
             <MainPageGame :gameResponse="gameResponse"/>
         </li>
     </ul>
-
 </template>
 
 <script>
-import { inject } from 'vue';
+import {mapState, mapGetters} from 'vuex'
 
 import MainPageGame from "../components/MainPageGame.vue";
 import { Game } from "../dto/Game";
@@ -17,39 +16,29 @@ import { GameResponseDTO } from "../dto/GameResponseDTO";
 
 export default {
   name: "HomeView",
-
   components: {
     MainPageGame,
   },
   data() {
     return {
       gameResponses: [],
-      searchText : ""
     };
   },
-
   async mounted() {
-    const search = this.$route.params.search;
-    console.log("search:")
-    console.log(search)
-    if (search && search !== "") { this.searchText = search }
-    else { this.searchText = ""}
-
     const response = await Game.findAllGames();
     this.gameResponses = response.map(response => new GameResponseDTO(response));
     console.log("Games: ");
     console.log(this.gameResponses);
   },
-  methods: {
-    applySearch(search) {
-
-    },
-  },
   computed: {
     filteredGameResponses() {
       return this.gameResponses.filter(game =>
-        this.searchText === '' || game.name.startsWith(this.searchText)
+        this.sharedData === '' || !this.sharedData || game.name.toLowerCase().startsWith(this.sharedData.toLowerCase())
       );
+    },
+    ...mapGetters(['getSharedData']), // Map Vuex getter
+    sharedData() {
+      return this.getSharedData; // Access the shared state
     }
   }
 };
