@@ -1,7 +1,7 @@
 <template>
 <div >
 <input
-  style="border-radius: 10px; width:20vw; height: 2vw;"
+  style="border-radius: 10px; width:20vw; height: 100%;"
   type="text"
   placeholder="Search..."
   v-model="searchText"

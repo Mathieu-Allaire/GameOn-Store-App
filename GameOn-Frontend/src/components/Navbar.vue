@@ -16,7 +16,16 @@
             </li>
             <li><RouterLink to="/debug">DEBUG</RouterLink></li>
             <li> <SearchBar @searchEvent="searchEvent"/> </li>
-            <li @click="displayCategories">  Category  </li>
+            <li style="background-color: orange; cursor: pointer; color: black; border-radius: 1vw; padding:0.25vw; padding-left: 3vw; padding-right: 3vw;"
+            @click="displayCategories" @mouseleave="hideCategories"> Category
+                <div v-if="categoryClicked" class="categoryBox">
+                <ul  class="category-list">
+                    <li v-for="categoryResponse in categoryResonses" :key="categoryResponse.name"  class="category-item">
+                        {{categoryResponse.name}}
+                    </li>
+                </ul>
+                </div>
+            </li>
         </ul>
     </nav>
 </template>
@@ -25,11 +34,20 @@
 import { RouterLink } from "vue-router";
 import SearchBar from "./SearchBar.vue"
 
+import { Category } from "../dto/Category"
+import { CategoryResponseDto } from "../dto/CategoryResponseDto"
+
 export default {
 
   name: "Navbar",
   components: {
     SearchBar
+  },
+  data() {
+    return {
+      categoryClicked:false,
+      categoryResonses : []
+    }
   },
   methods: {
     searchEvent(data) { //pass to app
@@ -37,13 +55,49 @@ export default {
       console.log(data)
       this.$emit("searchEvent", data)
       console.log("navbar transmitted")
+    },
+    displayCategories() {
+      this.updateCategories();
+      this.categoryClicked = true;
+    },
+    hideCategories() {
+      this.categoryClicked = false;
+    },
+    async updateCategories() {
+      const response = await Category.findAllCategories();
+      this.categoryResonses = response.map(response => new CategoryResponseDto(response));
+      console.log("Categories: ");
+      console.log(this.categoryResonses);
     }
-
-  }
+  },
+  async mounted() {
+    this.updateCategories();
+  },
 }
 </script>
 
 <style scoped>
+.categoryBox{
+
+    display: block
+
+}
+.category-item{
+     display: block;
+}
+.category-item:hover {
+    color: white;
+}
+.category-list{
+    list-style: none; /* Removes default list style */
+    padding: 0;
+    margin: 0;
+    display: block;
+    flex-direction: column;
+    display:flex;
+    justify-content: center;
+}
+
 .navbar {
     background-color: #333;
     padding: 0; /* Remove padding to align to the top */
