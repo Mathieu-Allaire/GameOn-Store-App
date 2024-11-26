@@ -35,6 +35,11 @@ const router = createRouter({
       component: () => import("../views/ManageCategoriesView.vue"),
     },
     {
+      path: "/manage/requests",
+      name: "manage-requests",
+      component: () => import("../views/ManageGameRequestView.vue"),
+    },
+    {
       path: "/home",
       name: "home",
       component: HomeView,
