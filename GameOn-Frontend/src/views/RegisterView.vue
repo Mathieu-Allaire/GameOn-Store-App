@@ -64,6 +64,10 @@ export default {
             try {
                 this.confirmPasswords();
                 const response = await axiosClient.post("/customer", newCustomer);
+                if (response.status === 201) {
+                    alert("Account created successfully");
+                    this.$router.push("/login");
+                }
             } catch (error) {
                 console.error(error);
             }

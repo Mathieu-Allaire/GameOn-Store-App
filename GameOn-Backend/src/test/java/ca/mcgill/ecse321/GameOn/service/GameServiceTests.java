@@ -7,6 +7,9 @@ import org.mockito.Mock;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.Collections;
+
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.doNothing;
 
@@ -133,7 +136,7 @@ public class GameServiceTests {
     @Test
     public void testGetAllCategories(){
         // Arrange
-        when(categoryMockRepo.findAll()).thenReturn(null);
+        when(categoryMockRepo.findAll()).thenReturn(Collections.emptyList());
 
         // Act
         service.getAllCategories();
@@ -294,7 +297,7 @@ public class GameServiceTests {
     @Test
     public void testGetAllGames(){
         // Arrange
-        when(gameMockRepo.findAll()).thenReturn(null);
+        when(gameMockRepo.findAll()).thenReturn(Collections.emptyList());
 
         // Act
         service.getAllGames();

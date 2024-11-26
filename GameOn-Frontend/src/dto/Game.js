@@ -13,6 +13,15 @@ export class Game {
     const path = "/games";
     try {
       const response = await axios.post(path, this);
+      return response.data; // Return successful response
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async updateGame(name) {
+    const path = "/gamesStatus/" + name;
+    try {
+      const response = await axios.post(path);
       return response.data;
     } catch (error) {
       return { error: error.message };
@@ -57,7 +66,7 @@ export class Game {
   static async updateGamePrice(name, price) {
     const path = "/games/updatePrice";
     try {
-      const response = await axios.post(path, { name, price });
+      const response = await axios.post(path,null, { params: {name,price}});
       return response.data;
     } catch (error) {
       return { error: error.message };
@@ -66,7 +75,7 @@ export class Game {
   static async updateGameQuantity(name, quantity) {
     const path = "games/updateQuantity";
     try {
-      const response = await axios.post(path, { name, quantity });
+      const response = await axios.post(path,null, { params: {name, quantity} });
       return response.data;
     } catch (error) {
       return { error: error.message };

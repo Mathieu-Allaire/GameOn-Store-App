@@ -3,5 +3,6 @@ export class GameRequestResponseDto {
     this.requestType = response.requestType;
     this.requestedGame = response.requestedGame;
     this.requestedGameStatus = response.requestedGameStatus;
+    this.requestedGameId = response.requestedGameId;
   }
 }

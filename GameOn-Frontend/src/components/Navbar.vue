@@ -3,10 +3,11 @@
         <ul class="nav-links">
             <li><RouterLink to="/">Main Page</RouterLink></li>
             <li><RouterLink to="/about">About</RouterLink></li>
-            <li><RouterLink to="/home">Home</RouterLink></li>
-            <li><RouterLink to="/login">Sign In</RouterLink></li>
-            <li><RouterLink to="/register">Sign Up</RouterLink></li>
-            <li class="dropdown">
+            <li ><RouterLink to="/home">Home</RouterLink></li>
+
+            <li v-if="state.loggedIn === '0'"><RouterLink to="/login">Sign In</RouterLink></li>
+            <li v-if="state.loggedIn === '0'"><RouterLink to="/register">Sign Up</RouterLink></li>
+            <li v-if="['3'].includes(state.loggedIn)" class="dropdown">
                 <a href="javascript:void(0)" class="dropbtn">Manage</a>
                 <div class="dropdown-content">
                     <RouterLink to="/manage/games">Games</RouterLink>
@@ -14,7 +15,9 @@
                     <RouterLink to="/manage/employee">Staff</RouterLink>
                 </div>
             </li>
+            <li v-if="state.loggedIn === '2'"><RouterLink to="/manage/requests">Game Request</RouterLink></li>
             <li><RouterLink to="/debug">DEBUG</RouterLink></li>
+
             <li> <SearchBar @searchEvent="searchEvent"/> </li>
             <li style="background-color: orange; cursor: pointer; color: black; border-radius: 1vw; padding:0.25vw; padding-left: 3vw; padding-right: 3vw;"
             @click="displayCategories" @mouseleave="hideCategories"> Category
@@ -26,13 +29,20 @@
                 </ul>
                 </div>
             </li>
+
+            <li v-if="['1','2', '3'].includes(state.loggedIn)"><button @click="logout" class="logout-btn">Logout</button></li>
+            <li><button @click="whoisLogged" class="logout-btn">Who</button></li>
+
         </ul>
     </nav>
 </template>
 
+
 <script >
-import { RouterLink } from "vue-router";
+
 import { mapActions } from "vuex";
+import { RouterLink, useRouter } from "vue-router";
+import { state } from '../store/state';
 
 import SearchBar from "./SearchBar.vue"
 
@@ -40,7 +50,9 @@ import { Category } from "../dto/Category"
 import { CategoryResponseDto } from "../dto/CategoryResponseDto"
 
 export default {
-
+  setup() {
+    return { state };
+  },
   name: "Navbar",
   components: {
     SearchBar
@@ -53,6 +65,17 @@ export default {
     }
   },
   methods: {
+    whoisLogged() {
+       console.log(state.loggedIn);
+       console.log(sessionStorage.getItem('Email'));
+    },
+    logout() {
+        state.loggedIn = '0'; // Update global state to logged out
+        sessionStorage.setItem('LoggedIn', '0'); // Update sessionStorage to logged out
+        sessionStorage.setItem('Email', ''); // Update sessionStorage to logged out
+        console.log(state.loggedIn);
+        this.$router.push('/');
+    },
     searchEvent(data) { //pass to app
       console.log("NavBar received: ")
       console.log(data)
@@ -94,6 +117,7 @@ export default {
       this.$store.dispatch("updateSharedCategory", this.category);
     }
   },
+
 }
 </script>
 
@@ -158,6 +182,12 @@ export default {
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
+  display: none;
+  position: absolute;
+  background-color: #333;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
 }
 
 .dropdown-content a {

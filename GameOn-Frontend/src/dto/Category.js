@@ -17,7 +17,7 @@ export class Category {
   static async deleteCategory(name) {
     const path = "/categories/" + name;
     try {
-      const response = await axios.delete(path);
+      const response = await axios.post(path);
       return response.data;
     } catch (error) {
       return { error: error.message };

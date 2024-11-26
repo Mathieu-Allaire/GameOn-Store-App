@@ -17,10 +17,14 @@ import ca.mcgill.ecse321.GameOn.dto.CustomerRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.CustomerResponseDto;
 import ca.mcgill.ecse321.GameOn.dto.EmployeeRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.EmployeeResponseDto;
+import ca.mcgill.ecse321.GameOn.dto.ManagerRequestDTO;
+import ca.mcgill.ecse321.GameOn.dto.ManagerResponseDTO;
 
 
 
 import jakarta.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -65,6 +69,16 @@ public class AccountController {
         }
     }
 
+    @GetMapping("/manager/{email}")
+    public ResponseEntity<?> findManagerByEmail(@PathVariable String email){
+        try {
+            Person manager = accountService.findManagerByEmail(email);
+            return new ResponseEntity<>(new ManagerResponseDTO(manager), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
      /**
      * Create a customer.
      *
@@ -99,6 +113,16 @@ public class AccountController {
         }
     }
 
+    @PostMapping("/manager")
+    public ResponseEntity<?> createManager(@Valid @RequestBody ManagerRequestDTO manager){
+        try {
+            Person createdManager = accountService.createManager(manager.getEmail(), manager.getName());
+            return new ResponseEntity<>(new ManagerResponseDTO(createdManager), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     /**
      * deactivate the account of an employee
      *
@@ -125,6 +149,19 @@ public class AccountController {
         try {
             Integer response = accountService.logIn(email, password);
             return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/employee")
+    public ResponseEntity<?> findAllEmployees(){
+        List<EmployeeResponseDto> dtos = new ArrayList<>();
+        try {
+            for (Person employee : accountService.getAllEmployees()) {
+                dtos.add(new EmployeeResponseDto(employee));
+            }
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
         }

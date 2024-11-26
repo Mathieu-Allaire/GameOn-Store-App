@@ -7,6 +7,7 @@ import Navbar from './components/Navbar.vue'
 import Logo from './components/Logo.vue'
 
 
+
 export default {
   components: {
     RouterView,
@@ -17,6 +18,7 @@ export default {
     sessionStorage.setItem("LoggedIn", "0");
   },
 }
+
 </script>
 
 
@@ -28,11 +30,18 @@ export default {
 </template>
 
 <style>
-/* Remove logos styles if previously added here */
-/* Ensure body has no margin to prevent unexpected spacing */
+
+
+
 body {
   margin: 0px;
   padding: 0px;
 
 }
+
+
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
 </style>

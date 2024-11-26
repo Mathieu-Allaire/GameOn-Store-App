@@ -7,11 +7,14 @@ import ca.mcgill.ecse321.GameOn.dto.CustomerResponseDto;
 import ca.mcgill.ecse321.GameOn.dto.GameCreateDto;
 import ca.mcgill.ecse321.GameOn.dto.GameResponseDTO;
 import ca.mcgill.ecse321.GameOn.dto.WishlistResponseDto;
+import ca.mcgill.ecse321.GameOn.model.Review;
 import ca.mcgill.ecse321.GameOn.repository.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -74,6 +77,7 @@ public class WishlistIntegrationTests {
     private static final Date VALID_DATE = Date.valueOf("2025-09-02"); // needs to be a date after today's date
     private static final String VALID_BILLING_ADDRESS = "23 frjjrfngr"; // at least one character
 
+    private static final List<Review> VALID_REVIEWS = new ArrayList<Review>();
     private Customer aCustomer;
 
 
@@ -122,8 +126,8 @@ public class WishlistIntegrationTests {
     @Order(2)
     public void testCreateGame() {
         // Arrange
-        GameCreateDto gameCreateDto = new GameCreateDto(GAME_PICTURE, GAME_NAME, GAME_DESCRIPTION, GAME_PRICE, GAME_QUANTITY, CATEGORY_NAME);
-        GameCreateDto gameCreateDto2 = new GameCreateDto(GAME_PICTURE, GAME_NAME2, GAME_DESCRIPTION, GAME_PRICE, GAME_QUANTITY, CATEGORY_NAME);
+        GameCreateDto gameCreateDto = new GameCreateDto(GAME_PICTURE, GAME_NAME, GAME_DESCRIPTION, GAME_PRICE, GAME_QUANTITY, CATEGORY_NAME, VALID_REVIEWS);
+        GameCreateDto gameCreateDto2 = new GameCreateDto(GAME_PICTURE, GAME_NAME2, GAME_DESCRIPTION, GAME_PRICE, GAME_QUANTITY, CATEGORY_NAME,VALID_REVIEWS);
         // Act
         ResponseEntity<GameResponseDTO> response = client.postForEntity("/games", gameCreateDto, GameResponseDTO.class);
         ResponseEntity<GameResponseDTO> response2 = client.postForEntity("/games", gameCreateDto2, GameResponseDTO.class);

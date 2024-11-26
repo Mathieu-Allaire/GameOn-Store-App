@@ -29,9 +29,17 @@ export class GameRequest {
   static async approveGameRequest(gameRequestId) {
     const path = "games/request/approve";
     try {
-      const response = await axios.post(path, null, {
-        params: { gameRequestId },
-      });
+      const response = await axios.post(path, null, { params: {gameRequestId}});
+      return response.data;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
+  static async findAllGameRequests() {
+    const path = "/games/gameRequests";
+    try {
+      const response = await axios.get(path);
       return response.data;
     } catch (error) {
       return { error: error.message };

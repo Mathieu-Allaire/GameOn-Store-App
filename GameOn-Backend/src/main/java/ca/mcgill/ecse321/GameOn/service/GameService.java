@@ -1,6 +1,12 @@
 package ca.mcgill.ecse321.GameOn.service;
 
 import ca.mcgill.ecse321.GameOn.exception.GameOnException;
+import ca.mcgill.ecse321.GameOn.model.*;
+import ca.mcgill.ecse321.GameOn.repository.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -9,12 +15,14 @@ import jakarta.transaction.Transactional;
 import ca.mcgill.ecse321.GameOn.repository.CategoryRepository;
 import ca.mcgill.ecse321.GameOn.repository.GameRepository;
 import ca.mcgill.ecse321.GameOn.repository.GameRequestRepository;
+import ca.mcgill.ecse321.GameOn.repository.ManagerRepository;
 import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
 import ca.mcgill.ecse321.GameOn.repository.EmployeeRepository;
 import ca.mcgill.ecse321.GameOn.model.Category;
 import ca.mcgill.ecse321.GameOn.model.Employee;
 import ca.mcgill.ecse321.GameOn.model.Game;
 import ca.mcgill.ecse321.GameOn.model.GameRequest;
+import ca.mcgill.ecse321.GameOn.model.Manager;
 import ca.mcgill.ecse321.GameOn.model.RequestType;
 import ca.mcgill.ecse321.GameOn.model.Game.GameStatus;
 
@@ -38,6 +46,10 @@ public class GameService {
     private PersonRepository personRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private ManagerRepository managerRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     /**
      * Method to create new category
@@ -87,7 +99,13 @@ public class GameService {
      */
     @Transactional
     public Iterable<Category> getAllCategories(){
-        return categoryRepository.findAll();
+        List<Category> availableCategories = new ArrayList<>();
+        for (Category category : categoryRepository.findAll()) {
+            if (category.getStatus() == Category.CategoryStatus.AVAILABLE) {
+                availableCategories.add(category);
+            }
+        }
+        return availableCategories;
     }
 
     /**
@@ -196,7 +214,13 @@ public class GameService {
      */
     @Transactional
     public Iterable<Game> getAllGames(){
-        return gameRepository.findAll();
+        List<Game> games = new ArrayList<>();
+        for (Game game : gameRepository.findAll()) {
+            if (game.getGameStatus() != GameStatus.Deleted && game.getGameStatus() != GameStatus.Unavailable) {
+                games.add(game);
+            }
+        }
+        return games ;
     }
 
     /**
@@ -287,6 +311,7 @@ public class GameService {
 
         Employee aEmployee = employeeRepository.findEmployeeById(aRequestCreatorID);
 
+
         if (aEmployee == null) {
             throw new GameOnException(HttpStatus.FORBIDDEN, "Request creator is not an employee");
         }
@@ -340,6 +365,11 @@ public class GameService {
         gameRepository.save(gameRequest.getRequestedGame());
         gameRequestRepository.delete(gameRequest);
 
+    }
+
+    @Transactional
+    public Iterable<GameRequest> getAllGameRequests(){
+        return gameRequestRepository.findAll();
     }
 
     /**
@@ -432,7 +462,51 @@ public class GameService {
         game.setPrice(aPrice);
         game = gameRepository.save(game);
 
-        return game; 
+        return game;
+    }
+
+    @Transactional
+    public Game addReview(String aGame, int reviewId){
+        if (aGame == null) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Game is invalid");
+        }
+
+        if (reviewId <= 0) {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "Review Id must be greater than 0");
+        }
+
+        Game game = gameRepository.findGameByName(aGame);
+
+        if (game == null) {
+            throw new GameOnException(HttpStatus.NOT_FOUND, "Game does not exist");
+        }
+
+        Review review = reviewRepository.findReviewById(reviewId);
+
+        if (review == null) {
+            throw new GameOnException(HttpStatus.NOT_FOUND, "Review does not exist");
+        }
+
+        game.addReview(review);
+        game = gameRepository.save(game);
+
+        return game;
+    }
+
+    @Transactional
+    public void UpdateGameStatusAvailable(String aGameName){
+        if (aGameName == null || aGameName.trim().length() == 0) {
+            throw new IllegalArgumentException("Name is invalid");
+        }
+
+        Game game = gameRepository.findGameByName(aGameName);
+
+        if (game == null) {
+            throw new IllegalArgumentException("Game does not exist");
+        }
+
+        game.setGameStatus(Game.GameStatus.Available );
+        gameRepository.save(game);
     }
 
 }
