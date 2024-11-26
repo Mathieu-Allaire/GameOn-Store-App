@@ -303,7 +303,11 @@ public class AccountService {
             if (person.getRole(0).getClass() == Customer.class) {
                 x = 1; // Customer
             } else if (person.getRole(0).getClass() == Employee.class) {
+                if(!(((Employee) person.getRole(0)).getIsEmployed())){
+                    throw new IllegalArgumentException("Account is deactivated");
+                }
                 x = 2;// Employee
+                
             } else if (person.getRole(0).getClass() == Manager.class){
                 x = 3; // Manager
             }
