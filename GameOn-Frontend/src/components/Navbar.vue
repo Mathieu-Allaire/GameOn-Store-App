@@ -15,23 +15,32 @@
                 </div>
             </li>
             <li><RouterLink to="/debug">DEBUG</RouterLink></li>
-            <li> <SearchBar/> </li>
+            <li> <SearchBar @searchEvent="searchEvent"/> </li>
+            <li @click="displayCategories">  Category  </li>
         </ul>
     </nav>
 </template>
 
 <script >
 import { RouterLink } from "vue-router";
-import SearchBar  from "./SearchBar.vue";
+import SearchBar from "./SearchBar.vue"
 
 export default {
-  name:"Navbar",
+
+  name: "Navbar",
   components: {
     SearchBar
+  },
+  methods: {
+    searchEvent(data) { //pass to app
+      console.log("NavBar received: ")
+      console.log(data)
+      this.$emit("searchEvent", data)
+      console.log("navbar transmitted")
+    }
+
   }
-
 }
-
 </script>
 
 <style scoped>
@@ -50,6 +59,7 @@ export default {
     gap: 1em;
     margin: 0;
     padding: 1em; /* Add padding to the nav links */
+
 }
 
 .nav-links li {
