@@ -116,18 +116,48 @@ export default {
 
 <style scoped>
 .employee-view {
+  position: absolute !important;
+  top: calc(50% + 30px) !important; /* Adjust offset based on the navbar height */
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
   padding: 20px;
   font-family: Arial, sans-serif;
+  background-color: #f8f9fa; /* Light background for the view */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  max-width: 1200px;
+  margin: auto;
+}
+
+.employee-view h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 2.5em;
 }
 
 .employee-container {
   display: flex;
   justify-content: space-between;
+  gap: 20px; /* Gap between columns */
+  flex-wrap: wrap; /* Wrap for smaller screens */
 }
 
 .create-employee,
 .deactivate-employee {
-  width: 45%;
+  width: 48%;
+  background-color: white; /* Card-like section */
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for cards */
+}
+
+.create-employee h2,
+.deactivate-employee h2 {
+  text-align: center;
+  color: #007bff;
+  font-size: 1.8em;
+  margin-bottom: 15px;
 }
 
 form {
@@ -137,12 +167,23 @@ form {
 
 form label {
   margin-top: 10px;
+  color: #555;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 form input {
-  margin-bottom: 10px;
-  padding: 5px;
-  font-size: 14px;
+  margin-bottom: 15px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 button {
@@ -151,29 +192,77 @@ button {
   background-color: #007bff;
   color: white;
   border: none;
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
   background-color: #0056b3;
+  transform: scale(1.02);
+}
+
+.employee-list {
+  margin-top: 20px;
+}
+
+.employee-list h3 {
+  text-align: center;
+  color: #28a745;
+  font-size: 1.5em;
+  margin-bottom: 15px;
 }
 
 .employee-list ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .employee-list li {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 5px;
+  align-items: center;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.employee-list li:hover {
+  background-color: #e9ecef;
+  transform: scale(1.01);
 }
 
 .employee-list button {
   background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .employee-list button:hover {
   background-color: #a71d2a;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .employee-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .create-employee,
+  .deactivate-employee {
+    width: 100%;
+  }
+}
+
 </style>

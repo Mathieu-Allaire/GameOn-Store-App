@@ -1,9 +1,7 @@
 <template>
-    <nav class="navbar">
+    <nav class="navbar" >
         <ul class="nav-links">
-            <li><RouterLink to="/">Main Page</RouterLink></li>
-            <li><RouterLink to="/about">About</RouterLink></li>
-            <li ><RouterLink to="/home">Home</RouterLink></li>
+            <li ><RouterLink to="/">Home</RouterLink></li>
 
             <li v-if="state.loggedIn === '0'"><RouterLink to="/login">Sign In</RouterLink></li>
             <li v-if="state.loggedIn === '0'"><RouterLink to="/register">Sign Up</RouterLink></li>
@@ -16,7 +14,6 @@
                 </div>
             </li>
             <li v-if="state.loggedIn === '2'"><RouterLink to="/manage/requests">Game Request</RouterLink></li>
-            <li><RouterLink to="/debug">DEBUG</RouterLink></li>
 
             <li> <SearchBar @searchEvent="searchEvent"/> </li>
             <li style="background-color: orange; cursor: pointer; color: black; border-radius: 1vw; padding:0.25vw; padding-left: 3vw; padding-right: 3vw;"
@@ -31,7 +28,7 @@
             </li>
 
             <li v-if="['1','2', '3'].includes(state.loggedIn)"><button @click="logout" class="logout-btn">Logout</button></li>
-            <li><button @click="whoisLogged" class="logout-btn">Who</button></li>
+            <li v-if="['10'].includes(state.loggedIn)"><button @click="whoisLogged" class="who-btn">Who</button></li>
 
         </ul>
     </nav>
@@ -99,7 +96,7 @@ export default {
     async goToCategory(c) {
       console.log(c)
       this.category = c;
-      await this.$router.push("/home");
+      await this.$router.push("/");
     },
     ...mapActions(["updateSharedCategory"]),
   },
@@ -122,87 +119,190 @@ export default {
 </script>
 
 <style scoped>
-.categoryBox{
 
-    display: block
 
-}
-.category-item{
-     display: block;
-}
-.category-item:hover {
-    color: white;
-}
-.category-list{
-    list-style: none; /* Removes default list style */
-    padding: 0;
-    margin: 0;
-    display: block;
-    flex-direction: column;
-    display:flex;
-    justify-content: center;
-}
+
+
 
 .navbar {
-    background-color: #333;
-    padding: 0; /* Remove padding to align to the top */
+    background-color: #222; /* Dark background for contrast */
+    padding: 1em 2em; /* Add padding for spacing */
     position: fixed;
     top: 0;
-    left: 0; /* Align navbar to the left */
+    left: 0;
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space elements apart */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    z-index: 1000;
+    font-family: 'Arial', sans-serif; /* Clean font style */
+
 }
 
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 1em;
+    gap: 2em; /* Add spacing between links */
     margin: 0;
-    padding: 1em; /* Add padding to the nav links */
-
+    padding: 0;
+    align-items: center;
+    justify-items: center;
 }
 
 .nav-links li {
-    display: inline;
+    display: inline-block;
 }
 
 .nav-links a {
     color: white;
     text-decoration: none;
+    font-size: 1em;
+    font-weight: 500;
+    transition: color 0.3s ease, transform 0.2s ease; /* Smooth hover transition */
+}
+
+.nav-links a:hover {
+    color: #ffa726;
+    transform: scale(1.1); /* Slight zoom effect on hover */
+}
+
+.categoryBox {
+
+    display: block;
+    position: absolute;
+
+    background-color: #333;
+    padding: 0.75em;
+    border-radius: 0.5em;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.category-list {
+
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the start */
+}
+
+.category-item {
+    padding: 0.5em 1em;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 0.25em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.category-item:hover {
+    background-color: #ff9800;
+    color: #222;
+    transform: scale(1.05); /* Slight zoom on hover */
 }
 
 .dropdown {
-    display: block;
     position: relative;
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #050505;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-  display: none;
-  position: absolute;
-  background-color: #333;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
+    background-color: #444;
+    min-width: 200px;
+    border-radius: 0.5em;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    z-index: 10;
 }
 
 .dropdown-content a {
-    color: rgb(243, 243, 243);
-    padding: 1em 2em;
+    color: white;
+    padding: 0.75em 1.5em;
     text-decoration: none;
     display: block;
-    text-align: left;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .dropdown-content a:hover {
-    background-color: #f10202;
+    background-color: #ffa726;
+    color: #222;
 }
 
 .dropdown:hover .dropdown-content {
     display: block;
+    animation: fadeIn 0.3s ease-in-out; /* Smooth dropdown appearance */
 }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logout-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 0.6em 1.2em;
+    border-radius: 0.5em;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.logout-btn:hover {
+    background-color: #d32f2f;
+    transform: scale(1.05); /* Slight zoom on hover */
+}
+
+.category {
+    background-color: #ffa726;
+    color: #222;
+    padding: 0.6em 1.5em;
+    border-radius: 0.5em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.category:hover {
+    background-color: #ff9800;
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1em;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        gap: 1em;
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .nav-links li {
+        width: 100%;
+        text-align: left;
+    }
+
+    .logout-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
 </style>
