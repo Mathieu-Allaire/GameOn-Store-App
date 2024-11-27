@@ -171,6 +171,8 @@ export default {
     try {
       const gameName = this.$route.params.gameNameNoSpace;
       const gameResponse = await Game.findGameByName(gameName);
+      console.log("Game page of : ")
+      console.log(gameName)
 
       if (gameResponse.error) {
         console.error(gameResponse.error);
