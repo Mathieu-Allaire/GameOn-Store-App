@@ -3,10 +3,7 @@
         <header>
             <img alt="Vue logo" class="logo" src="../assets/controller.png" />
             <label class="title">GameOn</label>
-            <label v-if="state.loggedIn === '1'" class="title">Welcome Customer</label> 
-            <li v-if="state.loggedIn === '1'"><RouterLink to="/cart">My Cart</RouterLink></li>
-            <li v-if="state.loggedIn === '1'"><RouterLink to="/orders">My Orders</RouterLink></li>
-            <li v-if="state.loggedIn === '1'"><RouterLink to="/customers">All Customers</RouterLink></li>
+            <label v-if="state.loggedIn === '1'" class="title"> Welcome Customer</label> 
             <div class="wrapper">
                 <nav>
                 </nav>
