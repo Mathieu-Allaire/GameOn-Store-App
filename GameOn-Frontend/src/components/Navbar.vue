@@ -6,6 +6,9 @@
             <li><RouterLink to="/home">Home</RouterLink></li>
             <li><RouterLink to="/login">Sign In</RouterLink></li>
             <li><RouterLink to="/register">Sign Up</RouterLink></li>
+            <li><RouterLink to="/cart">My Cart</RouterLink></li>
+            <li><RouterLink to="/orders">My Orders</RouterLink></li>
+            <li><RouterLink to="/customers">All Customers</RouterLink>All Customers</li>
             <li class="dropdown">
                 <a href="javascript:void(0)" class="dropbtn">Manage</a>
                 <div class="dropdown-content">
