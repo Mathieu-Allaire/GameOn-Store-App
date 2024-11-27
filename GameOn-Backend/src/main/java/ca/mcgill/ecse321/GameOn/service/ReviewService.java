@@ -1,4 +1,5 @@
 package ca.mcgill.ecse321.GameOn.service;
+import java.util.LinkedList;
 import java.util.List;
 
 import ca.mcgill.ecse321.GameOn.exception.GameOnException;
@@ -33,7 +34,7 @@ public class ReviewService {
      * @author Mathieu Allaire
      */
     @Transactional
-    public List<Review> getAllReviewsforGame(String gameName){
+    public List<Review> getAllReviewsForGame(String gameName){
         if (gameName == null || gameName.trim().isEmpty()) {
             throw new GameOnException(HttpStatus.BAD_REQUEST, "The name is invalid");
         }
@@ -42,6 +43,15 @@ public class ReviewService {
         if (game == null) {
             throw new GameOnException(HttpStatus.NOT_FOUND, "Game does not exist");
         }
+        System.out.println("game.getReviews in service. Size = " + game.getReviews().size());
+
+//        List<Review> reviews = new LinkedList<>();
+//        for (Review review : game.getReviews()){
+//            Review r = reviewRepo.findReviewById(review.getId());
+//            reviews.add(r);
+//        }
+//
+//        System.out.println("reviews.size in service = " + reviews.size());
         return game.getReviews();
 
     }
