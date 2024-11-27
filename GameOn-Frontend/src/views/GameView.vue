@@ -34,7 +34,7 @@
       <button v-if="['1'].includes(state.loggedIn)" @click="addToWishlist" class="add-wishlist-button">Add to Wishlist</button>
       <div v-if="wishlistSuccess" class="success-message">Game added to wishlist successfully!</div>
       <div v-if="wishlistError" class="error-message">{{ wishlistError }}</div>
-      <button v-if="['1'].includes(state.loggedIn)" @click="addToCart" class="action-button">Add to Cart</button>
+      <RouterLink to="/cart" v-if="['1'].includes(state.loggedIn)" class="action-button">Add to Cart</RouterLink>
       <div v-if="cartSuccess" class="success-message">Game added to cart successfully!</div>
       <div v-if="cartError" class="error-message">{{ cartError }}</div>
     </div>
