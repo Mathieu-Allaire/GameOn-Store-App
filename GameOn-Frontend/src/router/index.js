@@ -40,8 +40,23 @@ const router = createRouter({
       component: () => import("../views/ManageGameRequestView.vue"),
     },
     {
-      path: "/home",
-      name: "home",
+      path:'/orders',
+      name : 'orders',
+      component: () => import('../views/CustomerOrderView.vue'),
+    },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: () => import('../views/CartView.vue'),
+    },
+    {
+      path: '/customers',
+      name: 'customers',
+      component: () => import('../views/CustomersView.vue')
+    },
+    {
+      path: '/home',
+      name: 'home',
       component: HomeView,
     },
     {
