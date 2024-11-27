@@ -33,7 +33,9 @@
       <button @click="addToWishlist" class="add-wishlist-button">Add to Wishlist</button>
       <div v-if="wishlistSuccess" class="success-message">Game added to wishlist successfully!</div>
       <div v-if="wishlistError" class="error-message">{{ wishlistError }}</div>
-      <button class="action-button">Add to Cart</button>
+      <button @click="addToCart" class="action-button">Add to Cart</button>
+      <div v-if="cartSuccess" class="success-message">Game added to cart successfully!</div>
+      <div v-if="cartError" class="error-message">{{ cartError }}</div>
     </div>
 
     <div v-if="['1'].includes(state.loggedIn)" class="add-review-section">
@@ -94,14 +96,21 @@
         </thead>
         <tbody>
         <tr v-for="review in reviewsOfGame" :key="review.id">
-          <td>{{ review.customerEmail || 'Anonymous' }}</td> <!-- Default to "Anonymous" if no email -->
+          <td>{{ review.customerEmail || "Anonymous" }}</td>
           <td>{{ review.description }}</td>
           <td>{{ review.stars }}</td>
-          <td>{{ review.likes }}</td>
-          <td>{{ review.dislikes }}</td>
           <td>
-            <button class="reply-button" @click="replyToReview(review.id)">Reply</button>
-            <p>{{ review.reply || 'No reply yet' }}</p> <!-- Show reply if available -->
+            <div v-if="['1'].includes(state.loggedIn)" class="like-dislike-container">
+              <button @click="likeReview(review.id)" class="like-button">👍 {{ review.likes }}</button>
+              <button @click="dislikeReview(review.id)" class="dislike-button">👎 {{ review.dislikes }}</button>
+            </div>
+            <div v-else>Likes: {{ review.likes }}</div>
+          </td>
+          <td>
+            <div v-if="['3'].includes(state.loggedIn)" class="reply-container">
+              <button @click="replyToReview(review.id)" class="reply-button">Reply</button>
+              <p>{{ review.reply || "No reply yet" }}</p>
+            </div>
           </td>
         </tr>
         <tr v-if="reviewsOfGame.length === 0">
@@ -124,6 +133,7 @@ import { state } from '../store/state'; // Ensure the correct path to the state 
 import { Game } from "../dto/Game";
 import { Review } from "../dto/Review"; // Import the Review class
 import { GameWishlist } from "../dto/GameWishlist";
+import { Cart } from "../dto/Cart"; // Import the Cart class
 
 
 export default {
@@ -149,6 +159,8 @@ export default {
       },
       wishlistSuccess: false, // Tracks success of wishlist addition
       wishlistError: null, // Tracks error message, if any
+      cartSuccess: false, // Tracks success of adding to cart
+      cartError: null, // Tracks error message, if any
     };
 
   },
@@ -206,6 +218,20 @@ export default {
         this.wishlistSuccess = false;
       }
     },
+    async addToCart() {
+      try {
+        const cart = new Cart(sessionStorage.getItem("customerId"), this.gameDetails.name);
+        const response = await cart.addGameToCart();
+        if (response.error) {
+          throw new Error(response.error);
+        }
+        this.cartSuccess = true;
+        this.cartError = null;
+      } catch (error) {
+        this.cartError = `Failed to add to cart: ${error.message}`;
+        this.cartSuccess = false;
+      }
+    },
     async fetchReviewsForGame(gameName) {
       try {
         const reviewsResponse = await Game.getReviews(gameName);
@@ -213,24 +239,29 @@ export default {
           console.error(reviewsResponse.error);
         } else {
           this.reviewsOfGame = reviewsResponse;
-          //console.log("Fetched reviews:", this.reviewsOfGame);
         }
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
-
-  },
+    },
     async postReview() {
       try {
         // Post review
-        //this.newReview.customerEmail = this.storedEmail;
-        const reviewInstance = new Review(this.newReview);
-        const result = await reviewInstance.postReview();
-        const game = await Game.addReview(this.gameDetails.name, this.newReview); // Game name is "Chess", review is 5 stars
+
+        await axios.post("/reviews", {
+          description: this.newReview.description,
+          stars: this.newReview.stars,
+          likes: this.newReview.likes,
+          dislikes: this.newReview.dislikes,
+          reply: "",
+          customerEmail: sessionStorage.getItem('Email'),
+          managerEmail: "manager@manager.com"
+        });
         //console.log("Review added successfully:", game);
         // Update reviews and reset form
         this.newReview.description = '';
         this.newReview.stars = null;
+
       }catch (error){
         console.error("Error adding review:", error);
       }
@@ -276,6 +307,7 @@ body {
 }
 /* Center Content in the Layout */
 .layout-container {
+  color: white;
   display: flex;
   flex-direction: column;
   align-items: center; /* Center content horizontally */
