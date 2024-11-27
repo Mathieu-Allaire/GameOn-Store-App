@@ -121,7 +121,6 @@ const axiosClient = axios.create({
 import { state } from '../store/state'; // Ensure the correct path to the state file
 import { Game } from "../dto/Game";
 import { Review } from "../dto/Review"; // Import the Review class
-import { v4 as uuidv4 } from 'uuid';
 
 export default {
   computed: {
@@ -152,7 +151,7 @@ export default {
       immediate: true, // Trigger immediately when the watcher is registered
       handler(newVal) {
         if (newVal && newVal.name) {
-          this.fetchReviewsForGame(newVal.name);
+          //this.fetchReviewsForGame(newVal.name);
         }
       }
     }
@@ -183,7 +182,7 @@ export default {
     }
 
     try {
-      const reviewsReponse = await Game.getReviews(this.gameDetails.name);
+      this.reviewsReponse = await Game.getReviews(this.gameDetails.name);
       if(reviewsReponse.error){
         console.error(reviewsReponse.error);
       }
