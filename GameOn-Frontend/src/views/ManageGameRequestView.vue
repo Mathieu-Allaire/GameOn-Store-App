@@ -24,7 +24,7 @@
         <div class="Game-Request">
           <h2>Game Request</h2>
           <div class="game-request-list">
-            <h3>List Game Requests</h3>
+            <!-- <h3>List Game Requests</h3> -->
             <ul>
             <li v-for="grequest in gamerequests" :key="grequest.requestedGameId ">
               <p><strong>Requested Game Id:</strong>  {{ grequest.requestedGameId }}</p>
