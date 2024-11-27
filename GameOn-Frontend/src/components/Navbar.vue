@@ -1,8 +1,7 @@
 <template>
-    <nav class="navbar">
+    <nav class="navbar" >
         <ul class="nav-links">
-            <li><RouterLink to="/">Main Page</RouterLink></li>
-            <li ><RouterLink to="/home">Home</RouterLink></li>
+            <li ><RouterLink to="/">Home</RouterLink></li>
 
             <li v-if="state.loggedIn === '0'"><RouterLink to="/login">Sign In</RouterLink></li>
             <li v-if="state.loggedIn === '0'"><RouterLink to="/register">Sign Up</RouterLink></li>
@@ -97,7 +96,7 @@ export default {
     async goToCategory(c) {
       console.log(c)
       this.category = c;
-      await this.$router.push("/home");
+      await this.$router.push("/");
     },
     ...mapActions(["updateSharedCategory"]),
   },
@@ -121,9 +120,7 @@ export default {
 
 <style scoped>
 .categoryBox{
-
     display: block
-
 }
 .category-item{
      display: block;
@@ -148,15 +145,16 @@ export default {
     top: 0;
     left: 0; /* Align navbar to the left */
     width: 100%;
+
 }
 
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 1em;
+    gap: 2em;
     margin: 0;
     padding: 1em; /* Add padding to the nav links */
-
+    justify-content:  center;
 }
 
 .nav-links li {

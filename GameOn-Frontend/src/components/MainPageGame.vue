@@ -29,7 +29,7 @@ export default {
   methods: {
     async goToGamePage() {
       console.log("Go to game page");
-      this.$router.push(`/game/${this.gameResponse.name}`);
+      this.$router.push(`/home/${this.gameResponse.name}`);
     }
   }
 }
