@@ -29,7 +29,7 @@ export default {
   methods: {
     async goToGamePage() {
       console.log("Go to game page");
-      this.$router.push(`/game/${this.gameResponse.name}`);
+      this.$router.push(`/home/${this.gameResponse.name}`);
     }
   }
 }
@@ -59,6 +59,7 @@ export default {
         font-size: 1vw;  /* Adjust based on container */
           line-height: 1;  /* Adjust if multiline text */
           white-space: nowrap; /* Prevent wrapping for single line */
+          color: white;
     }
 
 

@@ -122,7 +122,7 @@ export default {
     async goToCategory(c) {
       console.log(c)
       this.category = c;
-      await this.$router.push("/home");
+      await this.$router.push("/");
     },
     ...mapActions(["updateSharedCategory"]),
   },
