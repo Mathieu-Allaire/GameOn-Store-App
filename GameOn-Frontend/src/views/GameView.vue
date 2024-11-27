@@ -28,6 +28,7 @@
       </div>
     </div>
 
+
     <!-- Middle Section: Buttons -->
     <div class="button-section">
       <button v-if="['1'].includes(state.loggedIn)" @click="addToWishlist" class="add-wishlist-button">Add to Wishlist</button>
