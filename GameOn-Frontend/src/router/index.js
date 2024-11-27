@@ -54,6 +54,11 @@ const router = createRouter({
       name: "Game Information",
       component: () => import("../views/GameView.vue"),
     },
+    {
+      path: "/wishlist",
+      name: "wishlist",
+      component: () => import("../views/WishlistView.vue"),
+    },
   ],
 });
 

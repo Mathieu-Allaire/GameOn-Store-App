@@ -30,6 +30,9 @@
             <li v-if="['1','2', '3'].includes(state.loggedIn)"><button @click="logout" class="logout-btn">Logout</button></li>
             <li v-if="['10'].includes(state.loggedIn)"><button @click="whoisLogged" class="who-btn">Who</button></li>
 
+          <li v-if="state.loggedIn === '1'"><RouterLink to="/wishlist">Wishlist</RouterLink></li>
+
+
         </ul>
     </nav>
 </template>

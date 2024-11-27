@@ -202,7 +202,7 @@ public class GameController {
         }
     }
 
-    @GetMapping("/{game}/reviews")
+    @GetMapping("/home/{gameName}/reviews")
     public ResponseEntity<?> getReviews(@RequestParam String game ){
         try{
             //add review in gameService

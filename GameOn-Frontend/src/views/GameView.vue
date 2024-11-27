@@ -30,7 +30,9 @@
 
     <!-- Middle Section: Buttons -->
     <div class="button-section">
-      <button class="action-button">Add to Wishlist</button>
+      <button @click="addToWishlist" class="add-wishlist-button">Add to Wishlist</button>
+      <div v-if="wishlistSuccess" class="success-message">Game added to wishlist successfully!</div>
+      <div v-if="wishlistError" class="error-message">{{ wishlistError }}</div>
       <button class="action-button">Add to Cart</button>
     </div>
 
@@ -121,6 +123,8 @@ const axiosClient = axios.create({
 import { state } from '../store/state'; // Ensure the correct path to the state file
 import { Game } from "../dto/Game";
 import { Review } from "../dto/Review"; // Import the Review class
+import { GameWishlist } from "../dto/GameWishlist";
+
 
 export default {
   computed: {
@@ -143,6 +147,8 @@ export default {
         customerEmail: '',
         managerEmail: 'manager@manager.com'
       },
+      wishlistSuccess: false, // Tracks success of wishlist addition
+      wishlistError: null, // Tracks error message, if any
     };
 
   },
@@ -195,6 +201,20 @@ export default {
     }
   },
   methods: {
+    async addToWishlist() {
+      try {
+        const gameWishlist = new GameWishlist(this.gameDetails.name, sessionStorage.getItem('Email'));
+        const response = await gameWishlist.addGameToWishlist();
+        if (response.error) {
+          throw new Error(response.error);
+        }
+        this.wishlistSuccess = true;
+        this.wishlistError = null;
+      } catch (error) {
+        this.wishlistError = `Failed to add to wishlist: ${error.message}`;
+        this.wishlistSuccess = false;
+      }
+    },
     async fetchReviewsForGame(gameName) {
       try {
         const reviewsResponse = await Game.getReviews(gameName);
@@ -490,5 +510,27 @@ body {
 
 .reviews-table th {
   background-color: #f0f0f0;
+}
+.add-wishlist-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-wishlist-button:hover {
+  background-color: #45a049;
+}
+
+.success-message {
+  color: green;
+  margin-top: 10px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
 }
 </style>
