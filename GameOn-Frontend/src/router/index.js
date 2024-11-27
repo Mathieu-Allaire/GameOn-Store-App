@@ -6,8 +6,8 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      name: "main-page",
-      component: () => import("../views/MainPageView.vue"),
+      name: "Home",
+      component: HomeView,
     },
     {
       path: "/login",
@@ -38,16 +38,6 @@ const router = createRouter({
       path: "/manage/requests",
       name: "manage-requests",
       component: () => import("../views/ManageGameRequestView.vue"),
-    },
-    {
-      path: "/home",
-      name: "home",
-      component: HomeView,
-    },
-    {
-      path: "/home/:search",
-      name: "home-search",
-      component: HomeView,
     },
     {
       path: "/about",
