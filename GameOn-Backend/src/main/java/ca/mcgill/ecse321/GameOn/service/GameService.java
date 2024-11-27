@@ -265,6 +265,7 @@ public class GameService {
         return category.getGames();
     }
 
+  
 
     /**
      * Method create a game request for a game.

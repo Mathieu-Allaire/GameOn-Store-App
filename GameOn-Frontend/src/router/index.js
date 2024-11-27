@@ -1,23 +1,23 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import HomeView from "../views/HomeView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'main-page',
-      component: () => import('../views/MainPageView.vue'),
+      path: "/",
+      name: "main-page",
+      component: () => import("../views/MainPageView.vue"),
     },
     {
       path: "/login",
       name: "login",
       component: () => import("../views/LoginView.vue"),
-     },
+    },
     {
-      path: '/manage/employee',
-      name: 'manage-employee',
-      component: () => import('../views/ManageEmployeeView.vue'),
+      path: "/manage/employee",
+      name: "manage-employee",
+      component: () => import("../views/ManageEmployeeView.vue"),
     },
     {
       path: "/register",
@@ -25,26 +25,33 @@ const router = createRouter({
       component: () => import("../views/RegisterView.vue"),
     },
     {
-      path: '/manage/games',
-      name : 'manage-games',
-      component: () => import('../views/ManageGamesView.vue'),
+      path: "/manage/games",
+      name: "manage-games",
+      component: () => import("../views/ManageGamesView.vue"),
     },
     {
-      path: '/manage/categories',
-      name : 'manage-categories',
-      component: () => import('../views/ManageCategoriesView.vue'),
+      path: "/manage/categories",
+      name: "manage-categories",
+      component: () => import("../views/ManageCategoriesView.vue"),
     },
     {
-      path: '/home',
-      name: 'home',
+      path: "/manage/requests",
+      name: "manage-requests",
+      component: () => import("../views/ManageGameRequestView.vue"),
+    },
+    {
+      path: "/home",
+      name: "home",
       component: HomeView,
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
+      path: "/home/:search",
+      name: "home-search",
+      component: HomeView,
+    },
+    {
+      path: "/about",
+      name: "about",
       component: () => import("../views/AboutView.vue"),
     },
     {
@@ -57,8 +64,7 @@ const router = createRouter({
       name: "Game Information",
       component: () => import("../views/GameView.vue"),
     },
-
   ],
-})
+});
 
-export default router
+export default router;
