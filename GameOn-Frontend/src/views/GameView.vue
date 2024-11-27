@@ -30,10 +30,10 @@
 
     <!-- Middle Section: Buttons -->
     <div class="button-section">
-      <button @click="addToWishlist" class="add-wishlist-button">Add to Wishlist</button>
+      <button v-if="['1'].includes(state.loggedIn)" @click="addToWishlist" class="add-wishlist-button">Add to Wishlist</button>
       <div v-if="wishlistSuccess" class="success-message">Game added to wishlist successfully!</div>
       <div v-if="wishlistError" class="error-message">{{ wishlistError }}</div>
-      <button @click="addToCart" class="action-button">Add to Cart</button>
+      <button v-if="['1'].includes(state.loggedIn)" @click="addToCart" class="action-button">Add to Cart</button>
       <div v-if="cartSuccess" class="success-message">Game added to cart successfully!</div>
       <div v-if="cartError" class="error-message">{{ cartError }}</div>
     </div>
@@ -90,18 +90,19 @@
           <th>Review</th>
           <th>Stars</th>
           <th>Likes</th>
-          <th>Dislikes</th>
-          <th>Reply</th>
+          <th v-if="['3'].includes(state.loggedIn)">Reply</th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for="review in reviewsOfGame" :key="review.id">
+        <tr v-for="review in this.reviewsOfGame" :key="review.customerEmail">
           <td>{{ review.customerEmail || "Anonymous" }}</td>
           <td>{{ review.description }}</td>
           <td>{{ review.stars }}</td>
           <td>
             <div v-if="['1'].includes(state.loggedIn)" class="like-dislike-container">
               <button @click="likeReview(review.id)" class="like-button">👍 {{ review.likes }}</button>
+            </div>
+            <div v-if="['1'].includes(state.loggedIn)" class="like-dislike-container">
               <button @click="dislikeReview(review.id)" class="dislike-button">👎 {{ review.dislikes }}</button>
             </div>
             <div v-else>Likes: {{ review.likes }}</div>
@@ -113,7 +114,7 @@
             </div>
           </td>
         </tr>
-        <tr v-if="reviewsOfGame.length === 0">
+        <tr v-if="this.reviewsOfGame.length === 0">
           <td colspan="6" class="no-reviews">No reviews yet. Be the first to review this game!</td>
         </tr>
         </tbody>
@@ -146,7 +147,26 @@ export default {
   data() {
     return {
       gameDetails: null, // To hold game details
-      reviewsOfGame: [], // To hold reviews for the game
+      reviewsOfGame: [
+        {
+          id: 1,
+          customerEmail: "user1@example.com",
+          description: "This game is amazing! The story and gameplay are top-notch.",
+          stars: 5,
+          likes:8,
+          dislikes: 2,
+          reply: "Thank you for your feedback!"
+        },
+        {
+          id: 2,
+          customerEmail: "user2@example.com",
+          description: "I found the game to be okay. Graphics are good, but the gameplay was repetitive.",
+          stars: 3,
+          likes: 4,
+          dislikes: 1,
+          reply: ""
+        }
+      ],
       role: '',
       newReview: {
         description: '',
@@ -201,7 +221,12 @@ export default {
       console.error("Error fetching game details:", error);
     }
 
-    this.fetchReviewsForGame(this.gameDetails.name);
+    try {
+      const response = await axiosClient.get("/reviews");
+      this.reviews = response.data;
+    } catch (error) {
+      console.error("Failed to load reviews:", error);
+    }
   },
   methods: {
     async addToWishlist() {
@@ -248,7 +273,7 @@ export default {
       try {
         // Post review
 
-        await axios.post("/reviews", {
+        const response = await axios.post("/reviews", {
           description: this.newReview.description,
           stars: this.newReview.stars,
           likes: this.newReview.likes,
@@ -257,8 +282,9 @@ export default {
           customerEmail: sessionStorage.getItem('Email'),
           managerEmail: "manager@manager.com"
         });
-        //console.log("Review added successfully:", game);
-        // Update reviews and reset form
+        console.log("Review created:", response.data);
+        this.reviewsOfGame.push(response.data);
+
         this.newReview.description = '';
         this.newReview.stars = null;
 
