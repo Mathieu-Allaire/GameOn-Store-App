@@ -59,6 +59,7 @@ export default {
         font-size: 1vw;  /* Adjust based on container */
           line-height: 1;  /* Adjust if multiline text */
           white-space: nowrap; /* Prevent wrapping for single line */
+          color: white;
     }
 
 
