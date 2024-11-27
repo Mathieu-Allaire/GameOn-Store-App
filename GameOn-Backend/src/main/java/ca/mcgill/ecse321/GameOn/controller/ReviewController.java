@@ -59,7 +59,9 @@ public class ReviewController{
     @GetMapping("/game/{gameName}/reviews")
     public ResponseEntity<?> getAllReviewsForGame(@PathVariable String gameName){
         try{
-            List<Review> reviews = reviewService.getAllReviewsforGame(gameName);
+            List<Review> reviews = reviewService.getAllReviewsForGame(gameName);
+            System.out.println("Serving reviews: " + reviews.size());
+            System.out.println("For the game: " + gameName);
             List<ReviewDto> response = reviews.stream()
                     .map(ReviewDto::new)
                     .collect(Collectors.toList());

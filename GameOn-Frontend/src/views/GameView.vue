@@ -183,18 +183,7 @@ export default {
       console.error("Error fetching game details:", error);
     }
 
-    try {
-      this.reviewsReponse = await Game.getReviews(this.gameDetails.name);
-      if(reviewsReponse.error){
-        console.error(reviewsReponse.error);
-      }
-      else{
-        this.reviewsOfGame = reviewsReponse;
-        //console.log("Reviews for Game:", this.reviewsOfGame);
-      }
-    } catch (error) {
-      console.error("Error fetching reviews:", error);
-    }
+    this.fetchReviewsForGame(this.gameDetails.name);
   },
   methods: {
     async fetchReviewsForGame(gameName) {
