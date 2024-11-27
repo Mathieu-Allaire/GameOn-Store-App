@@ -6,8 +6,6 @@ import { RouterView } from 'vue-router'
 import Navbar from './components/Navbar.vue'
 import Logo from './components/Logo.vue'
 
-
-
 export default {
   components: {
     RouterView,
@@ -18,7 +16,6 @@ export default {
     sessionStorage.setItem("LoggedIn", "0");
   },
 }
-
 </script>
 
 

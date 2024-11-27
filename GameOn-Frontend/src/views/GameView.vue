@@ -272,8 +272,8 @@ body {
   width: 100%;
   margin: 0 auto; /* Center layout in the viewport */
   padding: 20px;
-  background-color: white;
-  border-radius: 10px;
+  background-color: #2e2e2e;
+
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -339,7 +339,7 @@ body {
   padding: 5px 10px;
   border: none;
   border-radius: 5px;
-  background-color: #ffcc00;
+  background-color: #2e2e2e;
   color: black;
   font-size: 0.9em;
   cursor: pointer;
@@ -489,6 +489,6 @@ body {
 }
 
 .reviews-table th {
-  background-color: #f0f0f0;
+  background-color: #2e2e2e;
 }
 </style>
