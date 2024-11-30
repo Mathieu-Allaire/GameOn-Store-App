@@ -2,9 +2,12 @@
     <nav class="navbar" >
         <ul class="nav-links">
             <li ><RouterLink to="/">Home</RouterLink></li>
-
+            <li v-if="state.loggedIn === '1'"><RouterLink to="/cart">My Cart</RouterLink></li>
+            <li v-if="state.loggedIn === '1'"><RouterLink to="/orders">My Orders</RouterLink></li>
+            <li v-if="state.loggedIn === '2' || state.loggedIn === '3'"><RouterLink to="/customers">All Customers</RouterLink></li>
             <li v-if="state.loggedIn === '0'"><RouterLink to="/login">Sign In</RouterLink></li>
             <li v-if="state.loggedIn === '0'"><RouterLink to="/register">Sign Up</RouterLink></li>
+            
             <li v-if="['3'].includes(state.loggedIn)" class="dropdown">
                 <a href="javascript:void(0)" class="dropbtn">Manage</a>
                 <div class="dropdown-content">

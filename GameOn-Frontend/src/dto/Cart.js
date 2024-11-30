@@ -24,20 +24,29 @@ export class Cart {
       return { error: error.message };
     }
   }
-  static async removeGameFromCart(sgId, cId) {
-    //specific game id, cart id
-    const path = "/game-remove/" + sgId + cId;
+  static async removeGameFromCart() {
+  
+    const path = "/game-remove";
     try {
-      const response = await axios.post(path);
+      const response = await axios.post(path,this);
       return response.data;
     } catch (error) {
       return { error: error.message };
     }
   }
   static async removeAllGamesFromCart(id) {
-    const path = "/remove-all/" + id;
+    const path = "/remove-all";
     try {
-      const response = await axios.post(path);
+      const response = await axios.post(path,this);
+      return response.data;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+  static async createOrder() {
+    const path = "/createOrder";
+    try{
+      const response = await axios.post(path, this);
       return response.data;
     } catch (error) {
       return { error: error.message };

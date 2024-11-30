@@ -10,8 +10,8 @@ export class Order {
       return { error: error.message };
     }
   }
-  static async createOrder(cartId) {
-    const path = "createOrder/" + cartId;
+  static async createOrder() {
+    const path = "createOrder";
     try {
       const response = await axios.post(path);
       return response.data;
