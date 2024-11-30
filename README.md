@@ -63,7 +63,7 @@ Joseph Feghaly | 24| <ul><li>PurchaseGameService </li> <li>PurchaseGameIntegrati
 Person | Hours | Tasks Done|
 --- | --- |---|
 Camilo Berdugo | 20| <ul><li>Manage Employees Interface and Implementation</li> <li>Log In Page Interface and Implementation with Luis</li> </ul>|
-Neeshal Imrit | 20| <ul><li>Employee Games Interface and Implementation</li> <ul><li>Manager Games Interface and Implementation with Joel</li> <li>Wiki on how to start backend/frotend</li></ul>|
+Neeshal Imrit | 20| <ul><li>Employee Games Interface and Implementation</li><li>Manager Games Interface and Implementation with Joel</li> <li>Wiki on how to start backend/frotend</li></ul>|
 Luis Jarquin | 20| <ul><li>CSS style Implemented for app.vue </li> <li>Register Page Interface and Implementation </li> <li>Log In Page Interface and Implementation with Camilo</li> </ul>|
 Mathieu Allaire | 20| <ul><li>Wishlist Page Interface and Implementation </li> <li>Game Page Interface and Implementation </li></ul>|
 Joel Boyer | 20| <ul><li>Manage Games Page Interface and Implementation </li> <li>Main Page Interface and Implementation</li> </ul>|
