@@ -1,98 +1,142 @@
 <template>
-    <div class="container">
-      <div class="spacer"></div>
-      <div class="content">
-        <h1>Create Account</h1>
-        <form @submit.prevent="register">
-          <label for="email">Email</label>
-          <input id="email" v-model="email" type="email" required />
-  
-          <label for="name">Name</label>
-          <input id="name" v-model="name" type="text" required />
-  
-          <label for="password">Password</label>
-          <input id="password" v-model="password" type="password" required />
-  
-          <label for="passwordConfirmation">Confirm Password</label>
-          <input id="passwordConfirmation" v-model="passwordConfirmation" type="password" required />
-  
-          <label for="cardNumber">Card Number</label>
-          <input id="cardNumber" v-model="cardNumber" type="text" required />
-  
-          <label for="expiracyDate">Expiration Date</label>
-          <input id="expiracyDate" v-model="expiracyDate" type="date" required />
-  
-          <label for="billingAddress">Billing Address</label>
-          <input id="billingAddress" v-model="billingAddress" type="text" required />
-  
-          <div class="form-actions">
-            <button type="submit" @click="createCustomer">Create Account</button>
-            <label>
-              Already have an account?
-              <RouterLink to="/login">Login</RouterLink>
-            </label>
-          </div>
-        </form>
-      </div>
-      <div class="spacer"></div>
+  <div class="container">
+    <div class="spacer"></div>
+    <div class="content">
+      <h1>Create Account</h1>
+      <form @submit.prevent="createCustomer">
+        <label for="email">Email</label>
+        <input id="email" v-model="email" type="email" required />
+
+        <label for="name">Name</label>
+        <input id="name" v-model="name" type="text" required />
+
+        <label for="password">Password</label>
+        <input id="password" v-model="password" type="password" required />
+
+        <label for="passwordConfirmation">Confirm Password</label>
+        <input id="passwordConfirmation" v-model="passwordConfirmation" type="password" required />
+
+        <label for="cardNumber">Card Number</label>
+        <input id="cardNumber" v-model="cardNumber" type="text" required />
+
+        <label for="expiracyDate">Expiration Date</label>
+        <input id="expiracyDate" v-model="expiracyDate" type="date" required />
+
+        <label for="billingAddress">Billing Address</label>
+        <input id="billingAddress" v-model="billingAddress" type="text" required />
+
+        <div class="form-actions">
+          <button type="submit">Create Account</button>
+          <label>
+            Already have an account?
+            <RouterLink to="/login">Login</RouterLink>
+          </label>
+        </div>
+      </form>
     </div>
-  </template>
+    <div class="spacer"></div>
+  </div>
+</template>
 
 <script>
 import axios from "axios";
 import { RouterLink } from "vue-router";
 
 const axiosClient = axios.create({
-    baseURL: "http://localhost:8080"
+  baseURL: "http://localhost:8080"
 });
 
 export default {
-    name: "register",
-    data() {
-        return {
-            email: "",
-            name: "",
-            password: "",
-            passwordConfirmation: "",
-            cardNumber: "",
-            expiracyDate: "",
-            billingAddress: ""
-        };
-    },
+  name: "RegisterView",
+  components: {
+    RouterLink
+  },
+  data() {
+    return {
+      email: "",
+      name: "",
+      password: "",
+      passwordConfirmation: "",
+      cardNumber: "",
+      expiracyDate: "",
+      billingAddress: ""
+    };
+  },
 
-    async created() {
-        // Fetch data from the API
-    },
-
-    methods: {
-        async createCustomer() {
-            const newCustomer = {
-                email: this.email,
-                name: this.name,
-                password: this.password,
-                date: this.date,
-                cardNumber: this.cardNumber,
-                expiracyDate: this.expiracyDate,
-                billingAddress: this.billingAddress
-            };
-            try {
-                this.confirmPasswords();
-                const response = await axiosClient.post("/customer", newCustomer);
-                if (response.status === 201) {
-                    alert("Account created successfully");
-                    this.$router.push("/login");
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        },
-        confirmPasswords() {
-            if (this.password !== this.passwordConfirmation) {
-                alert("Passwords do not match");
-            }
+  methods: {
+    async createCustomer() {
+      console.log(typeof this.cardNumber + " " + this.cardNumber);
+      try {
+        if (!this.validateFields()) {
+          return;
         }
+        if (!this.confirmPasswords()) {
+          return;
+        }
+        if (!this.validCardNumber()) {
+          return;
+        }
+
+        const newCustomer = {
+          email: this.email,
+          name: this.name,
+          password: this.password,
+          cardNumber: this.cardNumber,
+          expiracyDate: this.expiracyDate,
+          billingAddress: this.billingAddress
+        };
+
+        const response = await axiosClient.post("/customer", newCustomer);
+        if (response.status === 201) {
+          alert("Account created successfully");
+          this.$router.push("/login");
+        }
+      } catch (error) {
+        if (typeof error.response.data === "string") {
+          alert(error.response.data);
+        } else if (error.response.data.errors && Array.isArray(error.response.data.errors)) {
+          alert(error.response.data.errors[0].defaultMessage);
+        } else if (error.response.data.error) {
+          alert(error.response.data.error);
+        } else if (error.response.data.message) {
+          alert(error.response.data.message);
+        } else {
+          alert("An error occurred");
+        }
+      }
+    },
+    confirmPasswords() {
+      if (this.password !== this.passwordConfirmation) {
+        alert("Passwords do not match");
+        return false;
+      }
+      return true;
+    },
+    validCardNumber() {
+      const cardNumber = this.cardNumber.trim();
+      if (!/^\d+$/.test(cardNumber)) {
+        alert("Card number must be a valid number");
+        return false;
+      }
+      return true;
+    },
+    validateFields() {
+      if (
+        !this.email.trim() ||
+        !this.name.trim() ||
+        !this.password ||
+        !this.passwordConfirmation ||
+        !this.cardNumber.trim() ||
+        !this.expiracyDate ||
+        !this.billingAddress.trim()
+      ) {
+        alert("Please fill in all fields");
+        return false;
+      }
+      return true;
     }
-}
+  }
+};
 </script>
 
 <style scoped>
@@ -129,25 +173,25 @@ body {
   align-items: stretch;
   justify-content: center;
   background: #ffffff;
-  padding: 2em; /* Slightly reduced padding */
+  padding: 2em;
   border-radius: 1em;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  width: 450px; /* Reduced width for a smaller form */
+  width: 450px;
   text-align: center;
 }
 
 h1 {
-  font-size: 2.2rem; /* Slightly smaller title */
+  font-size: 2.2rem;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 0.8em; /* Adjusted spacing below the title */
+  margin-bottom: 0.8em;
   color: #04050a;
 }
 
 form {
   display: flex;
   flex-direction: column;
-  gap: 0.7em; /* Reduced spacing between form elements */
+  gap: 0.7em;
 }
 
 label {
@@ -157,18 +201,18 @@ label {
 }
 
 input {
-  padding: 0.5em; /* Reduced input padding */
-  font-size: 0.95rem; /* Slightly smaller input text */
+  padding: 0.5em;
+  font-size: 0.95rem;
   border-radius: 0.5em;
   border: 1px solid #ccc;
 }
 
 button {
-  padding: 0.6em; /* Slightly reduced button padding */
-  font-size: 1rem; /* Slightly smaller button text */
+  padding: 0.6em;
+  font-size: 1rem;
   border-radius: 0.5em;
   border: none;
-  background-color: #007BFF;
+  background-color: #007bff;
   color: white;
   cursor: pointer;
 }
@@ -178,7 +222,7 @@ button:hover {
 }
 
 label a {
-  color: #007BFF;
+  color: #007bff;
   text-decoration: none;
 }
 
@@ -198,6 +242,6 @@ form button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.4em; /* Slightly reduced spacing for actions */
+  gap: 0.4em;
 }
 </style>
