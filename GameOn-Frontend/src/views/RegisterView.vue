@@ -77,11 +77,16 @@ export default {
           return;
         }
 
+        let processedCardNumber = this.cardNumber.trim();
+        if (processedCardNumber.length > 8) {
+          processedCardNumber = processedCardNumber.substring(0, 8);
+        }
+
         const newCustomer = {
           email: this.email,
           name: this.name,
           password: this.password,
-          cardNumber: this.cardNumber,
+          cardNumber: processedCardNumber,
           expiracyDate: this.expiracyDate,
           billingAddress: this.billingAddress
         };
