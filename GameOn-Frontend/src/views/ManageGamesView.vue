@@ -274,7 +274,7 @@ h1 {
   text-align: center;
   margin-bottom: 30px;
   font-size: 2.5em;
-  color: #0056b3;
+  color: #000000;
 }
 
 h2 {

@@ -8,8 +8,8 @@ export class Review {
         this.likes = response.likes;
         this.dislikes = response.dislikes;
         this.reply = response.reply;
-        this.customerId = response.customerId;
-        this.managerId = response.managerId;
+        this.customerEmail = response.customerEmail;
+        this.managerEmail = response.managerEmail;
     }
 
     /**
@@ -17,11 +17,14 @@ export class Review {
      * @returns {Promise<Review>} The created review.
      * @author Mathieu Allaire
      */
-    async createReview() {
+    async postReview() {
         try {
+            console.log(JSON.stringify(this));
             const response = await axios.post("/reviews", this);
+
             return new Review(response.data);
         } catch (error) {
+            console.error("Error posting review:", error.response?.data || error.message);
             throw new Error(error.response?.data || error.message);
         }
     }

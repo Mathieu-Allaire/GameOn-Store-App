@@ -3,6 +3,8 @@ package ca.mcgill.ecse321.GameOn.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.mcgill.ecse321.GameOn.dto.*;
+import ca.mcgill.ecse321.GameOn.model.Review;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,17 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import ca.mcgill.ecse321.GameOn.dto.ErrorResponseDTO;
-import ca.mcgill.ecse321.GameOn.dto.GameResponseDTO;
-import ca.mcgill.ecse321.GameOn.dto.GameCreateDto;
 import ca.mcgill.ecse321.GameOn.service.GameService;
 import ca.mcgill.ecse321.GameOn.model.Game;
-import ca.mcgill.ecse321.GameOn.dto.CategoryResponseDto;
-import ca.mcgill.ecse321.GameOn.dto.CategoryRequestDto;
 import ca.mcgill.ecse321.GameOn.model.Category;
 import ca.mcgill.ecse321.GameOn.model.GameRequest;
-import ca.mcgill.ecse321.GameOn.dto.GameRequestResponseDto;
-import ca.mcgill.ecse321.GameOn.dto.GameReqRequestDto;
 
 import jakarta.validation.Valid;
 
@@ -192,7 +187,7 @@ public class GameController {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
         }
     }
-    @PostMapping("/games/addReview")
+    @PostMapping("/game/addReview")
     public ResponseEntity<?> addReview(@RequestParam String name, @RequestParam int review){
         try{
             //add review in gameService
@@ -201,6 +196,24 @@ public class GameController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             if (e.getMessage().equalsIgnoreCase("Game does not exist")) {
+                return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/home/{gameName}/reviews")
+    public ResponseEntity<?> getReviews(@RequestParam String game ){
+        try{
+            //add review in gameService
+            List<Review> reviews = gameService.getReviews(game);
+            List<ReviewDto> dtos = new ArrayList<>();
+            for (Review review : reviews){
+                dtos.add(new ReviewDto(review));
+            }
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
+        } catch (Exception e) {
+            if (e.getMessage().equalsIgnoreCase("No reviews exist")) {
                 return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);

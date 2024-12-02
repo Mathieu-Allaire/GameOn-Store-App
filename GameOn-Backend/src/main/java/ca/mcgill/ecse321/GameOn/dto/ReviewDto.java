@@ -13,24 +13,24 @@ public class ReviewDto {
 
 
 
-    private Long customerId;
+    private String customerEmail;
 
 
-    private Long managerId;
+    private String managerEmail;
 
     // Default constructor for deserialization
     public ReviewDto() {}
 
     // Full constructor
-    public ReviewDto(int id,String description, int stars, int likes, int dislikes, String reply, Long customerId, Long managerId) {
+    public ReviewDto(int id,String description, int stars, int likes, int dislikes, String reply, String customerEmail, String managerEmail) {
         this.id = id;
         this.description = description;
         this.stars = stars;
         this.likes = likes;
         this.dislikes = dislikes;
         this.reply = reply;
-        this.customerId = customerId;
-        this.managerId = managerId;
+        this.customerEmail = customerEmail;
+        this.managerEmail = managerEmail;
     }
 
     public ReviewDto(Review review) {
@@ -40,8 +40,6 @@ public class ReviewDto {
         this.likes = review.getLikes();
         this.dislikes = review.getDislikes();
         this.reply = review.getReply();
-        this.customerId = review.getReviewAuthor().getId();
-        this.managerId = review.getManager().getId();
     }
 
     // Getters and setters
@@ -89,20 +87,20 @@ public class ReviewDto {
         this.reply = reply;
     }
 
-    public Long getCustomerId() {
-        return customerId;
+    public String getCustomerEmail() {
+        return customerEmail;
     }
 
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
     }
 
-    public Long getManagerId() {
-        return managerId;
+    public String getManagerEmail() {
+        return managerEmail;
     }
 
-    public void setManagerId(Long managerId) {
-        this.managerId = managerId;
+    public void setManagerEmail(String managerEmail) {
+        this.managerEmail = managerEmail;
     }
 
     @Override
@@ -114,8 +112,8 @@ public class ReviewDto {
                 ", likes=" + likes +
                 ", dislikes=" + dislikes +
                 ", reply='" + reply + '\'' +
-                ", customerId=" + customerId +
-                ", managerId=" + managerId +
+                ", customerId=" + customerEmail +
+                ", managerId=" + managerEmail +
                 '}';
     }
 }

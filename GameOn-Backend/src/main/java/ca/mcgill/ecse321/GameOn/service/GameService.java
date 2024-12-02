@@ -498,4 +498,15 @@ public class GameService {
         gameRepository.save(game);
     }
 
+    public List<Review> getReviews(String aGameName) {
+        if (aGameName == null || aGameName.trim().length() == 0) {
+            throw new IllegalArgumentException("Name is invalid");
+        }
+        Game game = gameRepository.findGameByName(aGameName);
+        if (game == null) {
+            throw new IllegalArgumentException("Game does not exist");
+        }
+        List<Review> reviews = game.getReviews();
+        return reviews;
+    }
 }
