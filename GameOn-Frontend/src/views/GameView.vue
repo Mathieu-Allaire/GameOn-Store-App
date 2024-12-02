@@ -25,6 +25,15 @@
         <p v-if="gameDetails?.category" class="game-category">
           Category: {{ gameDetails.category }}
         </p>
+        <p v-if="gameDetails?.quantity" 
+        :class="{
+          'game-quantity': true,
+          'out-of-stock': stockMessage === 'Out of Stock',
+          'limited-stock': stockMessage.includes('Limited Stock'),
+          'in-stock': stockMessage === 'In Stock'
+        }">
+        {{ stockMessage }}
+      </p>
       </div>
     </div>
 
@@ -126,12 +135,12 @@
 
 <script>
 import axios from "axios";
-
+import { state } from '../store/state'; // Ensure the correct path to the state file
 const axiosClient = axios.create({
   // NOTE: it's baseURL, not baseUrl
   baseURL: "http://localhost:8087"
 });
-import { state } from '../store/state'; // Ensure the correct path to the state file
+
 import { Game } from "../dto/Game";
 import { Review } from "../dto/Review"; // Import the Review class
 import { GameWishlist } from "../dto/GameWishlist";
@@ -142,7 +151,21 @@ export default {
   computed: {
     state() {
       return state; // Make the global state reactive in this component
+    },
+    stockMessage() {
+    if (!this.gameDetails || this.gameDetails.quantity === undefined) {
+      return ''; // No message if there's no quantity available
     }
+    const quantity = this.gameDetails.quantity;
+
+    if (quantity === 0) {
+      return 'Out of Stock';
+    } else if (quantity <= 15) {
+      return 'Limited Stock - Order Soon!';
+    } else {
+      return 'In Stock';
+    }
+  }
   },
   name: "GameDetailsPage",
   data() {
@@ -332,6 +355,11 @@ body {
   background-color: #f5f5f5; /* Optional: Light background */
 
 }
+
+h1 {
+  color: peru;
+}
+
 /* Center Content in the Layout */
 .layout-container {
   color: white;
@@ -342,9 +370,26 @@ body {
   width: 100%;
   margin: 0 auto; /* Center layout in the viewport */
   padding: 20px;
-  background-color: #2e2e2e;
+  background-color: #ffffff;
 
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  color: black;
+}
+
+.game-quantity {
+  font-weight: bold;
+}
+
+.game-quantity.out-of-stock {
+  color: red;
+}
+
+.game-quantity.limited-stock {
+  color: orange;
+}
+
+.game-quantity.in-stock {
+  color: green;
 }
 
 /* Top Section: Title, Picture, Description, Price, Category */
@@ -559,7 +604,7 @@ body {
 }
 
 .reviews-table th {
-  background-color: #2e2e2e;
+  background-color: #776e6e;
 }
 .add-wishlist-button {
   background-color: #4caf50;
