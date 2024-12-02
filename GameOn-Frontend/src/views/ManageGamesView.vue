@@ -60,23 +60,24 @@
 
       <div class="column">
         <div class="Game-Request">
-          <h2>Game Request</h2>
+          <h2>Game Requests</h2>
           <div class="gamerequest-list">
-            <h3>List Game Requests</h3>
-            <ul>
-              <li v-for="grequest in gamerequests" :key="grequest.requestedGameId ">
-                <p><strong>Requested Game Id:</strong>  {{ grequest.requestedGameId }}</p>
-                <p><strong>Requested Game Name:</strong>  {{ grequest.requestedGame }}</p>
-                <p><strong>Requested Game Description:</strong> {{ grequest.requestedGameDescription }}</p>
-                <p><strong>Request Type:</strong> {{ grequest.requestType }}</p>
-                <button @click="approveGameRequest(grequest.requestedGameId )">Approve</button>
-              </li>
-            </ul>
+        <h3>Pending Requests</h3>
+        <ul>
+          <li v-for="grequest in gamerequests" :key="grequest.requestedGameId">
+            <div class="request-item">
+          <p><strong>Game Name:</strong> {{ grequest.requestedGame }}</p>
+          <p><strong>Description:</strong> {{ grequest.requestedGameDescription }}</p>
+          <p><strong>Type:</strong> {{ grequest.requestType }}</p>
+          <button @click="approveGameRequest(grequest.requestedGameId)" class="approve-btn">Approve</button>
+            </div>
+          </li>
+        </ul>
           </div>
         </div>
       </div>
+      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -273,6 +274,11 @@ h1 {
   text-align: center;
   margin-bottom: 30px;
   font-size: 2.5em;
+  color: #0056b3;
+}
+
+h2 {
+  color: peru;
 }
 
 .game-container {
@@ -290,6 +296,7 @@ h1 {
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  color: #04050a;
 }
 
 h2 {
@@ -371,6 +378,57 @@ button:hover {
 .game-list button:hover {
   background-color: #a71d2a;
 }
+
+.Game-Request {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.gamerequest-list h3 {
+  margin-bottom: 15px;
+  font-size: 1.5em;
+  text-align: center;
+  color: #333;
+}
+
+.gamerequest-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.request-item {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
+.request-item p {
+  margin: 5px 0;
+  color: #444;
+}
+
+.approve-btn {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #28a745;
+  color: white;
+  font-size: 1em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.approve-btn:hover {
+  background-color: #218838;
+}
+
 
 @media (max-width: 768px) {
   .game-container {

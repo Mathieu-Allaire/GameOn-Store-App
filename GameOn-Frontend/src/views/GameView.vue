@@ -24,6 +24,15 @@
         <p v-if="gameDetails?.category" class="game-category">
           Category: {{ gameDetails.category }}
         </p>
+        <p v-if="gameDetails?.quantity" 
+        :class="{
+          'game-quantity': true,
+          'out-of-stock': stockMessage === 'Out of Stock',
+          'limited-stock': stockMessage.includes('Limited Stock'),
+          'in-stock': stockMessage === 'In Stock'
+        }">
+        {{ stockMessage }}
+      </p>
       </div>
     </div>
 
@@ -72,12 +81,29 @@ import { Game } from "../dto/Game";
 import { Review } from "../dto/Review"; // Import the Review class
 
 export default {
+  
   name: "GameDetailsPage",
   data() {
     return {
       gameDetails: null, // To hold game details
       reviews: [], // To hold reviews for the game
     };
+  },
+  computed: {
+  stockMessage() {
+    if (!this.gameDetails || this.gameDetails.quantity === undefined) {
+      return ''; // No message if there's no quantity available
+    }
+    const quantity = this.gameDetails.quantity;
+
+    if (quantity === 0) {
+      return 'Out of Stock';
+    } else if (quantity <= 15) {
+      return 'Limited Stock - Order Soon!';
+    } else {
+      return 'In Stock';
+    }
+  }
   },
   async created() {
     // Fetch game details by name from the route parameter
@@ -115,6 +141,10 @@ body {
   background-color: #f5f5f5; /* Optional: Light background */
   overflow: hidden; /* Prevent scrolling if not needed */
 }
+
+h1 {
+  color: peru;
+}
 /* Center Content in the Layout */
 .layout-container {
   display: flex;
@@ -127,6 +157,23 @@ body {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  color: black;
+}
+
+.game-quantity {
+  font-weight: bold;
+}
+
+.game-quantity.out-of-stock {
+  color: red;
+}
+
+.game-quantity.limited-stock {
+  color: orange;
+}
+
+.game-quantity.in-stock {
+  color: green;
 }
 
 /* Top Section: Title, Picture, Description, Price, Category */

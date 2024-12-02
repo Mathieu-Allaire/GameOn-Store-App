@@ -93,6 +93,8 @@ body {
   width: 100%;
 }
 
+
+
 /* Left and right empty spaces */
 .spacer {
   background-color: transparent;
@@ -107,6 +109,7 @@ body {
   background: #ffffff;
   padding: 2em; /* Adjusted padding for better spacing */
   border-radius: 1em;
+  color: #04050a;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   width: 400px;
   text-align: center;
@@ -117,7 +120,7 @@ h1 {
   font-weight: bold;
   text-align: center;
   margin-bottom: 0.5em; /* Tighter gap below the title */
-  color: #04050a;
+  color: peru;
 }
 
 form {
