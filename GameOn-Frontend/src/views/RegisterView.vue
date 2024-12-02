@@ -146,6 +146,8 @@ export default {
 
 <style scoped>
 /* General page styling */
+
+
 body {
   margin: 0;
   padding: 0;
@@ -178,6 +180,7 @@ body {
   align-items: stretch;
   justify-content: center;
   background: #ffffff;
+  color: #04050a;
   padding: 2em;
   border-radius: 1em;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
@@ -190,7 +193,7 @@ h1 {
   font-weight: bold;
   text-align: center;
   margin-bottom: 0.8em;
-  color: #04050a;
+  color: peru;
 }
 
 form {
@@ -209,7 +212,7 @@ input {
   padding: 0.5em;
   font-size: 0.95rem;
   border-radius: 0.5em;
-  border: 1px solid #ccc;
+  border: 1px solid #000000;
 }
 
 button {
