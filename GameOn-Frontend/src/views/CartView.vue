@@ -1,19 +1,30 @@
 <template>
   <div class="cart-container">
-    <div v-if="cartItems.length!=0">
-      <h1> Your Cart does not contain any game</h1>
+    <!-- If cart is empty -->
+    <div v-if="cartItems.length === 0">
+      <h1>Your cart is empty.</h1>
     </div>
+
+    <!-- If cart has items -->
     <div v-else>
-    <h1>Your Cart</h1>
-      <div class="cart-item" v-for="item in cartItems" :key="item.gameId">
+      <h1>Your Cart</h1>
+      <div
+        class="cart-item"
+        v-for="item in cartItems"
+        :key="item.id"
+      >
         <!-- Game Image -->
-        <img :src="item.image" alt="Game Image" class="game-image" />
+        <img
+          :src="item.image"
+          alt="Game Image"
+          class="game-image"
+        />
 
         <!-- Game Details -->
         <div class="game-details">
           <h2>{{ item.name }}</h2>
-          <p>Unit Price: ${{ item.price.toFixed(2) }}</p> <!-- Display price for the game -->
-          <p>Total Price: ${{ (item.price * item.quantity).toFixed(2) }}</p> <!-- Total Price -->
+          <p>Unit Price: ${{ item.price.toFixed(2) }}</p>
+          <p>Total Price: ${{ (item.price * item.quantity).toFixed(2) }}</p>
           <div class="quantity-controls">
             <button @click="removeGame(item.id)">-</button>
             <span>{{ item.quantity }}</span>
@@ -21,81 +32,58 @@
           </div>
         </div>
       </div>
-      
-
-      <!-- Cart Actions -->
-      <div class="cart-actions">
-        <button class="remove-all-button" @click="removeAllGames">Remove All Items</button>
-        <button class="purchase-button" @click="purchaseAllItems">Purchase All Items</button>
-      </div>
     </div>
 
-    <!-- Empty Cart Message -->
-    <div v-else>
-      <h1>Your cart is empty.</h1>
+    <!-- Cart Actions -->
+    <div class="cart-actions" v-if="cartItems.length > 0">
+      <button
+        class="remove-all-button"
+        @click="removeAllGames"
+      >
+        Remove All Items
+      </button>
+      <button
+        class="purchase-button"
+        @click="purchaseAllItems"
+      >
+        Purchase All Items
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-
-import { Cart } from "@/dto/Cart.js";
-import { CartResponseDto } from "@/dto/CartResponseDto";
+import axios from "axios";
 
 export default {
   name: "CartView",
   data() {
     return {
-      cartItems: [
-        {
-          name: "The Legend of Zelda",
-          image: "https://www.zeldadungeon.net/wiki/Gallery%3AThe_Legend_of_Zelda#/media/File:Link-Kneeling-Hyrule-Map.png",
-          quantity: 2,
-          price: 8.9,
-          id: 1,
-        },
-        {
-          name: "Super Mario Odyssey",
-          image: "https://www.mariowiki.com/Gallery%3ASuper_Mario_Odyssey#/media/File:SMO_Artwork_Box_Art.png",
-          quantity: 1,
-          price: 60.0,
-          id: 2,
-        },
-        {
-          name: "Minecraft",
-          image: "https://example.com/images/minecraft.jpg",
-          quantity: 3,
-          price: 70.12,
-          id: 3,
-        },
-      ], // Provided cartItems, // Initialize as empty, will fetch from backend
+      cartItems: [],
     };
   },
   methods: {
     async fetchCartItems() {
       try {
         const email = sessionStorage.getItem("Email");
-        if (id) {
-          //alert("Cart ID is missing. Please log in.");
-          alert(" id =", id);
-        } else {
-          alert(" id =", id);
+        if (!email) {
+          alert("No email found in session storage.");
+          return;
         }
-        const response = await Cart.getCartByEmail(email);
+        const response = await axios.get(`/cartEmail/${email}`);
         if (response.error) {
           console.error("Error fetching cart items:", response.error);
-          //alert(response.error);
+          alert("Error fetching cart items:", response.error)
         } else {
-          this.cartItems = response.items; // Assume API returns a property `items`
+          this.cartItems = response.items || [];
         }
       } catch (error) {
-        //alert("Unexpected error fetching cart items:", error);
+        alert("Unexpected error fetching cart items: " + error.message);
       }
     },
     async addGame(gameName) {
-      try{
-        const cart = new Cart(this.customerId, gameName);
-        const response = await cart.addGameToCart();
+      try {
+        const response = await axios.post("/addGameToCart", { gameName });
         if (response.error) {
           console.error("Error adding game:", response.error);
           alert(response.error);
@@ -103,15 +91,12 @@ export default {
           this.fetchCartItems(); // Refresh cart
         }
       } catch (error) {
-        alert("Unexpected error adding game: ", error);
+        alert("Unexpected error adding game: " + error.message);
       }
     },
     async removeGame(gameId) {
       try {
-        const response = await Cart.removeGameFromCart({
-          specificGameId: gameId,
-          cartId: this.cartId,
-        });
+        const response = await axios.post("/removeGameFromCart", { gameId });
         if (response.error) {
           console.error("Error removing game:", response.error);
           alert(response.error);
@@ -119,33 +104,46 @@ export default {
           this.fetchCartItems(); // Refresh cart
         }
       } catch (error) {
-        alert("Unexpected error removing game:", error);
+        alert("Unexpected error removing game: " + error.message);
       }
     },
-    async removeAllGamesFromCart(customerId) {
-    const path = "/remove-all";
-    try {
-      const response = await axios.post(path, { customerId });
-      return response.data;
-    } catch (error) {
-      return { error: error.message };
-    }
-    },
-    async purchaseAllItems(cartId) {
-      const path = "/createOrder";
+    async removeAllGames() {
       try {
-        const response = await axios.post(path, { cartId });
-        return response.data;
+        const response = await axios.post("/removeAllGames");
+        if (response.error) {
+          console.error("Error removing all games:", response.error);
+          alert(response.error);
+        } else {
+          this.cartItems = []; // Clear the cart
+        }
       } catch (error) {
-        return { error: error.message };
+        alert("Unexpected error removing all games: " + error.message);
       }
-    }
+    },
+    async purchaseAllItems() {
+      try {
+        const response = await axios.post("/purchaseCart", {
+          cartId: 1, // Example: Replace with actual cartId if needed
+        });
+        if (response.error) {
+          console.error("Error purchasing items:", response.error);
+          alert(response.error);
+        } else {
+          alert("Purchase successful!");
+          this.cartItems = []; // Clear the cart after purchase
+        }
+      } catch (error) {
+        alert("Unexpected error purchasing items: " + error.message);
+      }
+    },
   },
   mounted() {
-    this.fetchCartItems(); // Fetch items on component mount
+    // Uncomment to fetch real cart items on component mount
+    // this.fetchCartItems();
   },
 };
 </script>
+
 
 <style scoped>
 .cart-container {

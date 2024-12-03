@@ -1,9 +1,9 @@
 import axios from "axios";
 
 export class Cart {
-  constructor(customerId, aGameName) {
-    this.customerId = customerId;
+  constructor(aGameName, email) {
     this.aGameName = aGameName;
+    this.email = email;
   }
 
   static async getCart(id) {
@@ -55,7 +55,7 @@ export class Cart {
   static async getCartByEmail(email) {
     const path = "/cartEmail/" + email;
     try{
-      const response = await axios.post(path, this);
+      const response = await axios.get(path);
       return response.data;
     } catch (error) {
       return { error: error.message };
