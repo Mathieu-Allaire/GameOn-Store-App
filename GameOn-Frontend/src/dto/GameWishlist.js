@@ -5,6 +5,7 @@ export class GameWishlist {
     this.gameName = gameName;
     this.customerEmail = customerEmail;
   }
+
   async addGameToWishlist(gameName) {
     const path = "/wishlist-add";
     try {

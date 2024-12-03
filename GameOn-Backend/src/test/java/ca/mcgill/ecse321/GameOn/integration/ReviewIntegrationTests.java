@@ -95,7 +95,7 @@ public class ReviewIntegrationTests {
         Manager manager = (Manager) createdManager.getRole(0);
 
         // Arrange
-        ReviewDto review = new ReviewDto(REVIEW_ID,VALID_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, null , customer.getId(),manager.getId());
+        ReviewDto review = new ReviewDto(REVIEW_ID,VALID_DESCRIPTION, VALID_STARS, VALID_LIKES, VALID_DISLIKES, null , VALID_CUSTOMER_EMAIL,VALID_MANAGER_EMAIL);
 
         // Act
         ResponseEntity<ReviewDto> response = client.postForEntity("/reviews", review, ReviewDto.class);
@@ -110,8 +110,6 @@ public class ReviewIntegrationTests {
         assertEquals(VALID_STARS, createdReview.getStars());
         assertEquals(VALID_LIKES, createdReview.getLikes());
         assertEquals(VALID_DISLIKES, createdReview.getDislikes());
-        assertEquals(customer.getId(), createdReview.getCustomerId());
-        assertEquals(manager.getId(), createdReview.getManagerId());
     }
 
     @Test
@@ -122,7 +120,7 @@ public class ReviewIntegrationTests {
         Customer customer = (Customer) createdCustomer.getRole(0);
         Manager manager = (Manager) createdManager.getRole(0);
 
-        Review review = reviewService.postReview(VALID_DESCRIPTION,VALID_STARS,VALID_LIKES,VALID_DISLIKES,customer.getId(),manager.getId());
+        Review review = reviewService.postReview(VALID_DESCRIPTION,VALID_STARS,VALID_LIKES,VALID_DISLIKES,VALID_CUSTOMER_EMAIL,VALID_MANAGER_EMAIL);
         REVIEW_ID = review.getId();
 
 
@@ -139,8 +137,6 @@ public class ReviewIntegrationTests {
         assertEquals(VALID_LIKES, createdReview.getLikes());
         assertEquals(VALID_DISLIKES, createdReview.getDislikes());
         assertNull(createdReview.getReply());
-        assertEquals(customer.getId(), createdReview.getCustomerId());
-        assertEquals(manager.getId(), createdReview.getManagerId());
     }
 
 

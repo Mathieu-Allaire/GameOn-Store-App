@@ -91,7 +91,6 @@ export default {
     },
   },
   async mounted() {
-    // Create two categories by default
     await this.loadCategories();
   },
 };
@@ -100,7 +99,7 @@ export default {
 <style scoped>
 .category-view {
   position: absolute !important;
-  top: calc(50% + 30px) !important; /* Adjust offset based on the navbar height */
+  top: calc(50% + 30px) !important; 
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
   display: flex;
@@ -109,17 +108,25 @@ export default {
   align-items: center;
   padding: 20px;
   background-color: #f9f9f9;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional shadow */
-  border-radius: 8px; /* Optional rounded corners */
-  width: 80%; /* Optional: Adjust width for responsiveness */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  border-radius: 8px; 
+  width: 80%; 
   max-width: 600px;
+  color: black;
 }
 
 
 h1 {
-  font-size: 2.5em; /* Slightly reduce for better scaling */
+  font-size: 2.5em; 
   margin-bottom: 20px;
-  text-align: center; /* Ensure proper alignment */
+  text-align: center; 
+  color: black;
+}
+
+h2 {
+  font-size: 1.5em; 
+  margin-bottom: 10px;
+  color: peru
 }
 
 .category-container {

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +21,7 @@ import ca.mcgill.ecse321.GameOn.model.Review;
  *
  * @author Mathieu Allaire
  */
+@CrossOrigin(origins = "http://localhost:8087")
 @RestController
 public class ReviewController{
     @Autowired
@@ -40,8 +42,8 @@ public class ReviewController{
                     reviewDto.getStars(),
                     reviewDto.getLikes(),
                     reviewDto.getDislikes(),
-                    reviewDto.getCustomerId(),
-                    reviewDto.getManagerId()
+                    reviewDto.getCustomerEmail(),
+                    reviewDto.getManagerEmail()
         );
         return new ReviewDto(review);
 
@@ -58,7 +60,9 @@ public class ReviewController{
     @GetMapping("/game/{gameName}/reviews")
     public ResponseEntity<?> getAllReviewsForGame(@PathVariable String gameName){
         try{
-            List<Review> reviews = reviewService.getAllReviewsforGame(gameName);
+            List<Review> reviews = reviewService.getAllReviewsForGame(gameName);
+            System.out.println("Serving reviews: " + reviews.size());
+            System.out.println("For the game: " + gameName);
             List<ReviewDto> response = reviews.stream()
                     .map(ReviewDto::new)
                     .collect(Collectors.toList());
