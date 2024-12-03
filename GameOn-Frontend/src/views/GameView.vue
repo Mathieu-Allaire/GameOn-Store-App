@@ -70,6 +70,8 @@
 <script>
 import { Game } from "../dto/Game";
 import { Review } from "../dto/Review"; // Import the Review class
+import { Cart } from "../dto/Cart.js";
+import { CartResponseDto } from "../dto/CartResponseDto.js";
 
 export default {
   name: "GameDetailsPage",
@@ -87,6 +89,7 @@ export default {
       const gameResponse = await Game.findGameByName(gameName);
       if (gameResponse.error) {
         console.error(gameResponse.error);
+        alert("test, ");
       } else {
         this.gameDetails = gameResponse;
       }
@@ -98,7 +101,41 @@ export default {
       console.error("Error fetching data:", error.message);
     }
   },
-};
+
+  methods: {
+    async addToCart() {
+      try {
+        // Retrieve customer ID from session storage or Vuex store
+        const customerId = sessionStorage.getItem("customerId"); // Adjust based on your setup
+        if (!customerId) {
+          alert("You must be logged in to add a game to the cart.");
+          return;
+        }
+
+        // Ensure game details are loaded
+        if (!this.gameDetails) {
+          alert("Game details are missing. Please try again.");
+          return;
+        }
+
+        // Create a new Cart instance and add the game to the cart
+        const cart = new Cart(customerId, this.gameDetails.name);
+        const response = await cart.addGameToCart();
+
+        // Handle the response
+        if (response.error) {
+          console.error("Error adding game to cart:", response.error);
+          alert("Failed to add game to cart. Please try again.");
+        } else {
+          alert("Game added to cart successfully!");
+        }
+      } catch (error) {
+        console.error("Unexpected error:", error.message);
+        alert("An unexpected error occurred. Please try again.");
+      }
+  },
+},
+}
 </script>
 
 

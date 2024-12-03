@@ -1,5 +1,7 @@
 <template>
     <div class="view-customers">
+      <div v-if="customers.length==0"><h1>No Customers exist in the system</h1></div>
+      <div v-else>
       <h1>Customer List</h1>
       <div class="columns">
         <div class="column">
@@ -7,58 +9,67 @@
           <table>
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Email</th>
                 <th>Name</th>
-                <th>Address</th>
-                <th>Actions</th>
+                
+                <!--<th>Actions</th>-->
               </tr>
             </thead>
             <tbody>
               <tr v-for="customer in customers" :key="customer.id">
-                <td>{{ customer.id }}</td>
                 <td>{{ customer.email }}</td>
                 <td>{{ customer.name }}</td>
-                <td>{{ customer.address }}</td>
+                
                 <td>
-                  <button @click="redirectToOrders(customer.id)">View Orders</button>
+                  <!--<button @click="redirectToOrders(customer.id)">View Orders</button>-->
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
+      </div>
     </div>
   </template>
   
   <script>
+  import { Customer } from '@/dto/Customer';
+  import { CustomerResponseDto } from '@/dto/CustomerResponseDto';
   export default {
     name: "CustomerView",
     data() {
       return {
-        customers: [
-          // Example customer data
-          {
-            id: 1,
-            email: "john.doe@example.com",
-            name: "John Doe",
-            address: "123 Main St, Springfield",
-          },
-          {
-            id: 2,
-            email: "jane.smith@example.com",
-            name: "Jane Smith",
-            address: "456 Elm St, Shelbyville",
-          },
-        ],
+        customers: [],
       };
     },
-    methods: {
+    async mounted() {
+      try {
+        // Call the API to get all customers
+        const response = await Customer.getAllCustomers();
+
+        // Check for errors in the response
+        if (response.error) {
+          console.error("Error fetching customers:", response.error);
+          alert("Failed to fetch customers.");
+        } else {
+          // Map the response to CustomerResponseDto objects
+          this.customers = response.data.map(customer => new CustomerResponseDto(customer));
+          console.log("Customers fetched:", this.customers);
+        }
+      } catch (error) {
+        // Handle unexpected errors
+        console.error("Unexpected error:", error.message);
+        alert("An unexpected error occurred while fetching customers.");
+      }
+    },
+
+
+
       redirectToOrders(customerId) {
         // Redirect to CustomerOrderView with the customer's ID as a query parameter
         this.$router.push({ name: "customer-orders", query: { customerId } });
       },
-    },
+    
   };
   </script>
   

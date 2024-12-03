@@ -55,7 +55,7 @@ export default {
         sessionStorage.setItem('LoggedIn', this.role); // Store role in sessionStorage
         setLoggedIn(this.role);
         sessionStorage.setItem('Email', this.email); // Store email in sessionStorage
-
+        sessionStorage.setItem('CartId', this.cartId);
         this.$router.push('/'); // Go to main page
       }
       catch (error){

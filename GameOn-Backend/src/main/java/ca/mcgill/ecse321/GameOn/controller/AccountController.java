@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.GameOn.service.AccountService;
+import ca.mcgill.ecse321.GameOn.model.Customer;
+import ca.mcgill.ecse321.GameOn.model.OrderClass;
 import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.dto.CustomerRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.CustomerResponseDto;
@@ -19,9 +21,7 @@ import ca.mcgill.ecse321.GameOn.dto.EmployeeRequestDto;
 import ca.mcgill.ecse321.GameOn.dto.EmployeeResponseDto;
 import ca.mcgill.ecse321.GameOn.dto.ManagerRequestDTO;
 import ca.mcgill.ecse321.GameOn.dto.ManagerResponseDTO;
-
-
-
+import ca.mcgill.ecse321.GameOn.dto.OrderResponseDto;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -166,4 +166,32 @@ public class AccountController {
             return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/allCustomers")
+    public ResponseEntity<?> findAllCustomers() {
+        List<CustomerResponseDto> dtos = new ArrayList<>();
+        try{
+            for (Person customer : accountService.getAllCustomers()) {
+                dtos.add(new CustomerResponseDto((customer)));
+            }
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/allOrders/{email}")
+    public ResponseEntity<?> findAllCustomerOrders(@PathVariable String email) {
+        List<OrderResponseDto> dtos = new ArrayList<>();
+        try{
+            for (OrderClass order : accountService.getAllCustomerOrders(email)) {
+                dtos.add(new OrderResponseDto(order));
+            }
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage().toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+
 }

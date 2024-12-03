@@ -1,5 +1,9 @@
 <template>
   <div class="View my orders">
+    <div v-if="orders.length==0">
+    <h1>You don't have any order</h1>
+    </div>
+    <div v-else>
     <h1>List Of All Orders</h1>
     <div class="columns">
       <div class="column">
@@ -27,6 +31,7 @@
           </tbody>
         </table>
       </div>
+    </div>
 
       <div v-if="selectedOrder" class="column">
         <h2>Order Details</h2>
@@ -56,13 +61,14 @@
 </template>
 
 <script>
+import { Order } from '@/dto/Order';
 export default {
   name: "OrderView",
   data() {
     return {
       orders: [
         // Example data for orders
-        {
+        /*{
           id: 1,
           date: "2024-11-21",
           price: "$120",
@@ -102,12 +108,41 @@ export default {
               quantity: 2,
             },
           ],
-        },
+        },*/
       ],
       selectedOrder: null, // Tracks the currently selected order
     };
   },
   methods: {
+    async mounted() {
+      try {
+        // Get the customer's email from sessionStorage
+        const customerEmail = sessionStorage.getItem("Email");
+        if (!customerEmail) {
+          alert("Customer email is missing.");
+          this.$router.push("/login"); // Redirect to login if email is missing
+          return;
+        }
+
+        // Fetch orders using the customer's email
+        const response = await Order.findAllCustomerOrders(customerEmail);
+
+        // Handle errors in the response
+        if (response.error) {
+          console.error("Error fetching orders:", response.error);
+          alert("Error fetching orders.");
+        } else {
+          // Transform response into OrderResponseDto objects
+          this.orders = response.map(order => new OrderResponseDto(order));
+          console.log("Orders fetched:", this.orders);
+        }
+      } catch (error) {
+        // Handle unexpected errors
+        console.error("Unexpected error:", error);
+        alert("An unexpected error occurred while fetching orders, ", error);
+      }
+  },
+
     toggleOrderDetails(order) {
       if (this.selectedOrder && this.selectedOrder.id === order.id) {
         this.selectedOrder = null; // Hide details if the same order is clicked again

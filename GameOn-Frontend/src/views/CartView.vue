@@ -34,169 +34,25 @@
 </template>
 
 <script>
-/*import { ref } from 'vue';
-import axios from 'axios';
-const axiosClient = axios.create({
-  baseURL: "http://localhost:8080",
-})
-// Reactive state for cart items
-const cartItems = ref([
-  {
-    name: "The Legend of Zelda",
-    image: "https://example.com/images/zelda.jpg",
-    quantity: 2,
-    price: 8.90,
-    id: 1,
-  },
-  {
-    name: "Super Mario Odyssey",
-    image: "https://example.com/images/mario.jpg",
-    quantity: 1,
-    price: 60.00,
-    id: 2,
-  },
-  {
-    name: "Minecraft",
-    image: "https://example.com/images/minecraft.jpg",
-    quantity: 3,
-    price: 70.12,
-    id: 3,
-  },
-]);
-
-// Simulating cart ID and customer ID for API requests
-const cartId = 1; // Replace with the actual cart ID for the user
-const customerId = 123; // Replace with the actual customer ID for the user
-
-// Fetch cart items from the backend
-const fetchCartItems = async () => {
-  try {
-    const response = await axios.get(`http://localhost:8080/carts/${cartId}`);
-    cartItems.value = response.data.items;
-  } catch (error) {
-    console.error("Error fetching cart items:", error);
-    alert("Error fetching cart items: " + (error.response?.data || error.message));
-  }
-};
-
-// Add a game to the cart
-const addGame = async (gameName) => {
-  try {
-    const response = await axiosClient.post("/game-add", {
-      gameName,
-      customerId,
-    });
-    console.log("Game added successfully:", response.data); // Log response for debugging
-    await fetchCartItems(); // Refresh the cart
-  } catch (error) {
-    if (error.response) {
-      // The request was made, but the server responded with a status code that falls out of the range of 2xx
-      console.error("Server responded with an error:", error.response.data);
-      alert("Error adding game to cart: " + error.response.data);
-    } else if (error.request) {
-      // The request was made but no response was received
-      console.error("No response received from server:", error.request);
-      alert("Error: No response received from the server: " + error.request);
-    } else {
-      // Something happened in setting up the request that triggered an error
-      console.error("Error setting up the request:", error.message);
-      alert("Error adding game to cart: " + error.message);
-    }
-  }
-};
-
-
-// Remove a game from the cart
-const removeGame = async (gameId) => {
-  try {
-    await axios.post(`http://localhost:8080/api/game-remove`, {
-      specificGameId: gameId,
-      cartId,
-    });
-    await fetchCartItems(); // Refresh the cart
-  } catch (error) {
-    if (error.response) {
-      // The request was made, but the server responded with a status code that falls out of the range of 2xx
-      console.error("Server responded with an error:", error.response.data);
-      alert("Error removing game from cart: " + error.response.data);
-    } else if (error.request) {
-      // The request was made but no response was received
-      console.error("No response received from server:", error.request);
-      alert("Error: No response received from the server: " + error.request);
-    } else {
-      // Something happened in setting up the request that triggered an error
-      console.error("Error setting up the request:", error.message);
-      alert("Error removing game from cart: " + error.message);
-    }
-  }
-  ;
-
-// Remove all games from the cart
-  const removeAllGames = async () => {
-    try {
-      await axios.post(`http://localhost:8080/api/remove-all`, {cartId});
-      await fetchCartItems(); // Refresh the cart
-    } catch (error) {
-      if (error.response) {
-        // The request was made, but the server responded with a status code that falls out of the range of 2xx
-        console.error("Server responded with an error:", error.response.data);
-        alert("Error adding game to cart: " + error.response.data);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error("No response received from server:", error.request);
-        alert("Error: No response received from the server: " + error.request);
-      } else {
-        // Something happened in setting up the request that triggered an error
-        console.error("Error setting up the request:", error.message);
-        alert("Error removing all games from cart: " + error.message);
-      }
-    }
-  };
-
-// Purchase all items
-  const purchaseAllItems = async () => {
-    try {
-      await axios.post(`http://localhost:8080/api/createOrder`, {cartId});
-      cartItems.value = []; // Clear cart after purchase
-      alert("Order created successfully!");
-    } catch (error) {
-      if (error.response) {
-        // The request was made, but the server responded with a status code that falls out of the range of 2xx
-        console.error("Server responded with an error:", error.response.data);
-        alert("Error buying games from cart: " + error.response.data);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error("No response received from server:", error.request);
-        alert("Error: No response received from the server: " + error.request);
-      } else {
-        // Something happened in setting up the request that triggered an error
-        console.error("Error setting up the request:", error.message);
-        alert("Error buying games from cart: " + error.message);
-      }
-    }
-  };
-}*/
-
 
 import { Cart } from "@/dto/Cart.js";
+import { CartResponseDto } from "@/dto/CartResponseDto";
 
 export default {
   name: "CartView",
   data() {
     return {
-      cartId: 1, // Replace with actual cart ID
-      customerId: 123, // Replace with actual customer ID
       cartItems: [
         {
           name: "The Legend of Zelda",
-          image: "https://example.com/images/zelda.jpg",
+          image: "https://www.zeldadungeon.net/wiki/Gallery%3AThe_Legend_of_Zelda#/media/File:Link-Kneeling-Hyrule-Map.png",
           quantity: 2,
           price: 8.9,
           id: 1,
         },
         {
           name: "Super Mario Odyssey",
-          image: "https://example.com/images/mario.jpg",
+          image: "https://www.mariowiki.com/Gallery%3ASuper_Mario_Odyssey#/media/File:SMO_Artwork_Box_Art.png",
           quantity: 1,
           price: 60.0,
           id: 2,
@@ -214,15 +70,21 @@ export default {
   methods: {
     async fetchCartItems() {
       try {
-        const response = await Cart.getCart(this.cartId);
+        const id = sessionStorage.getItem("CartId");
+        if (!id) {
+          //alert("Cart ID is missing. Please log in.");
+        } else {
+          //alert(" id =", id);
+        }
+        const response = await Cart.getCart(this.id);
         if (response.error) {
           console.error("Error fetching cart items:", response.error);
-          alert(response.error);
+          //alert(response.error);
         } else {
           this.cartItems = response.items; // Assume API returns a property `items`
         }
       } catch (error) {
-        alert("Unexpected error fetching cart items:", error);
+        //alert("Unexpected error fetching cart items:", error);
       }
     },
     async addGame(gameName) {
@@ -255,33 +117,24 @@ export default {
         alert("Unexpected error removing game:", error);
       }
     },
-    async removeAllGames() {
-      try {
-        const response = await Cart.removeAllGamesFromCart(this.cartId);
-        if (response.error) {
-          console.error("Error removing all games:", response.error);
-          alert(response.error);
-        } else {
-          this.fetchCartItems(); // Refresh cart
-        }
-      } catch (error) {
-        alert("Unexpected error removing all games:", error);
-      }
+    async removeAllGamesFromCart(customerId) {
+    const path = "/remove-all";
+    try {
+      const response = await axios.post(path, { customerId });
+      return response.data;
+    } catch (error) {
+      return { error: error.message };
+    }
     },
-    async purchaseAllItems() {
+    async purchaseAllItems(cartId) {
+      const path = "/createOrder";
       try {
-        const response = await Cart.createOrder({ cartId: this.cartId });
-        if (response.error) {
-          console.error("Error purchasing items:", response.error);
-          alert(response.error);
-        } else {
-          alert("Order created successfully!");
-          this.cartItems = []; // Clear the cart
-        }
+        const response = await axios.post(path, { cartId });
+        return response.data;
       } catch (error) {
-        alert("Unexpected error purchasing items:", error);
+        return { error: error.message };
       }
-    },
+    }
   },
   mounted() {
     this.fetchCartItems(); // Fetch items on component mount
