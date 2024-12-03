@@ -3,7 +3,7 @@ package ca.mcgill.ecse321.GameOn.service;
 
 
 import ca.mcgill.ecse321.GameOn.model.OrderClass;
-
+import ca.mcgill.ecse321.GameOn.model.Person;
 import ca.mcgill.ecse321.GameOn.exception.GameOnException;
 import ca.mcgill.ecse321.GameOn.model.Cart;
 import ca.mcgill.ecse321.GameOn.model.Customer;
@@ -13,6 +13,7 @@ import ca.mcgill.ecse321.GameOn.model.Game;
 
 import ca.mcgill.ecse321.GameOn.repository.CartRepository;
 import ca.mcgill.ecse321.GameOn.repository.OrderRepository;
+import ca.mcgill.ecse321.GameOn.repository.PersonRepository;
 import ca.mcgill.ecse321.GameOn.repository.SpecificGameRepository;
 import ca.mcgill.ecse321.GameOn.repository.GameRepository;
 import jakarta.transaction.Transactional;
@@ -36,7 +37,21 @@ public class PurchaseGameService {
     private OrderRepository orderRepository;
     @Autowired
     private GameRepository gameRepository;
+    @Autowired
+    private PersonRepository personRepository;
 
+    public Cart findCartByEmail(String email) {
+        if (email == null || email == "") {
+            throw new GameOnException(HttpStatus.BAD_REQUEST, "email invalid.");
+        }
+        Person person = personRepository.findPersonByEmail(email);
+        Customer customer = (Customer) person.getRole(0);
+        Cart cart = customer.getCart();
+        if (cart == null) {
+            throw new GameOnException(HttpStatus.NOT_FOUND, "There are no cart with the email: " + email + ".");
+        }
+        return cart;
+    }
     /**
      * Method to retrieve Cart by ID
      * @param id id of cart

@@ -1,6 +1,9 @@
 <template>
   <div class="cart-container">
-    <div v-if="cartItems.length > 0">
+    <div v-if="cartItems.length!=0">
+      <h1> Your Cart does not conatin any game</h1>
+    </div>
+    <div v-else>
     <h1>Your Cart</h1>
       <div class="cart-item" v-for="item in cartItems" :key="item.gameId">
         <!-- Game Image -->
@@ -18,6 +21,7 @@
           </div>
         </div>
       </div>
+      
 
       <!-- Cart Actions -->
       <div class="cart-actions">
@@ -70,13 +74,14 @@ export default {
   methods: {
     async fetchCartItems() {
       try {
-        const id = sessionStorage.getItem("CartId");
-        if (!id) {
+        const email = sessionStorage.getItem("Email");
+        if (id) {
           //alert("Cart ID is missing. Please log in.");
+          alert(" id =", id);
         } else {
-          //alert(" id =", id);
+          alert(" id =", id);
         }
-        const response = await Cart.getCart(this.id);
+        const response = await Cart.getCartByEmail(email);
         if (response.error) {
           console.error("Error fetching cart items:", response.error);
           //alert(response.error);

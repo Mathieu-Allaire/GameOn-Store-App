@@ -52,6 +52,13 @@ export class Cart {
       return { error: error.message };
     }
   }
-
-  
+  static async getCartByEmail(email) {
+    const path = "/cartEmail/" + email;
+    try{
+      const response = await axios.post(path, this);
+      return response.data;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
 }

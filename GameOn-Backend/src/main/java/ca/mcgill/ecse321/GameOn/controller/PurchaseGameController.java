@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
 /**
  * this class allows us to control the purchase of games
  * @author Neeshal Imrit, Joseph Feghaly
@@ -31,6 +32,17 @@ public class PurchaseGameController {
 
     @Autowired
     private PurchaseGameService purchaseGameService;
+    
+    @GetMapping("/cartEmail/{email}")
+    public ResponseEntity<?> getCartByEmail(@PathVariable String email) {
+        try {
+            Cart cart = purchaseGameService.findCartByEmail(email);
+            CartResponseDto response = new CartResponseDto(cart);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
     
     /**
      * Find a cart by its id
@@ -147,5 +159,7 @@ public class PurchaseGameController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    
 
 }
