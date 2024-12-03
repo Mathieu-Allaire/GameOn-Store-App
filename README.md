@@ -69,6 +69,6 @@ Mathieu Allaire | 23| <ul><li>Wishlist Page Interface and Implementation </li> <
 Joel Boyer | 25| <ul><li>Create DTO/Axios that interacts with the backend for all classes </li> <li>Main Page Interface (Search, All games, Sort by Category) Implementation</li> </ul>|
 Joseph Feghaly | 20| <ul><li>Staff's Order Page Interface and Implementation** </li> <li>Customer's Order Page Interface and Implementation**</li></ul>|
 
-Task done with ** are currently not completed. 
+### Task done with ** are currently incomplete
 ---
 [Deliverable 3 report](https://github.com/McGill-ECSE321-Fall2024/project-group-3/wiki/Deliverable-3)
