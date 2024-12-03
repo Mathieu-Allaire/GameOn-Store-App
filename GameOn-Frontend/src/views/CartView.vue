@@ -1,7 +1,7 @@
 <template>
   <div class="cart-container">
     <div v-if="cartItems.length!=0">
-      <h1> Your Cart does not conatin any game</h1>
+      <h1> Your Cart does not contain any game</h1>
     </div>
     <div v-else>
     <h1>Your Cart</h1>

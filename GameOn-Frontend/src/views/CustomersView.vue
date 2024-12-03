@@ -20,9 +20,9 @@
                 <td>{{ customer.email }}</td>
                 <td>{{ customer.name }}</td>
                 
-                <td>
-                  <!--<button @click="redirectToOrders(customer.id)">View Orders</button>-->
-                </td>
+                
+                  <!--<td><button @click="redirectToOrders(customer.id)">View Orders</button></td>-->
+                
               </tr>
             </tbody>
           </table>
@@ -89,7 +89,7 @@
   }
 
   .column {
-    flex: 1;
+    flex: 10;
     width: 100%; /* Ensures the column spans the entire width */
     padding: 20px;
     border: none;
