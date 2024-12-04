@@ -11,7 +11,8 @@
 </template>
 
 <script>
-import { GameResponseDTO } from "../dto/GameResponseDTO";
+import { GameResponseDTO } from "../dto/GameResponseDTO.js";
+
 
 export default {
   name: "MainPageGame",

@@ -2,6 +2,7 @@ import axios from "axios";
 
 export class Customer {
   constructor(
+    id,
     email,
     name,
     password,
@@ -9,6 +10,7 @@ export class Customer {
     cardExpiracyDate,
     billingAddress,
   ) {
+    this.id = id;
     this.email = email;
     this.name = name;
     this.password = password;
@@ -33,6 +35,16 @@ export class Customer {
       return response;
     } catch (error) {
       return { error: error.message };
+    }
+  }
+
+  static async getAllCustomers() {
+    const path = "/allCustomers";
+    try {
+      const response = await axios.get(path);
+      return response;
+    } catch (error) {
+      return {error : error.message};
     }
   }
 }

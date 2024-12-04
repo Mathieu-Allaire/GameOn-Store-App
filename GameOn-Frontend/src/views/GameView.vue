@@ -144,8 +144,8 @@ const axiosClient = axios.create({
 import { Game } from "../dto/Game";
 import { Review } from "../dto/Review"; // Import the Review class
 import { GameWishlist } from "../dto/GameWishlist";
-import { Cart } from "../dto/Cart"; // Import the Cart class
-
+import { Cart } from "../dto/Cart.js"; // Import the Cart class
+import { CartResponseDto } from "../dto/CartResponseDto.js";
 
 export default {
   computed: {
@@ -269,6 +269,25 @@ export default {
     },
     async addToCart() {
       try {
+        const email = sessionStorage.getItem("Email");
+        //const cart = await Cart.getCartByEmail("Email");
+        const cart = new Cart(this.gameDetails.name, sessionStorage.getItem('Email'))
+        const response = await cart.addGameToCart();
+        if (response.error) {
+          throw new Error(response.error);
+          alert(`Failed to add to cart 2: ${error.message}`);
+        }
+        this.cartSuccess = true;
+        this.cartError = null;
+        alert ('game added');
+      } catch (error) {
+        this.cartError = `Failed to add to cart: ${error.message}`;
+        this.cartSuccess = false;
+        alert(`Failed to add to cart: ${error.message}`);
+      }
+    },
+    /*async addToCart() {
+      try { 
         const cart = new Cart(sessionStorage.getItem("customerId"), this.gameDetails.name);
         const response = await cart.addGameToCart();
         if (response.error) {
@@ -280,7 +299,9 @@ export default {
         this.cartError = `Failed to add to cart: ${error.message}`;
         this.cartSuccess = false;
       }
-    },
+    },*/
+   
+    
     async fetchReviewsForGame(gameName) {
       try {
         const reviewsResponse = await Game.getReviews(gameName);

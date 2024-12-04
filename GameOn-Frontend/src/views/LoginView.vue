@@ -56,7 +56,6 @@ export default {
         sessionStorage.setItem('LoggedIn', this.role); // Store role in sessionStorage
         setLoggedIn(this.role);
         sessionStorage.setItem('Email', this.email); // Store email in sessionStorage
-
         this.$router.push('/'); // Go to main page
       }
       // catch block to handle errors

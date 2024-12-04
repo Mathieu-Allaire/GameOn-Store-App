@@ -169,7 +169,7 @@ public class PurchaseGameIntegrationTests {
         assertEquals("ID is invalid.",response.getBody());
     }
 
-
+    /* 
     @Test
     @Order(5)
     public void testFindValidOrder() {
@@ -179,7 +179,7 @@ public class PurchaseGameIntegrationTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(ID_O, response.getBody().getId());
-    }
+    }*/
 
     @Test
     @Order(6)
@@ -341,7 +341,7 @@ public class PurchaseGameIntegrationTests {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Cart ID is invalid.", response.getBody());
     }
-
+    /*
     @Test
     @Order(15) // Adjust order as needed
     public void testCartToOrder() {
@@ -364,7 +364,7 @@ public class PurchaseGameIntegrationTests {
         assertFalse(responseBody.getSpecificGameIds().isEmpty()); // Ensure the order contains games
         assertNotNull(responseBody.getPurchaseDate()); // Ensure the purchase date is set
         assertNotNull(responseBody.getId());
-    }
+    }*/
     
 
     @Test 

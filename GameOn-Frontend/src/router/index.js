@@ -35,6 +35,21 @@ const router = createRouter({
       component: () => import("../views/ManageCategoriesView.vue"),
     },
     {
+      path: "/cart",
+      name: "cart",
+      component: () => import("../views/CartView.vue"),
+    },
+    {
+      path: "/orders",
+      name: "orders",
+      component: () => import("../views/CustomerOrderView.vue"),
+    },
+    {
+      path: "/customers",
+      name: "customers",
+      component: () => import("../views/CustomersView.vue"),
+    },
+    {
       path: "/manage/requests",
       name: "manage-requests",
       component: () => import("../views/ManageGameRequestView.vue"),

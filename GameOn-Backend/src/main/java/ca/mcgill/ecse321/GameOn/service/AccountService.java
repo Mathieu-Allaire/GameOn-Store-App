@@ -11,7 +11,6 @@ import ca.mcgill.ecse321.GameOn.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -36,6 +35,8 @@ public class AccountService {
     private ManagerRepository managerRepository;
     @Autowired
     private CartRepository cartRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
     /**
      * This method will create a Person with role of customer
@@ -317,6 +318,31 @@ public class AccountService {
         }
         return x;
     }
+
+
+    public Iterable<Person> getAllCustomers(){
+        List<Person> customers = new ArrayList<>();
+        for(Person person : personRepository.findAll()){
+            if(person.getRole(0).getClass() == Customer.class){
+                customers.add(person);
+            }
+        }
+        return customers;
+    }
+
+    public Iterable<OrderClass> getAllCustomerOrders(String email) {
+        List<OrderClass> orders = new ArrayList<>();
+        Person person = personRepository.findPersonByEmail(email);
+        Customer customer = (Customer) person.getRole(0);
+        Long id = customer.getId();
+        for (OrderClass order : orderRepository.findAll()) {
+            if (order.getOrderCustomer().getId() == id) {
+                orders.add(order);
+            }
+        }
+        return orders;
+    }
+
 
 
 }
