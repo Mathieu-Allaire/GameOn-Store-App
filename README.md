@@ -67,7 +67,7 @@ Neeshal Imrit | 25| <ul><li>Employee Games Interface and Implementation</li><li>
 Luis Jarquin | 25| <ul><li>CSS style Implemented for app.vue </li> <li>Register Page Interface and Implementation </li> <li>Log In Page Interface and Implementation with Camilo</li> <li>Nav bar implementation</li> </ul>|
 Mathieu Allaire | 23| <ul><li>Wishlist Page Interface and Implementation </li> <li>Specific Page Interface and Implementation </li> <li>Review interface for specific game** </li> </ul>|
 Joel Boyer | 25| <ul><li>Create DTO/Axios that interacts with the backend for all classes </li> <li>Main Page Interface (Search, All games, Sort by Category) Implementation</li> </ul>|
-Joseph Feghaly | 20| <ul><li>Staff's Order Page Interface and Implementation** </li> <li>Customer's Order Page Interface and Implementation**</li></ul>|
+Joseph Feghaly | 25| <ul><li>Staff's Order Page Interface and Implementation** </li> <li>Customer's Order Page Interface and Implementation</li> Cart Page Interface and Implementation**</ul>|
 
 ### Task done with ** are currently incomplete
 ---
