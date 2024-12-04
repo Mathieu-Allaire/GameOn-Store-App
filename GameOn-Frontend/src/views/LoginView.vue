@@ -3,6 +3,7 @@
     <div class="spacer"></div>
     <div class="content">
       <h1>Login</h1>
+      <!-- labels and inputs for email and password to log in to an existing customer account -->
       <form @submit.prevent="login">
         <label for="email">Email</label>
         <input id="email" v-model="email" type="text" required />
@@ -36,7 +37,7 @@ export default {
       role: ''
     }
   },
-
+  // Retrieve the role from sessionStorage
   async created() {
     // Retrieve the role from sessionStorage
     const storedRole = sessionStorage.getItem('LoggedIn');
@@ -44,7 +45,7 @@ export default {
       this.role = storedRole; // Update role
     }
     },
-
+  // Login method to authenticate the user
   methods: {
     async login() {
       try{
@@ -58,6 +59,7 @@ export default {
 
         this.$router.push('/'); // Go to main page
       }
+      // catch block to handle errors
       catch (error){
         console.error(error.response.data); 
         alert(error.response.data);

@@ -25,6 +25,7 @@
           <h2>Game Request</h2>
           <div class="game-request-list">
             <h3>List Game Requests</h3>
+            <!-- List of game requests -->
             <ul>
             <li v-for="grequest in gamerequests" :key="grequest.requestedGameId ">
               <p><strong>Requested Game Id:</strong>  {{ grequest.requestedGameId }}</p>
@@ -38,6 +39,7 @@
 
         
       </div>
+      <!-- Right Column -->
       <div class="column">
           <div class="archive-game-request">
         <h2>Archive Game Request</h2>
@@ -66,6 +68,7 @@ import { GameRequestResponseDto } from "../dto/GameRequestResponseDto";
 
 export default {
   data() {
+    // Initialize data properties
     return {
       newGame: {
         name: "",
@@ -88,6 +91,7 @@ export default {
     };
   },
   methods: {
+    // Method to create a new game request
     async createGameRequest() {
       if (
         this.newGame.name &&
@@ -128,6 +132,7 @@ export default {
         }
       }
     },
+    // Method to add a new game
     async addGame(name, category, description, price, quantity, picture) {
       const game = new Game(picture, name, description, price, quantity, category);
       await game.createGame();
@@ -137,6 +142,7 @@ export default {
       await this.loadGameRequests();
 
     },
+    // Method to archive a game
     async archiveGame(name) {
       const game = this.games.find((game) => game.name === name);
       if (game) {
@@ -163,6 +169,7 @@ export default {
           }
       }
   },
+    // Method to load all games
     async loadGames() {
       try {
         const response = await Game.findAllGames();
@@ -185,6 +192,7 @@ export default {
         this.errorMessage = error.message || "Failed to load games. Please try again.";
       }
     },
+    // Method to load all game requests
     async loadGameRequests() {
   try {
     const response = await GameRequest.findAllGameRequests();
@@ -206,6 +214,7 @@ export default {
   }
 }
 },
+// Load games and game requests when the component is mounted
 async mounted() {
   await this.loadGameRequests();
   await this.loadGames();

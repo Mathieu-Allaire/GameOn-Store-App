@@ -88,6 +88,7 @@ import { GameRequestResponseDto } from "../dto/GameRequestResponseDto";
 
 export default {
   data() {
+    // Initialize data properties
     return {
       newGame: {
         name: "",
@@ -110,6 +111,7 @@ export default {
     };
   },
   methods: {
+    // Create a new game
     async createGame() {
       if (
         this.newGame.name &&
@@ -202,6 +204,7 @@ export default {
         await this.loadGames();
       }
     },
+    // Add a new game to the list
     async addGame(name, category, description, price, quantity, picture) {
       const game = new Game(picture, name, description, price, quantity, category);
       await game.createGame();
@@ -215,6 +218,7 @@ export default {
         picture: game.picture,
       });
     },
+    // Load all games
     async loadGames() {
       try {
         const response = await Game.findAllGames();
@@ -237,6 +241,7 @@ export default {
         this.errorMessage = error.message || "Failed to load games. Please try again.";
       }
     },
+    // Load all game requests
     async loadGameRequests() {
     try {
       const response = await GameRequest.findAllGameRequests();

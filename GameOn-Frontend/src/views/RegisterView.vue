@@ -3,6 +3,8 @@
     <div class="spacer"></div>
     <div class="content">
       <h1>Create Account</h1>
+      <!-- labels and inputs for email, name, password, password confirmation, card number, expiration date, and billing address
+      to create a new customer account -->
       <form @submit.prevent="createCustomer">
         <label for="email">Email</label>
         <input id="email" v-model="email" type="email" required />
@@ -28,6 +30,7 @@
         <div class="form-actions">
           <button type="submit">Create Account</button>
           <label>
+            <!-- going to login page after creating the account -->
             Already have an account?
             <RouterLink to="/login">Login</RouterLink>
           </label>
@@ -45,12 +48,13 @@ import { RouterLink } from "vue-router";
 const axiosClient = axios.create({
   baseURL: "http://localhost:8080"
 });
-
+// RegisterView component to create a new customer account
 export default {
   name: "RegisterView",
   components: {
     RouterLink
   },
+  // data properties for email, name, password, password confirmation, card number, expiration date, and billing address
   data() {
     return {
       email: "",
@@ -62,7 +66,7 @@ export default {
       billingAddress: ""
     };
   },
-
+  // createCustomer method to create a new customer account
   methods: {
     async createCustomer() {
       console.log(typeof this.cardNumber + " " + this.cardNumber);
@@ -82,6 +86,7 @@ export default {
           processedCardNumber = processedCardNumber.substring(0, 8);
         }
 
+        // newCustomer object with email, name, password, card number, expiration date, and billing address
         const newCustomer = {
           email: this.email,
           name: this.name,
@@ -91,11 +96,13 @@ export default {
           billingAddress: this.billingAddress
         };
 
+        // POST request to create a new customer account
         const response = await axiosClient.post("/customer", newCustomer);
         if (response.status === 201) {
           alert("Account created successfully");
           this.$router.push("/login");
         }
+        // alert if an error occurs
       } catch (error) {
         if (typeof error.response.data === "string") {
           alert(error.response.data);
@@ -110,6 +117,7 @@ export default {
         }
       }
     },
+    // confirmPasswords method to check if the password and password confirmation match
     confirmPasswords() {
       if (this.password !== this.passwordConfirmation) {
         alert("Passwords do not match");
@@ -117,6 +125,7 @@ export default {
       }
       return true;
     },
+    // validateFields method to check if all fields are filled
     validCardNumber() {
       const cardNumber = this.cardNumber.trim();
       if (!/^\d+$/.test(cardNumber)) {
@@ -125,6 +134,7 @@ export default {
       }
       return true;
     },
+    // validateFields method to check if all fields are filled
     validateFields() {
       if (
         !this.email.trim() ||
