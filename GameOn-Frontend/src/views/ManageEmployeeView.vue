@@ -1,6 +1,7 @@
 <template>
   <div class="employee-view">
     <h1>Manage Staff</h1>
+    <!-- Create and deactivate employees -->
     <div class="employee-container">
       <div class="create-employee">
         <h2>Create Employee</h2>
@@ -13,7 +14,7 @@
         </form>
       </div>
 
-    
+    <!-- Deactivate employees -->
       <div class="deactivate-employee">
         <h2>Deactivate Employee</h2>
         <div class="employee-list">
@@ -41,6 +42,7 @@ const axiosClient = axios.create({
 export default {
   
   data() {
+    // Initialize data properties
     return {
       employees: [],
       email: "",

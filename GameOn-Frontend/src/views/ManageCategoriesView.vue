@@ -1,5 +1,6 @@
 <template>
   <div class="category-view">
+        <!-- Create and delete categories -->
     <h1>Manage Categories</h1>
     <div class="category-container">
       <div class="create-category">
@@ -41,6 +42,7 @@ export default {
     };
   },
   methods: {
+    // method to create a new category
     createCategory() {
       if (this.newCategory.name) {
         // Check if the category already exists
